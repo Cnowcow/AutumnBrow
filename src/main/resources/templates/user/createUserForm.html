@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원등록</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
+    <script>
+        function formatPhoneNumber(input) {
+            let value = input.value.replace(/\D/g, '');
+            if (value.length > 3 && value.length <= 7) {
+                value = value.replace(/(\d{3})(\d{0,4})/, '$1-$2');
+            } else if (value.length > 7) {
+                value = value.replace(/(\d{3})(\d{4})(\d{0,4})/, '$1-$2-$3');
+            }
+            input.value = value;
+        }
+    </script>
+</head>
+<body>
+<div class="container">
+    <h2 class="mt-5"><a class="text-body text-decoration-none" href="/user/new">회원가입</a></h2>
+
+    <!-- 에러 메시지가 있을 때 Modal 띄우기 -->
+    <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true" th:if="${errorMessage}">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="errorModalLabel">중복회원</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" th:text="${errorMessage}">
+                    <!-- 에러 메시지가 여기에 표시됨 -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <form action="#" th:action="@{/user/new}" method="post">
+        <div class="mb-3">
+            <label for="name" class="form-label">이름</label>
+            <input type="text" id="name" name="name" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label for="phone" class="form-label">전화번호</label>
+            <input type="text" id="phone" name="phone" class="form-control" required oninput="formatPhoneNumber(this)">
+        </div>
+        <div class="mb-3">
+            <label for="birthDay" class="form-label">생년월일</label>
+            <input type="date" class="form-control" id="birthDay" name="birthDay" required>
+        </div>
+        <button type="submit" class="btn btn-primary">가입하기</button>
+    </form>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+<script>
+    // errorMessage가 있을 경우 모달을 띄우기
+    if ([[${errorMessage != null}]]) {
+        var errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
+        errorModal.show();
+    }
+</script>
+
+</body>
+</html>
