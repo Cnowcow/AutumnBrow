@@ -38,9 +38,8 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     implementation 'commons-net:commons-net:3.9.0'
-    //implementation 'org.springframework.boot:spring-boot-starter-security'
 
-    //  	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat' // 내장 톰캣을 제외하고 서블릿 컨테이너에서 사용할 수 있게 설정
+    providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat' // 내장 톰캣을 제외하고 서블릿 컨테이너에서 사용할 수 있게 설정
 
 }
 

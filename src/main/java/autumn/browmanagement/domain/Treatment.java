@@ -11,8 +11,7 @@ import java.util.List;
 @Getter @Setter
 public class Treatment {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
@@ -24,8 +23,6 @@ public class Treatment {
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Treatment> children = new ArrayList<>(); // 자식 시술 리스트
 
-    @OneToMany(mappedBy = "treatment")
-    private List<Post> posts = new ArrayList<>();
 
     // 기본 생성자
     public Treatment() {}

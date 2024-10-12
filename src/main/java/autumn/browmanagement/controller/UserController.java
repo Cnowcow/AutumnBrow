@@ -1,8 +1,11 @@
 package autumn.browmanagement.controller;
 
+import autumn.browmanagement.config.EncryptionUtil;
 import autumn.browmanagement.domain.User;
 import autumn.browmanagement.service.UserService;
 import java.text.ParseException;
+
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -45,7 +48,7 @@ public class UserController {
         }
 
         try {
-            userService.join(name, phone, birthDay);
+            userService.create(name, phone, birthDay);
         } catch (IllegalStateException e) {
             // 에러 메시지 모델에 추가
             model.addAttribute("errorMessage", e.getMessage());
@@ -65,19 +68,33 @@ public class UserController {
     @PostMapping("/user/login")
     public String Login(@RequestParam String name,
                         @RequestParam String phone,
-                        Model model) {
+                        HttpSession session,
+                        Model model) throws Exception {
         System.out.println("Received Name: " + name + "Received Phone: " + phone);
 
-        boolean isLoginSuccessful = userService.login(name, phone);
+        User user = userService.login(name, phone);
 
-        if (isLoginSuccessful) {
-            System.out.println(name + " " + phone);
-            model.addAttribute("name", name);
-            return "index2";
+        if (user != null) {
+            session.setAttribute("user", user);
+            model.addAttribute("userName", user.getName());
+            System.out.println(name + " 로그인 성공, 역할: " + user.getRoleId());
+            System.out.println("user.getName() = " + user.getName());
+            System.out.println("저나버노" + user.getPhone());
+            String decryptedPhone = EncryptionUtil.decrypt(user.getPhone());
+            System.out.println("복호화된 전화번호 = " + decryptedPhone);
+
+            return "index";
         } else {
-            model.addAttribute("error", "이름 또는 전화번호가 일치하지 않습니다.");
-            return "user/userLogin";
+            System.out.println("로그인 실패"+name+" "+phone);
+            return "redirect:/user/login?loginFailed=true";
         }
+    }
+
+    @GetMapping("/user/logout")
+    public String Logout(HttpSession session){
+        session.invalidate();
+        System.out.println("로그아웃");
+        return "index";
     }
 
 }

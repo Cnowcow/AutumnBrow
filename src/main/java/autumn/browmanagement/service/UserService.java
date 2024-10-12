@@ -1,5 +1,6 @@
 package autumn.browmanagement.service;
 
+import autumn.browmanagement.config.EncryptionUtil;
 import autumn.browmanagement.config.HashUtil;
 import autumn.browmanagement.domain.User;
 import autumn.browmanagement.repository.UserRepository;
@@ -19,41 +20,40 @@ public class UserService {
     private final UserRepository userRepository;
 
     @Transactional
-    public Long join(String name, String phone, Date birthDay) {
+    public Long create(String name, String phone, Date birthDay) {
         User user = new User();
         user.setName(name);
         //user.setPhone(phone);
-        user.setPhone(HashUtil.hashPhone(phone));
+        try {
+            // 전화번호 암호화하여 저장
+            user.setPhone(EncryptionUtil.encrypt(phone));
+        } catch (Exception e) {
+            throw new IllegalStateException("전화번호 암호화 실패", e);
+        }
         user.setBirthDay(birthDay);
 
         // 중복 회원 검증
         validateDuplicateMember(user);
 
-        userRepository.save(user);
+        userRepository.create(user);
         return user.getId();
     }
 
-    private void validateDuplicateMember(User user) {
+    @Transactional
+    public void validateDuplicateMember(User user) {
         List<User> findUser = userRepository.findByUser(user.getName(), user.getPhone());
         if (!findUser.isEmpty()) {
             throw new IllegalStateException("이미 가입된 회원입니다.");
         }
     }
 
-    public boolean login(String name, String phone) {
+    @Transactional
+    public User login(String name, String phone) throws Exception {
         // 전화번호를 해시 처리하여 사용자 조회
-        List<User> users = userRepository.findByUser(name, HashUtil.hashPhone(phone));
-
+        List<User> users = userRepository.findByUser(name, EncryptionUtil.encrypt(phone));
         // 사용자가 존재하면 true 반환
-        return !users.isEmpty();
+        return users.isEmpty() ? null : users.get(0);
     }
 
-    public Optional<User> findByPhone(String phone) {
-        return userRepository.findByPhone(phone);
-    }
-
-    public void saveUser(User user) {
-        userRepository.save(user);
-    }
 
 }

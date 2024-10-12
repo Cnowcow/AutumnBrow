@@ -12,12 +12,18 @@ import java.util.Date;
 @Getter @Setter
 public class Post {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "post_id")
     private Long id;
 
     // 방문경로
     private String visitPath;
+
+    // 시술 내용
+    private String parentTreatment;
+
+    // 시술 내용
+    private String childTreatment;
 
     // 시술 날짜
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -31,7 +37,7 @@ public class Post {
     private String afterImageUrl;
 
     // 리터치 여부
-    private String retouch;
+    private Boolean retouch = false;
 
     // 리터치 날짜
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -45,17 +51,16 @@ public class Post {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "treatment_id")
-    private Treatment treatment;
 
 
     // 기본 생성자
     public Post() {}
 
     // 필요한 정보를 포함하는 생성자
-    public Post(String visitPath, Date treatmentDate, String beforeImageUrl, String afterImageUrl, String retouch, Date retouchDate, String info, User user, Treatment treatment) {
+    public Post(String visitPath, Date treatmentDate, String beforeImageUrl, String afterImageUrl, Boolean retouch, Date retouchDate, String info, User user, String parentTreatment, String childTreatment) {
         this.visitPath = visitPath;
+        this.parentTreatment = parentTreatment;
+        this.childTreatment = childTreatment;
         this.treatmentDate = treatmentDate;
         this.beforeImageUrl = beforeImageUrl;
         this.afterImageUrl = afterImageUrl;
@@ -63,7 +68,7 @@ public class Post {
         this.retouchDate = retouchDate;
         this.info = info;
         this.user = user;
-        this.treatment = treatment;
+
     }
 
 }

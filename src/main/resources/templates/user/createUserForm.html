@@ -1,67 +1,142 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>회원등록</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
-    <script>
-        function formatPhoneNumber(input) {
-            let value = input.value.replace(/\D/g, '');
-            if (value.length > 3 && value.length <= 7) {
-                value = value.replace(/(\d{3})(\d{0,4})/, '$1-$2');
-            } else if (value.length > 7) {
-                value = value.replace(/(\d{3})(\d{4})(\d{0,4})/, '$1-$2-$3');
-            }
-            input.value = value;
-        }
-    </script>
-</head>
-<body>
-<div class="container">
-    <h2 class="mt-5"><a class="text-body text-decoration-none" href="/user/new">회원가입</a></h2>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-    <!-- 에러 메시지가 있을 때 Modal 띄우기 -->
-    <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true" th:if="${errorMessage}">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="errorModalLabel">중복회원</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <title>회원등록</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+            href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+            rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="/css/sb-admin-2.min.css" rel="stylesheet">
+
+
+</head>
+<body id="page-top">
+
+<!-- Page Wrapper -->
+<div id="wrapper">
+
+    <!-- Sidebar -->
+    <div th:include="/sidebar.html"></div>
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+        <!-- Main Content -->
+        <div id="content">
+
+            <!-- Top bar -->
+            <div th:include="/header.html"></div>
+
+            <!-- Begin Page Content -->
+            <div class="container mt-5 mb-5">
+                <h2 class="text-center">회원가입</h2>
+
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <form action="#" th:action="@{/user/new}" method="post">
+                            <div class="mb-3">
+                                <label for="name" class="form-label">이름</label>
+                                <input type="text" id="name" name="name" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="phone" class="form-label">전화번호</label>
+                                <input type="text" id="phone" name="phone" class="form-control" required oninput="formatPhoneNumber(this)">
+                            </div>
+                            <div class="mb-3">
+                                <label for="birthDay" class="form-label">생년월일</label>
+                                <input type="date" class="form-control" id="birthDay" name="birthDay" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">가입하기</button>
+                        </form>
+                    </div>
                 </div>
-                <div class="modal-body" th:text="${errorMessage}">
-                    <!-- 에러 메시지가 여기에 표시됨 -->
+            </div>
+            <!-- /.container-fluid -->
+
+        </div>
+        <!-- End of Main Content -->
+
+        <!-- Footer -->
+        <footer class="sticky-footer bg-white">
+            <div class="container my-auto">
+                <div class="copyright text-center my-auto">
+                    <span>Copyright &copy; Your Website 2021</span>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
+            </div>
+        </footer>
+        <!-- End of Footer -->
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+</div>
+<!-- End of Page Wrapper -->
+
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>
+
+<!-- Logout Modal-->
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">정말 로그아웃 하시겠습니까?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">취소를 누르면 이전 페이지로 돌아갑니다.</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">취소</button>
+                <a class="btn btn-danger" href="/user/logout">로그아웃</a>
             </div>
         </div>
     </div>
-
-    <form action="#" th:action="@{/user/new}" method="post">
-        <div class="mb-3">
-            <label for="name" class="form-label">이름</label>
-            <input type="text" id="name" name="name" class="form-control" required>
-        </div>
-        <div class="mb-3">
-            <label for="phone" class="form-label">전화번호</label>
-            <input type="text" id="phone" name="phone" class="form-control" required oninput="formatPhoneNumber(this)">
-        </div>
-        <div class="mb-3">
-            <label for="birthDay" class="form-label">생년월일</label>
-            <input type="date" class="form-control" id="birthDay" name="birthDay" required>
-        </div>
-        <button type="submit" class="btn btn-primary">가입하기</button>
-    </form>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+<!-- Bootstrap core JavaScript-->
+<script src="/js/jquery.min.js"></script>
+<script src="/js/bootstrap.bundle.min.js"></script>
+
+<!-- Core plugin JavaScript-->
+<script src="/js/jquery.easing.min.js"></script>
+
+<!-- Custom scripts for all pages-->
+<script src="/js/sb-admin-2.min.js"></script>
+
+<!-- Page level plugins -->
+<script src="/js/Chart.min.js"></script>
+
+<!-- Page level custom scripts -->
+<script src="/js/chart-area-demo.js"></script>
+<script src="/js/chart-pie-demo.js"></script>
+
+<script th:if="${param.loginFailed}">
+    alert("로그인에 실패했습니다. 아이디와 비밀번호를 확인해주세요.");
+</script>
+
 <script>
-    // errorMessage가 있을 경우 모달을 띄우기
-    if ([[${errorMessage != null}]]) {
-        var errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
-        errorModal.show();
+    function formatPhoneNumber(input) {
+        let value = input.value.replace(/\D/g, '');
+        if (value.length > 3 && value.length <= 7) {
+            value = value.replace(/(\d{3})(\d{0,4})/, '$1-$2');
+        } else if (value.length > 7) {
+            value = value.replace(/(\d{3})(\d{4})(\d{0,4})/, '$1-$2-$3');
+        }
+        input.value = value;
     }
 </script>
 
