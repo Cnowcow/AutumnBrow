@@ -12,6 +12,9 @@ public class PostForm {
 
     private Long id;
 
+    // 사용자 id
+    private Long userId;
+
     // 이름
     private String name;
 
@@ -29,16 +32,16 @@ public class PostForm {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date birthDay;
 
+    // 시술 내용
+    private String parentTreatment;
+    private String childTreatment;
+
     // 시술 날짜
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date treatmentDate;
 
     // 방문 경로
     private String visitPath;
-
-    // 시술 내용
-    private String parentTreatment;
-    private String childTreatment;
 
     // 비포 애프터
     private String beforeImageUrl;
@@ -48,6 +51,7 @@ public class PostForm {
     private Boolean retouch;
 
     // 리터치 날짜
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date retouchDate;
 
     // 비고

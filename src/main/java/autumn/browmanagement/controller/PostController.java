@@ -1,3 +1,4 @@
+
 package autumn.browmanagement.controller;
 
 import autumn.browmanagement.config.FtpUtil;
@@ -43,12 +44,17 @@ public class PostController {
             return "redirect:/?authority=true";
         }
 
-        return "post/createPostForm";
-
+        // 헤더에 보낼 userInfo
+        User userInfo = (User) session.getAttribute("user");
+        model.addAttribute("userInfo", userInfo);
+        if (userInfo == null || userInfo.getName() == null){
+            return "redirect:/user/login";
+        }
+        return "post/postCreateForm";
     }
 
     @PostMapping("/post/new")
-    public String createPost(@ModelAttribute PostForm postForm, HttpSession session) throws IOException {
+    public String createPost(PostForm postForm, Model model, HttpSession session) throws IOException {
 
         FtpUtil ftpUtil = new FtpUtil();
         ftpUtil.connect();
@@ -80,7 +86,7 @@ public class PostController {
             }
             System.out.println("88888 = " + afterImageFile);
 
-        postService.createPost(postForm); // 서비스 메서드 호출
+            postService.createPost(postForm); // 서비스 메서드 호출
         } catch (IOException e) {
             e.printStackTrace();
             return "error"; // 오류 처리 (필요 시 에러 페이지로 리다이렉트)
@@ -90,28 +96,67 @@ public class PostController {
             ftpUtil.disconnect(); // FTP 연결 종료
         }
 
+        // 헤더에 보낼 userInfo
+        User userInfo = (User) session.getAttribute("user");
+        model.addAttribute("userInfo", userInfo);
+        if (userInfo == null || userInfo.getName() == null){
+            return "redirect:/user/login";
+        }
         System.out.println("77777 = " + postForm);
         return "redirect:/"; // 성공적으로 저장 후 리다이렉트
     }
 
 
     @GetMapping("/post/list")
-    public String listPosts(Model model) {
+    public String listPosts(Model model, HttpSession session) {
         List<PostForm> postForms = postService.findAll(); // 모든 게시물 조회
-        System.out.println("모든게시물 조회하자" + postForms);
+
         model.addAttribute("posts", postForms); // 모델에 게시물 목록 추가
-        System.out.println("모델에 담았니?");
+
+        // 헤더에 보낼 userInfo
+        User userInfo = (User) session.getAttribute("user");
+        if (userInfo == null){
+            return "redirect:/user/login";
+        }
         return "post/postList"; // 게시물 목록 페이지로 이동
     }
 
     @GetMapping("/post/{postId}/edit")
-    public String updatePostForm(@PathVariable("postId") Long postId, Model model) {
-        List<PostForm> postForms = postService.findAll(); // 모든 게시물 조회
-        System.out.println("수정해자" + postForms);
-        model.addAttribute("posts", postForms); // 모델에 게시물 목록 추가
-        System.out.println("수정을해보장");
-        return "post/updatePostForm"; // 게시물 목록 페이지로 이동
+    public String updatePostForm(@PathVariable("postId") Long postId, Model model, HttpSession session) {
+        Post post = (Post) postService.findOne(postId);
+
+        PostForm form = new PostForm();
+        form.setId(postId);
+        form.setName(post.getUser().getName());
+        form.setPhone(post.getUser().getPhone());
+        form.setBirthDay(post.getUser().getBirthDay());
+        form.setParentTreatment(post.getParentTreatment());
+        form.setChildTreatment(post.getChildTreatment());
+        form.setTreatmentDate(post.getTreatmentDate());
+        form.setVisitPath(post.getVisitPath());
+        form.setBeforeImageUrl(post.getBeforeImageUrl());
+        form.setAfterImageUrl(post.getAfterImageUrl());
+        form.setRetouch(post.getRetouch());
+        form.setRetouchDate(post.getRetouchDate());
+        form.setInfo(post.getInfo());
+
+        model.addAttribute("updateForm", form);
+
+        // 헤더에 보낼 userInfo
+        User userInfo = (User) session.getAttribute("user");
+        if (userInfo == null){
+            return "redirect:/user/login";
+        }
+        return "post/postUpdateForm";
     }
 
+    @PostMapping("/post/{postId}/edit")
+    public String updatePost(@PathVariable Long postId, @ModelAttribute("updateForm") PostForm form ){
+        postService.updatePost(postId, form.getName(), form.getTreatmentDate(),
+                String.valueOf(form.getRetouch()), form.getRetouchDate());
+        // phone, parentTreatment, childTreatment, birthDay, visitPath, beforeUrl, afterUrl
+
+        return "redirect:/post/list";
+    }
 
 }

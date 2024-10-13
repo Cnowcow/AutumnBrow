@@ -28,7 +28,7 @@
     <div id="wrapper">
 
         <!-- Sidebar -->
-        <div th:include="/sidebar.html"></div>
+        <div th:insert="~{/sidebar.html}"></div>
 
         <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
@@ -37,7 +37,7 @@
             <div id="content">
 
                 <!-- Top bar -->
-                <div th:include="/header.html"></div>
+                <div th:insert="~{/header.html}"></div>
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
@@ -85,24 +85,8 @@
     </a>
 
     <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">정말 로그아웃 하시겠습니까?</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">취소를 누르면 이전 페이지로 돌아갑니다.</div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">취소</button>
-                    <a class="btn btn-danger" href="/user/logout">로그아웃</a>
-                </div>
-            </div>
-        </div>
-    </div>
+    <div th:insert="~{/logout.html}"></div>
+
 
     <!-- Bootstrap core JavaScript-->
     <script src="/js/jquery.min.js"></script>

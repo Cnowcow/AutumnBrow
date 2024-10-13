@@ -1,5 +1,6 @@
 package autumn.browmanagement.repository;
 
+import autumn.browmanagement.config.EncryptionUtil;
 import autumn.browmanagement.domain.Post;
 import autumn.browmanagement.domain.User;
 import jakarta.persistence.EntityManager;
@@ -27,6 +28,21 @@ public class PostRepository {
     public List<Post> findAll() {
         return em.createQuery("select m from Post m", Post.class)
                 .getResultList();
+    }
+
+    public Post findOne(Long postId){
+        //return em.find(Post.class, postId);
+        Post post = em.find(Post.class, postId);
+
+        if (post != null) {
+            try {
+                String decrypt = EncryptionUtil.decrypt(post.getUser().getPhone());
+                post.getUser().setPhone(decrypt);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return post;
     }
 
 }

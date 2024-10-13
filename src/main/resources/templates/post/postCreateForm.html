@@ -26,60 +26,52 @@
             "직접입력": []
         };
 
-        // 부모 시술 선택에 따라 자식 시술을 업데이트하는 함수
         function updateChildTreatments() {
-            const treatmentParent = document.getElementById('treatmentParent').value;
-            const treatmentChild = document.getElementById('treatmentChild');
-            const treatmentArea = document.getElementById('treatmentArea');
-            const directInputArea = document.getElementById('directInputArea');
+            const parentSelect = document.getElementById('treatmentParent');
+            const childSelect = document.getElementById('treatmentChild');
+            const selectedValue = parentSelect.value;
 
-            // 자식 시술 드롭다운 초기화
-            treatmentChild.innerHTML = '<option value="">세부 시술 선택</option>';
-            treatmentArea.innerHTML = '';
+            // 자식 시술 옵션 초기화
+            childSelect.innerHTML = '<option value="">세부 시술 선택</option>';
 
-            if (treatmentParent === '직접입력') {
+            // 선택된 부모 시술에 따라 자식 시술 옵션 추가
+            if (selectedValue in treatmentsData) {
+                treatmentsData[selectedValue].forEach(function (treatment) {
+                    const option = document.createElement('option');
+                    option.value = treatment;
+                    option.textContent = treatment;
+                    childSelect.appendChild(option);
+                });
+            }
+
+            // '직접입력'이 선택된 경우 입력 필드를 활성화
+            if (selectedValue === "직접입력") {
+                childSelect.style.display = 'none'; // 자식 시술 선택 드롭다운 숨김
+
                 // 직접 입력 필드 표시
-                directInputArea.style.display = 'block';
-                treatmentChild.style.display = 'none';
-            } else {
-                // 직접 입력 필드 숨김
-                directInputArea.style.display = 'none';
-                treatmentChild.style.display = 'block';
+                const directInputField = document.createElement('input');
+                directInputField.type = 'text';
+                directInputField.className = 'form-control mt-2';
+                directInputField.name = 'directTreatment';
+                directInputField.placeholder = '직접 입력하세요';
+                directInputField.required = true; // 필수 입력 필드로 설정
 
-                if (treatmentParent) {
-                    const childOptions = treatmentsData[treatmentParent];
-                    childOptions.forEach(function (child) {
-                        const option = document.createElement('option');
-                        option.value = child;
-                        option.text = child;
-                        treatmentChild.appendChild(option);
-                    });
+                // 자식 시술 선택 드롭다운 아래에 입력 필드 추가
+                const childSelectContainer = childSelect.parentElement; // 자식 시술 선택 컨테이너 가져오기
+                childSelectContainer.appendChild(directInputField);
+            } else {
+                // '직접입력'이 아닌 경우, 직접 입력 필드 숨김
+                const directInputField = document.querySelector('input[name="directTreatment"]');
+                if (directInputField) {
+                    directInputField.remove(); // 기존 입력 필드 제거
                 }
+                childSelect.style.display = 'block'; // 자식 시술 선택 드롭다운 보이기
             }
         }
-
-        // 자식 시술 값 표시
-        function displaySelectedTreatment() {
-            const treatmentChild = document.getElementById('treatmentChild').value;
-            const treatmentArea = document.getElementById('treatmentArea');
-            treatmentArea.innerHTML = treatmentChild;
-        }
-
 
         function toggleInputField(select) {
             const visitPathInput = document.getElementById('visitPathInput');
             visitPathInput.style.display = select.value === '직접입력' ? 'block' : 'none';
-        }
-
-
-        function formatPhoneNumber(input) {
-            let value = input.value.replace(/\D/g, '');
-            if (value.length > 3 && value.length <= 7) {
-                value = value.replace(/(\d{3})(\d{0,4})/, '$1-$2');
-            } else if (value.length > 7) {
-                value = value.replace(/(\d{3})(\d{4})(\d{0,4})/, '$1-$2-$3');
-            }
-            input.value = value;
         }
     </script>
 </head>
@@ -89,7 +81,7 @@
 <div id="wrapper">
 
     <!-- Sidebar -->
-    <div th:include="/sidebar.html"></div>
+    <div th:insert="~{/sidebar.html}"></div>
 
     <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
@@ -98,7 +90,7 @@
         <div id="content">
 
             <!-- Top bar -->
-            <div th:include="/header.html"></div>
+            <div th:insert="~{/header.html}"></div>
 
             <!-- Begin Page Content -->
             <div class="container mt-5 mb-5">
@@ -110,24 +102,28 @@
 
                             <div class="mb-3">
                                 <label for="name" class="form-label">이름</label>
-                                <input type="text" class="form-control" id="name" name="name" required placeholder="이름을 입력하세요">
+                                <input type="text" class="form-control" id="name" name="name" placeholder="이름을 입력하세요"
+                                       required>
                             </div>
 
                             <div class="mb-3">
                                 <label for="phone" class="form-label">전화번호</label>
-                                <input type="text" class="form-control" id="phone" name="phone" required placeholder="전화번호를 입력하세요" oninput="formatPhoneNumber(this)">
+                                <input type="text" class="form-control" id="phone" name="phone"
+                                       placeholder="전화번호를 입력하세요" oninput="formatPhoneNumber(this)" required>
                             </div>
 
                             <div class="mb-3">
                                 <label for="birthDay" class="form-label">생일 (선택)</label>
-                                <input type="date" class="form-control" id="birthDay" name="birthDay" placeholder="생일을 선택하세요">
+                                <input type="date" class="form-control" id="birthDay" name="birthDay"
+                                       placeholder="생일을 선택하세요">
                             </div>
 
                             <!-- 시술 종류 -->
                             <div class="row mb-3">
                                 <div class="col-md-6">
-                                    <label for="treatmentParent" class="form-label">시술 종류</label>
-                                    <select class="form-control" id="treatmentParent" required onchange="updateChildTreatments()">
+                                    <label for="parentTreatment" class="form-label">시술 종류</label>
+                                    <select class="form-control" id="parentTreatment" name="parentTreatment"
+                                            onchange="updateChildTreatments()">
                                         <option value="">시술 종류</option>
                                         <option value="반영구">반영구</option>
                                         <option value="속눈썹">속눈썹</option>
@@ -135,49 +131,46 @@
                                     </select>
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="treatmentChild" class="form-label">세부 시술</label>
-                                    <select class="form-control" id="treatmentChild" required onchange="displaySelectedTreatment()">
+                                    <label for="treatmentChild" class="form-label">세부 내용</label>
+                                    <select class="form-control" id="treatmentChild" name="childTreatment">
+                                        <option value="">세부 내용 선택</option>
                                     </select>
-                                    <div id="directInputArea" style="display: none;">
-                                        <input type="text" class="form-control" id="directTreatmentInput" name="treatmentName" placeholder="시술 내용을 입력하세요" onchange="displaySelectedTreatment()"></input>
-                                    </div>
                                 </div>
                             </div>
 
-                            <!-- 선택한 시술을 표시하는 영역 -->
-                            <div class="row mb-3">
-                                <div class="col-md-12">
-                                    <label for="treatmentArea" class="form-label"></label>
-                                    <p id="treatmentArea"></p>
-                                    <input type="hidden" id="treatmentName" name="treatmentName">
-                                </div>
-                            </div>
 
                             <div class="mb-3">
                                 <label for="treatmentDate" class="form-label">시술 날짜</label>
-                                <input type="date" class="form-control" id="treatmentDate" name="treatmentDate" placeholder="날짜 선택">
+                                <input type="date" class="form-control" id="treatmentDate" name="treatmentDate"
+                                       placeholder="날짜 선택">
                             </div>
 
                             <div class="mb-3">
                                 <label for="visitPath" class="form-label">방문 경로</label>
-                                <select class="form-control" id="visitPath" name="visitPath" onchange="toggleInputField(this)" required>
+                                <select class="form-control" id="visitPath" name="visitPath"
+                                        onchange="toggleInputField(this)" required>
                                     <option value="">방문 경로 선택</option>
-                                    <option value="SNS">Instagram</option>
-                                    <option value="지인 추천">당근</option>
-                                    <option value="검색">카카오채널</option>
-                                    <option value="직접입력">직접입력</option>
+                                    <option value="Instagram">Instagram</option>
+                                    <option value="당근">당근</option>
+                                    <option value="카카오채널">카카오채널</option>
+                                    <option value="지인추천">지인추천</option>
+                                    <option value="검색">검색</option>
+                                    <option value="">직접입력</option>
                                 </select>
-                                <textarea id="visitPathInput" class="form-control mt-2" style="display: none;" name="visitPath" placeholder="직접 입력하세요"></textarea>
+                                <textarea id="visitPathInput" class="form-control mt-2" style="display: none;"
+                                          placeholder="직접 입력하세요"></textarea>
                             </div>
 
                             <div class="mb-3">
                                 <label for="beforeImage" class="form-label">Before 사진</label>
-                                <input type="file" class="form-control" id="beforeImage" name="beforeImageFile" accept="image/*">
+                                <input type="file" class="form-control" id="beforeImage" name="beforeImageFile"
+                                       accept="image/*">
                             </div>
 
                             <div class="mb-3">
                                 <label for="afterImage" class="form-label">After 사진</label>
-                                <input type="file" class="form-control" id="afterImage" name="afterImageFile" accept="image/*">
+                                <input type="file" class="form-control" id="afterImage" name="afterImageFile"
+                                       accept="image/*">
                             </div>
 
                             <!--    <div class="mb-3">
@@ -227,24 +220,7 @@
 </a>
 
 <!-- Logout Modal-->
-<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">정말 로그아웃 하시겠습니까?</h5>
-                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-body">취소를 누르면 이전 페이지로 돌아갑니다.</div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">취소</button>
-                <a class="btn btn-danger" href="/user/logout">로그아웃</a>
-            </div>
-        </div>
-    </div>
-</div>
+<div th:insert="~{/logout.html}"></div>
 
 <!-- Bootstrap core JavaScript-->
 <script src="/js/jquery.min.js"></script>

@@ -35,9 +35,6 @@ public class User {
     @Column(name = "treatmentCount", nullable = false)
     private Long treatmentCount = 1L;
 
-    @ManyToOne
-    @JoinColumn(name = "role_id", insertable = false, updatable = false)
-    private Role role;
 
     @Column(name = "role_id", nullable = false)
     private Long roleId = 2L; // 기본값으로 customer 역할 설정

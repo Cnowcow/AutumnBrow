@@ -39,13 +39,9 @@ public class PostService {
         String afterImageUrl = postForm.getAfterImageUrl(); // 애프터
         String info = postForm.getInfo(); // 비고
 
-        System.out.println("11111 = " + info);
-
         // User 처리
         Optional<User> optionalUser = userRepository.findByPhone(phone);
         User user;
-
-        System.out.println("22222 = " + postForm);
 
         if (optionalUser.isPresent()) {
             user = optionalUser.get(); // User가 존재하는 경우
@@ -66,8 +62,6 @@ public class PostService {
             userRepository.create(user); // User를 저장
         }
 
-        System.out.println("333333 = " + user);
-
         // 시술 날짜가 입력되지 않았으면 현재 날짜로 설정
         if (treatmentDate == null) {
             treatmentDate = new Date(); // 현재 날짜로 설정
@@ -85,8 +79,6 @@ public class PostService {
         post.setAfterImageUrl(afterImageUrl);
         post.setInfo(info);
 
-        System.out.println("44444 = " + post);
-        // Post를 저장
         postRepository.save(post); // Post를 저장
     }
 
@@ -94,16 +86,13 @@ public class PostService {
     @Transactional
     public List<PostForm> findAll() {
         List<Post> posts = postRepository.findAll(); // 모든 게시물 조회
-        System.out.println("조회했니? = " + posts);
-        return convertToPostForms(posts); // Post 목록을 PostForm 목록으로 변환
-    }
 
-    private List<PostForm> convertToPostForms(List<Post> posts) {
         List<PostForm> postForms = new ArrayList<>();
-        System.out.println("새로 목록만들었니? = " + postForms);
+
         for (Post post : posts) {
             PostForm postForm = new PostForm();
             postForm.setId(post.getId());
+            postForm.setUserId(post.getUser().getId()); //유저아이디
             postForm.setName(post.getUser().getName()); // 이름
             // 전화번호 복호화
             String decryptedPhone = null;
@@ -113,7 +102,6 @@ public class PostService {
                 System.out.println("전화번호 복호화 실패: " + e.getMessage());
             }
             postForm.setPhone(decryptedPhone); // 복호화된 전화번호 설정
-
             postForm.setBirthDay(post.getUser().getBirthDay()); // 생년월일
             postForm.setParentTreatment(post.getParentTreatment()); // 시술내용
             postForm.setChildTreatment(post.getChildTreatment()); // 시술내용
@@ -128,17 +116,61 @@ public class PostService {
             postForm.setInfo(post.getInfo()); // 비고
             // 필요한 필드를 모두 설정하세요
             postForms.add(postForm);
-            System.out.println("필드설정 다 됐니?");
         }
-        System.out.println(" 이제 보낸다?");
         return postForms;
     }
 
-    @Transactional
-    public List<Post> findAll2(){
+    /*
+    private List<PostForm> convertToPostForms(List<Post> posts) {
+        List<PostForm> postForms = new ArrayList<>();
+        for (Post post : posts) {
+            PostForm postForm = new PostForm();
+            postForm.setId(post.getId());
+            postForm.setUserId(post.getUser().getId()); //유저아이디
+            postForm.setName(post.getUser().getName()); // 이름
+            // 전화번호 복호화
+            String decryptedPhone = null;
+            try {
+                decryptedPhone = EncryptionUtil.decrypt(post.getUser().getPhone());
+            } catch (Exception e) {
+                System.out.println("전화번호 복호화 실패: " + e.getMessage());
+            }
+            postForm.setPhone(decryptedPhone); // 복호화된 전화번호 설정
+            postForm.setBirthDay(post.getUser().getBirthDay()); // 생년월일
+            postForm.setParentTreatment(post.getParentTreatment()); // 시술내용
+            postForm.setChildTreatment(post.getChildTreatment()); // 시술내용
+            postForm.setTreatmentDate(post.getTreatmentDate()); // 시술날짜
+            postForm.setVisitPath(post.getVisitPath()); // 방문경로
+            postForm.setFirstVisitDate(post.getUser().getFirstVisitDate()); // 첫방문 날짜
+            postForm.setTreatmentCount(post.getUser().getTreatmentCount()); // 방문횟수
+            postForm.setRetouch(Boolean.valueOf(post.getRetouch())); // 리터치 여부
+            postForm.setRetouchDate(post.getRetouchDate()); // 리터치 날짜
+            postForm.setBeforeImageUrl(post.getBeforeImageUrl()); // 비포
+            postForm.setAfterImageUrl(post.getAfterImageUrl()); // 애프터
+            postForm.setInfo(post.getInfo()); // 비고
+            // 필요한 필드를 모두 설정하세요
+            postForms.add(postForm);
+        }
+        return postForms;
+    }
+    */
 
-        List<Post> posts = postRepository.findAll();
-        return posts;
+
+    // 게시물 수정
+    public Post findOne(Long postId){
+        return postRepository.findOne(postId);
     }
 
+    @Transactional
+    public Post updatePost(Long postId, String name, Date treatmentDate, String retouch, Date retouchDate){
+        Post findPost = postRepository.findOne(postId);
+        findPost.setId(postId);
+        findPost.getUser().setName(name);
+        findPost.setTreatmentDate(treatmentDate);
+        findPost.setRetouch(Boolean.valueOf(retouch));
+        findPost.setRetouchDate(retouchDate);
+
+        return findPost;
+
+    }
 }
