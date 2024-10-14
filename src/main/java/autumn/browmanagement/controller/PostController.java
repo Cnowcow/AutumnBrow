@@ -106,7 +106,7 @@ public class PostController {
         return "redirect:/"; // 성공적으로 저장 후 리다이렉트
     }
 
-
+    // 게시물 목록
     @GetMapping("/post/list")
     public String listPosts(Model model, HttpSession session) {
         List<PostForm> postForms = postService.findAll(); // 모든 게시물 조회
@@ -121,6 +121,7 @@ public class PostController {
         return "post/postList"; // 게시물 목록 페이지로 이동
     }
 
+    // 게시물 수정 페이지
     @GetMapping("/post/{postId}/edit")
     public String updatePostForm(@PathVariable("postId") Long postId, Model model, HttpSession session) {
         Post post = (Post) postService.findOne(postId);
@@ -140,7 +141,7 @@ public class PostController {
         form.setRetouchDate(post.getRetouchDate());
         form.setInfo(post.getInfo());
 
-        model.addAttribute("updateForm", form);
+        model.addAttribute("postUpdateForm", form);
 
         // 헤더에 보낼 userInfo
         User userInfo = (User) session.getAttribute("user");
@@ -151,10 +152,10 @@ public class PostController {
     }
 
     @PostMapping("/post/{postId}/edit")
-    public String updatePost(@PathVariable Long postId, @ModelAttribute("updateForm") PostForm form ){
-        postService.updatePost(postId, form.getName(), form.getTreatmentDate(),
-                String.valueOf(form.getRetouch()), form.getRetouchDate());
-        // phone, parentTreatment, childTreatment, birthDay, visitPath, beforeUrl, afterUrl
+    public String updatePost(@PathVariable Long postId, @ModelAttribute("postUpdateForm") PostForm form ){
+        postService.updatePost(postId, form.getName(), form.getPhone(), form.getParentTreatment(),
+                form.getChildTreatment(), form.getTreatmentDate(), String.valueOf(form.getRetouch()), form.getRetouchDate(), form.getInfo());
+        // birthDay, visitPath, beforeUrl, afterUrl
 
         return "redirect:/post/list";
     }

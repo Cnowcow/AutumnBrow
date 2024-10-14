@@ -120,7 +120,7 @@ public class UserController {
         form.setFirstVisitDate(user.getFirstVisitDate());
         form.setTreatmentCount(user.getTreatmentCount());
 
-        model.addAttribute("updateForm", form);
+        model.addAttribute("userUpdateForm", form);
 
         // 헤더에 보낼 userInfo
         User userInfo = (User) session.getAttribute("user");
@@ -132,7 +132,7 @@ public class UserController {
 
     // 사용자 수정 요청
     @PostMapping("/user/{id}/edit")
-    public String updateUser(@PathVariable Long id, @ModelAttribute("updateForm") UserForm form){
+    public String updateUser(@PathVariable Long id, @ModelAttribute("userUpdateForm") UserForm form){
         userService.updateUser(id, form.getName(), form.getPhone(), form.getBirthDay(), form.getFirstVisitDate());
         return "redirect:/user/findAll";
     }

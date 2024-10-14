@@ -162,15 +162,22 @@ public class PostService {
     }
 
     @Transactional
-    public Post updatePost(Long postId, String name, Date treatmentDate, String retouch, Date retouchDate){
+    public Post updatePost(Long postId, String name, String phone, String parentTreatment, String childTreatment, Date treatmentDate, String retouch, Date retouchDate, String info){
         Post findPost = postRepository.findOne(postId);
         findPost.setId(postId);
         findPost.getUser().setName(name);
+        try {
+            findPost.getUser().setPhone(EncryptionUtil.encrypt(phone));
+        } catch (Exception e) {
+            throw new IllegalStateException("전화번호 암호화 실패", e);
+        }
+        findPost.setParentTreatment(parentTreatment);
         findPost.setTreatmentDate(treatmentDate);
+        findPost.setChildTreatment(childTreatment);
         findPost.setRetouch(Boolean.valueOf(retouch));
         findPost.setRetouchDate(retouchDate);
+        findPost.setInfo(info);
 
         return findPost;
-
     }
 }

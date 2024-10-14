@@ -27,8 +27,8 @@
         };
 
         function updateChildTreatments() {
-            const parentSelect = document.getElementById('treatmentParent');
-            const childSelect = document.getElementById('treatmentChild');
+            const parentSelect = document.getElementById('parentTreatment');
+            const childSelect = document.getElementById('childTreatment');
             const selectedValue = parentSelect.value;
 
             // 자식 시술 옵션 초기화
@@ -69,6 +69,7 @@
             }
         }
 
+
         function toggleInputField(select) {
             const visitPathInput = document.getElementById('visitPathInput');
             visitPathInput.style.display = select.value === '직접입력' ? 'block' : 'none';
@@ -98,19 +99,19 @@
 
                 <div class="row justify-content-center">
                     <div class="col-md-8">
-                        <form th:object="${updateForm}" method="post" enctype="multipart/form-data">
+                        <form th:object="${postUpdateForm}" method="post" enctype="multipart/form-data">
                             <input type="hidden" th:field="*{id}"/>
 
                             <div class="mb-3">
                                 <label for="name" class="form-label">이름</label>
                                 <input type="text" class="form-control" id="name" name="name" th:field="*{name}"
-                                       placeholder="이름을 입력하세요" disabled>
+                                       placeholder="이름을 입력하세요">
                             </div>
 
                             <div class="mb-3">
                                 <label for="phone" class="form-label">전화번호</label>
-                                <input type="text" class="form-control" id="phone" th:field="*{phone}"
-                                       placeholder="전화번호를 입력하세요" oninput="formatPhoneNumber(this)" disabled>
+                                <input type="text" class="form-control" id="phone" name="phone" th:field="*{phone}"
+                                       placeholder="전화번호를 입력하세요" oninput="formatPhoneNumber(this)">
                             </div>
 
                             <div class="mb-3">
@@ -122,20 +123,23 @@
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label for="parentTreatment" class="form-label">시술 종류</label>
-                                    <select class="form-control" id="parentTreatment" onchange="updateChildTreatments()" required>
-                                        <option value="">시술 종류</option>
-                                        <option value="반영구">반영구</option>
-                                        <option value="속눈썹">속눈썹</option>
-                                        <option value="직접입력">직접입력</option>
+                                    <select class="form-control" id="parentTreatment" name="parentTreatment"
+                                            onchange="updateChildTreatments()">
+                                        <option>시술 종류</option>
+                                        <option th:selected="*{parentTreatment == '반영구'}" value="반영구">반영구</option>
+                                        <option th:selected="*{parentTreatment == '속눈썹'}" value="속눈썹">속눈썹</option>
+                                        <option th:selected="*{parentTreatment == '직접입력'}" value="직접입력">직접입력
+                                        </option>
                                     </select>
-                                    <span th:field="*{parentTreatment}"></span>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="childTreatment" class="form-label">세부 내용</label>
-                                    <select class="form-control" id="childTreatment">
+                                    <select class="form-control" id="childTreatment" name="childTreatment">
                                         <option value="">세부 내용 선택</option>
+                                        <option th:value="*{childTreatment}"
+                                                th:text="*{childTreatment}"
+                                                th:selected="*{childTreatment}"></option>
                                     </select>
-                                    <span th:field="*{childTreatment}"></span>
                                 </div>
                             </div>
 
@@ -145,25 +149,53 @@
                                        th:field="*{treatmentDate}">
                             </div>
 
-                            <div class="mb-3">
+                            <div class="mb-4">
                                 <label for="visitPath" class="form-label">방문 경로</label>
                                 <select class="form-control" id="visitPath"
                                         onchange="toggleInputField(this)" th:field="*{visitPath}" required>
                                     <option value="">방문 경로 선택</option>
-                                    <option value="SNS">Instagram</option>
-                                    <option value="지인 추천">당근</option>
-                                    <option value="검색">카카오채널</option>
-                                    <option value="직접입력">직접입력</option>
+                                    <option th:selected="*{visitPath == 'Instagram'}" value="Instagram">Instagram</option>
+                                    <option th:selected="*{visitPath == '당근'}" value="당근">당근</option>
+                                    <option th:selected="*{visitPath == '카카오채널'}" value="카카오채널">카카오채널</option>
+                                    <option th:selected="*{visitPath == '지인추천'}" value="지인추천">지인추천</option>
+                                    <option th:selected="*{visitPath == '검색'}" value="검색">검색</option>
+                                    <option th:selected="*{visitPath == '직접입력'}" value="">직접입력</option>
                                 </select>
                                 <textarea id="visitPathInput" class="form-control mt-2" style="display: none;"
                                           name="visitPath" placeholder="직접 입력하세요"></textarea>
                             </div>
 
-                            <!--<div class="mb-3">
-                                <label for="beforeImage" class="form-label">Before 사진</label>
-                                <img th:src="@{|http://hhjnn92.synology.me/autumnBrow/*{beforeImageUrl}|}">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Before</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Atfer</label>
+                                </div>
                             </div>
-                            <div class="mb-3">
+                            <div class="row mb-5">
+                                <div class="col-md-6">
+                                    <img class="col-md-6"
+                                         th:src="@{|http://hhjnn92.synology.me/autumnBrow/*{beforeImageUrl}|}">
+                                </div>
+                                <div class="col-md-6">
+                                    <img class="col-md-6"
+                                         th:src="@{|http://hhjnn92.synology.me/autumnBrow/*{afterImageUrl}|}">
+                                </div>
+                            </div>
+                            <div class="row mb-5">
+                                <div class="col-md-6">
+                                    <label for="beforeImage" class="form-label">Before사진 변경하기</label>
+                                    <input type="file" class="form-control" id="beforeImage"
+                                           accept="image/*">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="afterImage" class="form-label">After사진 변경하기</label>
+                                    <input type="file" class="form-control" id="afterImage"
+                                           accept="image/*">
+                                </div>
+                            </div>
+                            <!--<div class="mb-3">
                                 <label for="beforeImage" class="form-label">Before 사진 변경하기</label>
                                 <input type="file" class="form-control" id="beforeImage" name="beforeImageFile"
                                        accept="image/*">
@@ -179,19 +211,23 @@
                                        accept="image/*">
                             </div>-->
 
-                            <div class="mb-3">
+                            <div class="mb-4">
                                 <label class="form-label">리터치 여부</label>
-                                <input type="checkbox" id="retouch" name="retouch" th:checked="*{retouch == true}" style="transform: scale(1.5);">
+                                <span>　</span>
+                                <input type="checkbox" id="retouch" name="retouch"
+                                       th:checked="*{retouch == true}" style="transform: scale(1.5);">
                             </div>
 
                             <div class="mb-3">
                                 <label for="retouchDate" class="form-label">리터치날짜</label>
-                                <input type="date" class="form-control" id="retouchDate"  name="retouchDate" th:field="*{retouchDate}">
+                                <input type="date" class="form-control" id="retouchDate" name="retouchDate"
+                                       th:field="*{retouchDate}">
                             </div>
 
-                            <div class="mb-3">
+                            <div class="mb-4">
                                 <label for="info" class="form-label">비고</label>
-                                <textarea class="form-control" id="info" name="info" th:field="*{info}" placeholder="비고를 입력하세요"></textarea>
+                                <textarea class="form-control" id="info" name="info" th:field="*{info}"
+                                          placeholder="비고를 입력하세요"></textarea>
                             </div>
 
                             <button type="submit" class="btn btn-primary w-100">저장</button>

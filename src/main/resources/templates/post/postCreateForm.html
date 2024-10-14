@@ -27,8 +27,8 @@
         };
 
         function updateChildTreatments() {
-            const parentSelect = document.getElementById('treatmentParent');
-            const childSelect = document.getElementById('treatmentChild');
+            const parentSelect = document.getElementById('parentTreatment');
+            const childSelect = document.getElementById('childTreatment');
             const selectedValue = parentSelect.value;
 
             // 자식 시술 옵션 초기화
@@ -131,8 +131,8 @@
                                     </select>
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="treatmentChild" class="form-label">세부 내용</label>
-                                    <select class="form-control" id="treatmentChild" name="childTreatment">
+                                    <label for="childTreatment" class="form-label">세부 내용</label>
+                                    <select class="form-control" id="childTreatment" name="childTreatment">
                                         <option value="">세부 내용 선택</option>
                                     </select>
                                 </div>
