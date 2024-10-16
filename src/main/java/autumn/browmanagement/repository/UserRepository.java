@@ -1,21 +1,23 @@
 package autumn.browmanagement.repository;
 
-import autumn.browmanagement.config.EncryptionUtil;
 import autumn.browmanagement.domain.User;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.TypedQuery;
-import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Repository
-@RequiredArgsConstructor
-public class UserRepository {
+public interface UserRepository extends JpaRepository<User, Long> {
+    Optional<User> findByNameAndPhone(String name, String phone);
 
-    private final EntityManager em;
+    List<User> findByRoleId(Long roleId);
+
+    Optional<User> findById(Long userId); // ID로 사용자 조회
+
+
+    /*private final EntityManager em;
 
     // 가입 요청
     public void create(User user) {
@@ -69,7 +71,7 @@ public class UserRepository {
             }
             return user;
         }).collect(Collectors.toList());
-    }
+    }*/
 
 
 }

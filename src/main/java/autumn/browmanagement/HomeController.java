@@ -14,7 +14,11 @@ public class HomeController {
         return "index";
     }
 
+    @GetMapping("/test")
+    public String testHome(Model model) {
 
+        return "test/index";
+    }
 
     @GetMapping("/list")
     public String PostList(Model model) {

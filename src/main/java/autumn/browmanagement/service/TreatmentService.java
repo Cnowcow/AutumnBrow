@@ -1,5 +1,8 @@
 package autumn.browmanagement.service;
 
+import autumn.browmanagement.controller.TreatmentForm;
+import autumn.browmanagement.domain.Treatment;
+import autumn.browmanagement.repository.TreatmentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -8,19 +11,39 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class TreatmentService {
 
-    public Map<String, List<String>> getTreatments() {
+    private final TreatmentRepository treatmentRepository;
 
-        Map<String, List<String>> treatments = new HashMap<>();
-        treatments.put("반영구", Arrays.asList("자연눈썹", "섀도우눈썹", "콤보눈썹", "아이라인", "헤어라인", "입술타투", "미인점"));
-        treatments.put("속눈썹", Arrays.asList("속눈썹펌", "블랙틴팅펌", "탱글영양 + 블랙틴팅펌"));
-        treatments.put("직접입력", Arrays.asList());
-        System.out.println("서비스 treatments값 = " + treatments);
-        return treatments;
+    // 모든 시술 조회 메소드
+    public List<Treatment> treatmentList() {
+        return treatmentRepository.findByParentIsNull(); // 상위 시술만 반환
     }
+
+
+    /*
+
+    // 부모 시술 목록을 가져오는 서비스 메서드
+    public List<Treatment> findParentTreatments() {
+        return treatmentRepository.findParentTreatments();
+    }
+
+    public List<TreatmentForm> findChildTreatments(Long parentId) {
+        List<Treatment> treatments = treatmentRepository.findChildTreatment(parentId);
+        return treatments.stream()
+                .map(treatment -> {
+                    TreatmentForm form = new TreatmentForm();
+                    form.setId(treatment.getId());
+                    form.setName(treatment.getName());
+                    form.setParentId(treatment.getParent() != null ? treatment.getParent().getId() : null);
+                    return form;
+                })
+                .collect(Collectors.toList());
+    }*/
+
 }

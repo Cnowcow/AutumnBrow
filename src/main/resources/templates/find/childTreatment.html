@@ -1,0 +1,18 @@
+<div th:each="child : ${child}">
+    <input type="checkbox" class="btn-check"
+           th:id="'child-check-' + ${child.id}" th:value="${child.name}" autocomplete="off"
+           onclick="viewChildTreatments(this.value)" >
+    <label class="btn btn-outline-secondary" th:for="'child-check-' + ${child.id}" th:text="${child.name}"></label>
+</div>
+
+
+
+// 자식 시술 데이터를 화면에 표시
+let childContainer = document.getElementById('childTreatment');
+childContainer.innerHTML = ''; // 기존 내용을 비워줌
+
+data.forEach(function (child) {
+let checkbox = `<input type="checkbox" class="btn-check" id="child-check-${child.id}" value="${child.id}" onclick="viewChildTreatments('${child.name}')">`;
+let label = `<label class="btn btn-outline-secondary" for="child-check-${child.id}">${child.name}</label>`;
+childContainer.innerHTML += checkbox + label;
+});

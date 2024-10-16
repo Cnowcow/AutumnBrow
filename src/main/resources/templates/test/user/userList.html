@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>회원목록</title>
+</head>
+<body>
+<h1>회원목록</h1>
+
+<div class="card shadow mb-4">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>이름</th>
+                    <th>전화번호</th>
+                    <th>생년월일</th>
+                    <th>첫방문 날짜</th>
+                    <th>시술 횟수</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="user : ${users}">
+                    <td th:text="${user.userId}"></td>
+                    <td th:text="${user.name}"></td>
+                    <td th:text="${user.phone}"></td>
+                    <td th:text="${user.birthDay}"></td>
+                    <td th:text="${user.firstVisitDate}"></td>
+                    <td th:text="${user.treatmentCount}"></td>
+                    <td>
+                        <a href="#" th:href="@{/test/user/{id}/edit (id=${user.userId})}" class="btn btn-primary" role="button">수정</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+</body>
+</html>

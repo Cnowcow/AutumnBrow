@@ -2,20 +2,23 @@ package autumn.browmanagement.repository;
 
 import autumn.browmanagement.config.EncryptionUtil;
 import autumn.browmanagement.domain.Post;
+import autumn.browmanagement.domain.Role;
 import autumn.browmanagement.domain.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
 @Repository
-@RequiredArgsConstructor
-public class PostRepository {
+public interface PostRepository extends JpaRepository<Post, Long> {
 
-    private final EntityManager em;
+    List<Post> findByIsDeleted(String isDeleted);
+
+    /*private final EntityManager em;
 
     public void save(Post post){
         if (post.getId() == null){
@@ -43,6 +46,6 @@ public class PostRepository {
             }
         }
         return post;
-    }
+    }*/
 
 }

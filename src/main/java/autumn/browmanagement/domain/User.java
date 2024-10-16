@@ -33,15 +33,20 @@ public class User {
 
     // 시술 횟수
     @Column(name = "treatmentCount", nullable = false)
-    private Long treatmentCount = 1L;
+    private Long treatmentCount;
 
 
-    @Column(name = "role_id", nullable = false)
-    private Long roleId = 2L; // 기본값으로 customer 역할 설정
+    @ManyToOne // 각 사용자는 하나의 역할만 가질 수 있다.
+    @JoinColumn(name = "role_id")
+    private Role role; // 역할 추가
 
     @PrePersist
-    protected void onCreate() {
-        firstVisitDate = new Date(); // 현재 시간으로 설정
+    protected void roleId() {
+        if (this.role == null) {
+            Role defaultRole = new Role();
+            defaultRole.setId(2L); // 기본 역할의 ID 설정
+            this.role = defaultRole; // Role 객체 설정
+        }
     }
 
     @OneToMany(mappedBy = "user")

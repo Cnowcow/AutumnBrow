@@ -12,7 +12,7 @@ import java.util.List;
 
 public class UserForm {
 
-    private Long id;
+    private Long userId;
 
     private String name;
 
@@ -25,5 +25,7 @@ public class UserForm {
     private Date firstVisitDate;
 
     private Long treatmentCount;
+
+    private Long roleId;
 
 }

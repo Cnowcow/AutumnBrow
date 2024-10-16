@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Autumn Brow</title>
+
+    <!-- Custom fonts for this template-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+            href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+            rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="/css/sb-admin-2.min.css" rel="stylesheet">
+</head>
+
+<body id="page-top">
+
+<h1>시술</h1>
+
+<div class="row mb-3">
+    <label class="form-label">시술 내용</label>
+    <div class="col-md-3">
+        <select class="form-control" id="parentTreatment" name="parentTreatment" onchange="updateChildTreatments()">
+            <option value="">시술 내용 선택</option>
+            <div th:each="treatment : ${parent}">
+                <option th:data-id="${treatment.id}" th:value="${treatment.name}" th:text="${treatment.name}"></option>
+            </div>
+        </select>
+    </div>
+    <div class="col-md-4">
+        <select class="form-control" id="childTreatment" onchange="updateInputField()">
+            <option value="">세부 내용 선택</option>
+            <!-- 하위 카테고리 옵션이 동적으로 추가될 것입니다. -->
+        </select>
+    </div>
+    <div class="col-md-4">
+        <input class="form-control" type="text" id="directInput" name="childTreatment">
+    </div>
+</div>
+
+<script>
+    function updateChildTreatments() {
+        const parentSelect = document.getElementById('parentTreatment');
+        console.log("1111111111"+ parentSelect);
+        const childSelect = document.getElementById('childTreatment');
+        console.log("2222222222"+ childSelect);
+
+        // 기존 옵션 삭제
+        childSelect.innerHTML = '<option value="">세부 내용 선택</option>';
+
+        // 선택된 부모 시술 ID 가져오기
+        const selectedOption = parentSelect.options[parentSelect.selectedIndex];
+        const selectedParentId = selectedOption.getAttribute('data-id');
+
+        if (selectedParentId) {
+            // AJAX 요청을 통해 하위 시술 가져오기
+            fetch(`/find/child/${selectedParentId}`)
+                .then(response => response.json())
+                .then(data => {
+                    data.forEach(child => {
+                        const option = document.createElement('option');
+                        option.value = child.name; // child.id 설정
+                        option.textContent = child.name; // child.name 설정
+                        childSelect.appendChild(option);
+                    });
+                })
+                .catch(error => console.error('Error fetching child treatments:', error));
+        }
+    }
+
+    function updateInputField() {
+        const childSelect = document.getElementById('childTreatment');
+        const directInput = document.getElementById('directInput');
+
+        // 선택한 하위 시술의 name 값을 input 필드에 설정
+        directInput.value = childSelect.value;
+        // placeholder를 선택한 하위 시술의 name으로 설정
+        directInput.placeholder = "직접 입력하세요.";
+    }
+</script>
+
+<!--<div class="row mb-3">
+    <label class="form-label">시술 내용</label>
+    <div id="parentTreatment" style="display: flex; flex-wrap: wrap; gap: 10px;">
+        <div th:each="treatment : ${parent}">
+            <input type="checkbox" class="btn-check"
+                   th:id="'btn-check-' + ${treatment.id}" th:value="${treatment.id}" autocomplete="off"
+                   th:data-value="${treatment.name}" onclick="loadChildTreatments(this)">
+            <label class="btn btn-outline-secondary" th:for="'btn-check-' + ${treatment.id}"
+                   th:text="${treatment.name}"></label>
+        </div>
+    </div>
+    <label class="form-label">세부 내용</label>
+    <div id="childTreatment" style="display: flex; flex-wrap: wrap; gap: 10px;">
+    </div>
+</div>-->
+
+<div class="row mb-3">
+    <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+        <div>
+            <input type="hidden" id="parent" name="parentTreatment" readonly>
+            <label class="btn btn-outline-secondary" for="parent" id="viewParent" readonly></label>
+        </div>
+        <div>
+            <input type="hidden" id="child" name="childTreatment" readonly>
+            <label class="btn btn-outline-secondary" for="child" id="viewChild" readonly></label>
+        </div>
+    </div>
+</div>
+
+<script>
+    function loadChildTreatments(checkbox) {
+        const parentId = checkbox.value;  // 부모 ID
+        const treatmentName = checkbox.dataset.value;  // 선택된 부모 시술 이름
+        document.getElementById('viewParent').innerText = treatmentName;
+
+        // Ajax 요청을 보내 자식 카테고리 데이터를 가져옴
+        $.ajax({
+            url: '/find/child/' + parentId,  // 서버에서 자식 카테고리 데이터를 가져올 URL
+            type: 'GET',
+            success: function (data) {
+                // childTreatment div 초기화
+                const childTreatmentDiv = document.getElementById('childTreatment');
+                childTreatmentDiv.innerHTML = ''; // 기존 내용 제거
+
+                // 자식 카테고리 추가
+                data.forEach(treatment => {
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.className = 'btn-check';
+                    checkbox.id = 'child-check-' + treatment.id;
+                    checkbox.value = treatment.name;
+                    checkbox.autocomplete = 'off';
+                    checkbox.onclick = function () { viewChildTreatments(this.value); };
+
+                    const label = document.createElement('label');
+                    label.className = 'btn btn-outline-secondary';
+                    label.setAttribute('for', 'child-check-' + treatment.id);
+                    label.innerText = treatment.name;
+
+                    childTreatmentDiv.appendChild(checkbox);
+                    childTreatmentDiv.appendChild(label);
+                });
+
+                console.log("Parent ID: " + parentId + " - Child Treatments: ");
+                data.forEach(treatment => {
+                    console.log("ID: " + treatment.id + ", Name: " + treatment.name);
+                });
+            },
+            error: function (xhr, status, error) {
+                console.error("Error: " + error);
+            }
+        });
+        document.getElementById('parent').value = treatmentName;
+    }
+
+
+    function viewChildTreatments(child) {
+        const viewChild = child;
+        document.getElementById('viewChild').innerText = viewChild;
+        document.getElementById('child').datavalue = viewChild;
+    }
+
+    window.onload = function (parentId) {
+        loadChildTreatments(1);
+    };
+</script>
+</body>
+</html>

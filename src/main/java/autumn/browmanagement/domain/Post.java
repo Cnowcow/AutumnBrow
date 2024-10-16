@@ -16,15 +16,6 @@ public class Post {
     @Column(name = "post_id")
     private Long id;
 
-    // 방문경로
-    private String visitPath;
-
-    // 시술 내용
-    private String parentTreatment;
-
-    // 시술 내용
-    private String childTreatment;
-
     // 시술 날짜
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Temporal(TemporalType.DATE) // 날짜만 저장
@@ -47,20 +38,26 @@ public class Post {
     // 비고
     private String info;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    // 삭제여부
+    private String isDeleted;
+
+    // 방문경로
+    private Long visitPath;
+
+    // 사용자 정보 - 이름, 전화번호 등은 User 엔티티에서 참조
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-
+    // 시술 정보
+    private Long parentTreatment; // 부모 시술 ID
+    private Long childTreatment;  // 자식 시술 ID
 
     // 기본 생성자
     public Post() {}
 
     // 필요한 정보를 포함하는 생성자
-    public Post(String visitPath, Date treatmentDate, String beforeImageUrl, String afterImageUrl, Boolean retouch, Date retouchDate, String info, User user, String parentTreatment, String childTreatment) {
-        this.visitPath = visitPath;
-        this.parentTreatment = parentTreatment;
-        this.childTreatment = childTreatment;
+    public Post(Date treatmentDate, String beforeImageUrl, String afterImageUrl, Boolean retouch, Date retouchDate, String info, User user, String isDeleted, Long visitPath, Long parentTreatment, Long childTreatment ) {
         this.treatmentDate = treatmentDate;
         this.beforeImageUrl = beforeImageUrl;
         this.afterImageUrl = afterImageUrl;
@@ -68,7 +65,10 @@ public class Post {
         this.retouchDate = retouchDate;
         this.info = info;
         this.user = user;
-
+        this.isDeleted = isDeleted;
+        this.visitPath = visitPath;
+        this.parentTreatment = parentTreatment;
+        this.childTreatment = childTreatment;
     }
 
 }

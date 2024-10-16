@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>시술내역 등록</title>
+</head>
+<body>
+<h1>시술내역 등록</h1>
+<form action="/test/post/create"  method="post" enctype="multipart/form-data">
+
+    <h3>사용자 정보</h3>
+
+    <label for="name">이름:</label>
+    <input type="text" id="name" name="name" required /><br/>
+
+    <label for="phone">전화번호:</label>
+    <input type="text" id="phone" name="phone" required /><br/>
+
+    <label for="birthDay">생년월일:</label>
+    <input type="date" id="birthDay" name="birthDay" /><br/>
+
+    <label for="visitPath">방문 경로:</label>
+    <select id="visitPath" name="visitPath">
+        <option value="" disabled selected>방문 경로 선택</option>
+        <th:block th:each="visit : ${visits}">
+            <option th:value="${visit.id}" th:text="${visit.visitPath}"></option>
+        </th:block>
+    </select><br/>
+
+    <h3>시술 내용</h3>
+    <label for="parentTreatment">시술 내용</label>
+    <select id="parentTreatment" name="parentTreatment" onchange="loadChildTreatments(this.value)">
+        <option value="" disabled selected>상위 시술을 선택하세요</option>
+        <th:block th:each="treatment : ${treatments}">
+            <option th:value="${treatment.treatmentId}" th:text="${treatment.name}"></option>
+        </th:block>
+    </select><br/>
+
+    <label for="childTreatment">세부 내용:</label>
+    <input type="text" id="childTreatment"                 /><br/>
+
+    <label for="treatmentDate">시술 날짜:</label>
+    <input type="date" id="treatmentDate" name="treatmentDate" /><br/>
+
+    <label for="beforeImageFile">시술 전 사진 업로드:</label>
+    <input type="file" id="beforeImageFile" name="beforeImageFile" accept="image/*" /><br/>
+
+    <label for="afterImageFile">시술 후 사진 업로드:</label>
+    <input type="file" id="afterImageFile" name="afterImageFile" accept="image/*" /><br/>
+
+<!--    <label for="retouch">리터치 여부:</label>
+    <input type="checkbox" id="retouch" name="retouch" /><br/>
+
+    <label for="retouchDate">리터치 날짜:</label>
+    <input type="date" id="retouchDate" name="retouchDate" /><br/>-->
+
+    <label for="info">비고:</label>
+    <textarea id="info" name="info"></textarea><br/>
+
+    <button type="submit">저장</button>
+</form>
+</body>
+</html>

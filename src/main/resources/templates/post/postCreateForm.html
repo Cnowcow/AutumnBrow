@@ -19,60 +19,7 @@
     <link href="/css/sb-admin-2.min.css" rel="stylesheet">
 
     <script>
-        // 시술 데이터를 JavaScript 객체로 정의
-        const treatmentsData = {
-            "반영구": ["자연눈썹", "섀도우눈썹", "콤보눈썹", "아이라인", "헤어라인", "입술타투", "미인점"],
-            "속눈썹": ["속눈썹펌", "블랙틴팅펌", "탱글영양 + 블랙틴팅펌"],
-            "직접입력": []
-        };
 
-        function updateChildTreatments() {
-            const parentSelect = document.getElementById('parentTreatment');
-            const childSelect = document.getElementById('childTreatment');
-            const selectedValue = parentSelect.value;
-
-            // 자식 시술 옵션 초기화
-            childSelect.innerHTML = '<option value="">세부 시술 선택</option>';
-
-            // 선택된 부모 시술에 따라 자식 시술 옵션 추가
-            if (selectedValue in treatmentsData) {
-                treatmentsData[selectedValue].forEach(function (treatment) {
-                    const option = document.createElement('option');
-                    option.value = treatment;
-                    option.textContent = treatment;
-                    childSelect.appendChild(option);
-                });
-            }
-
-            // '직접입력'이 선택된 경우 입력 필드를 활성화
-            if (selectedValue === "직접입력") {
-                childSelect.style.display = 'none'; // 자식 시술 선택 드롭다운 숨김
-
-                // 직접 입력 필드 표시
-                const directInputField = document.createElement('input');
-                directInputField.type = 'text';
-                directInputField.className = 'form-control mt-2';
-                directInputField.name = 'directTreatment';
-                directInputField.placeholder = '직접 입력하세요';
-                directInputField.required = true; // 필수 입력 필드로 설정
-
-                // 자식 시술 선택 드롭다운 아래에 입력 필드 추가
-                const childSelectContainer = childSelect.parentElement; // 자식 시술 선택 컨테이너 가져오기
-                childSelectContainer.appendChild(directInputField);
-            } else {
-                // '직접입력'이 아닌 경우, 직접 입력 필드 숨김
-                const directInputField = document.querySelector('input[name="directTreatment"]');
-                if (directInputField) {
-                    directInputField.remove(); // 기존 입력 필드 제거
-                }
-                childSelect.style.display = 'block'; // 자식 시술 선택 드롭다운 보이기
-            }
-        }
-
-        function toggleInputField(select) {
-            const visitPathInput = document.getElementById('visitPathInput');
-            visitPathInput.style.display = select.value === '직접입력' ? 'block' : 'none';
-        }
     </script>
 </head>
 <body id="page-top">
@@ -121,9 +68,8 @@
                             <!-- 시술 종류 -->
                             <div class="row mb-3">
                                 <div class="col-md-6">
-                                    <label for="parentTreatment" class="form-label">시술 종류</label>
-                                    <select class="form-control" id="parentTreatment" name="parentTreatment"
-                                            onchange="updateChildTreatments()">
+                                    <label for="parent" class="form-label">시술 종류</label>
+                                    <select class="form-control" id="parent" name="parent">
                                         <option value="">시술 종류</option>
                                         <option value="반영구">반영구</option>
                                         <option value="속눈썹">속눈썹</option>
@@ -147,8 +93,7 @@
 
                             <div class="mb-3">
                                 <label for="visitPath" class="form-label">방문 경로</label>
-                                <select class="form-control" id="visitPath" name="visitPath"
-                                        onchange="toggleInputField(this)" required>
+                                <select class="form-control" id="visitPath" name="visitPath" required>
                                     <option value="">방문 경로 선택</option>
                                     <option value="Instagram">Instagram</option>
                                     <option value="당근">당근</option>
