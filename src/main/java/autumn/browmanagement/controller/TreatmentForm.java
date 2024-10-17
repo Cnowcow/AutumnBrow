@@ -6,7 +6,7 @@ import lombok.Setter;
 @Getter @Setter
 public class TreatmentForm {
 
-    private Long id;
+    private Long treatmentId;
     private String name;
 
     // 부모 ID 또는 이름을 포함할 수 있음 (선택적)

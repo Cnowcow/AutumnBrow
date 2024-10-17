@@ -10,7 +10,7 @@ import java.util.Date;
 @Getter @Setter
 public class PostForm {
 
-    private Long id;
+    private Long postId;
 
     // 시술 날짜
     @DateTimeFormat(pattern = "yyyy-MM-dd")
