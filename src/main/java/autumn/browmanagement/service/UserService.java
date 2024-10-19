@@ -28,7 +28,7 @@ public class UserService {
     public Long register(String name, String phone, Date birthDay){
         User user = new User();
         user.setName(name);
-
+        user.setPassword(phone);
         try {
             user.setPhone(EncryptionUtil.encrypt(phone));
         } catch (Exception e) {

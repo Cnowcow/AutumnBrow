@@ -134,6 +134,14 @@
             const selectedParentId = selectedOption.value;
             console.log("value" + selectedParentId);
 
+            if(selectedParentId === "3"){
+                console.log("직접입력");
+                childSelect.innerHTML = '<option value="">직접입력</option>';
+                document.getElementById("childView").readOnly = false;  // 입력 필드 활성화
+                document.getElementById("childView").value = '';
+                document.getElementById("directInput").value = '';
+                return;
+            }
 
             if (selectedParentId){
                 fetch(`/find/child/${selectedParentId}`)
@@ -144,16 +152,6 @@
                             option.value = child.treatmentId;
                             option.textContent = child.name; // child.name 설정
                             childSelect.appendChild(option);
-
-                            if(parentSelect.value === "3"){
-
-                                console.log("직접입력");
-                                childSelect.innerHTML = '<option value="">직접입력</option>';
-                                document.getElementById("childView").readOnly = false;  // 입력 필드 활성화
-                                document.getElementById("childView").value = '';
-                                document.getElementById("directInput").value = '';
-                            }
-
                         });
                     })
                     .catch(error => console.error('Error', error));

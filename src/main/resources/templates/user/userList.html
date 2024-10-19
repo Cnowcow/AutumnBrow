@@ -56,7 +56,10 @@
                                 <tbody>
                                 <tr th:each="user : ${users}">
                                     <td th:text="${user.userId}"></td>
-                                    <td th:text="${user.name}"></td>
+                                    <!--<td th:text="${user.name}"></td>-->
+                                    <td>
+                                        <a class="d-block text-decoration-none" th:href="@{/post/{id}/list (id=${user.userId})}" th:text="${user.name}"></a>
+                                    </td>
                                     <td th:text="${user.phone}"></td>
                                     <td th:text="${user.birthDay}"></td>
                                     <td th:text="${user.firstVisitDate}"></td>

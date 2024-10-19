@@ -18,6 +18,9 @@ public class User {
     // 이름
     private String name;
 
+    // 전화번호를 이용한 비밀번호
+    private String password;
+
     // 전화번호
     private String phone;
 

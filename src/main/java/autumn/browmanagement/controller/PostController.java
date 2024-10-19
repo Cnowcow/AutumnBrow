@@ -5,10 +5,12 @@ import autumn.browmanagement.config.EncryptionUtil;
 import autumn.browmanagement.config.FtpUtil;
 import autumn.browmanagement.domain.Post;
 import autumn.browmanagement.domain.Treatment;
+import autumn.browmanagement.domain.User;
 import autumn.browmanagement.domain.Visit;
 import autumn.browmanagement.service.PostService;
 import autumn.browmanagement.service.TreatmentService;
 import autumn.browmanagement.service.VisitServce;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -217,4 +219,30 @@ public class PostController {
         return "redirect:/post/list";
     }
 
+
+    // 관리자용 사용자별 시술내역 조회
+    @GetMapping("/post/{userId}/list")
+    public String ownlist(@PathVariable Long userId,Model model){
+        List<PostForm> postForms = postService.findByUserId(userId); // 모든 게시물 조회
+        model.addAttribute("posts", postForms); // 모델에 게시물 목록 추가
+
+        return "post/postOwnList";
+    }
+
+
+    // 사용자별 시술내역 조회
+    @GetMapping("/post/{userId}/ownList")
+    public String selflist(@PathVariable Long userId, Model model, HttpSession session){
+        User sessionUser = (User) session.getAttribute("user");
+        System.out.println("sessionUserId = " + sessionUser.getId());
+
+        if (!sessionUser.getId().equals(userId)) {
+            return "redirect:/"; // 다른 사용자의 시술 내역을 조회하려고 하면 홈으로 리다이렉트
+        }
+
+        List<PostForm> postForms = postService.findByUserId(userId); // 모든 게시물 조회
+        model.addAttribute("posts", postForms); // 모델에 게시물 목록 추가
+
+        return "post/postOwnList";
+    }
 }

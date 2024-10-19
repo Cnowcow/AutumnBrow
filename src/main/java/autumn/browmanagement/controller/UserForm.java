@@ -14,6 +14,8 @@ public class UserForm {
 
     private String name;
 
+    private String password;
+
     private String phone;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")

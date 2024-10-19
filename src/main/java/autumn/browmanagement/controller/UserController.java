@@ -45,7 +45,7 @@ public class UserController {
             return "user/userRegister";
         }
 
-        return "index";
+        return "redirect:/";
     }
 
 
@@ -123,6 +123,7 @@ public class UserController {
 
         return userService.deletePost(userId);
     }
+
 
     /*
         // 헤더에 보낼 userInfo

@@ -62,7 +62,7 @@
                                     <td th:text="${post.postId}"></td>
                                     <td th:text="${#temporals.format(post.treatmentDate, 'yyyy.MM.dd. HH:mm')}"></td>
                                     <td>
-                                        <a class="d-block text-decoration-none" th:href="@{/post/{id}/list (id=${post.userId})}" th:text="${post.name}"></a>
+                                        <a class="d-block text-decoration-none" th:href="@{/user/{id}/edit (id=${post.userId})}" th:text="${post.name}"></a>
                                     </td>
                                     <td th:text="${post.phone}"></td>
                                     <td th:text="${post.parentName}"></td>
