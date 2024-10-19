@@ -55,9 +55,19 @@ public class UserService {
     }
 
 
+    // 로그인 요청
+    @Transactional
+    public User login(String name, String phone) throws Exception {
+        // 전화번호를 해시 처리하여 사용자 조회
+        Optional<User> users = userRepository.findByNameAndPhone(name, EncryptionUtil.encrypt(phone));
+        // 사용자가 존재하면 true 반환
+        return users.isEmpty() ? null : users.get();
+    }
+
+
     // 회원 목록
     public List<UserForm> findAll(Long RoleId) {
-        List<User> users = userRepository.findByRoleId(RoleId);
+        List<User> users = userRepository.findByRoleIdOrderByIdDesc(RoleId);
         List<UserForm> userForms = new ArrayList<>();
 
         for(User user : users){

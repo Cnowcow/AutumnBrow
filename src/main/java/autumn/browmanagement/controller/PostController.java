@@ -33,7 +33,7 @@ public class PostController {
 
 
     // 시술내역 등록 폼
-    @GetMapping("/test/post/create")
+    @GetMapping("/post/create")
     public String createForm(Model model){
         List<Visit> visits = visitServce.visitList(); // 모든 방문 경로 조회
         model.addAttribute("visits", visits);
@@ -41,12 +41,40 @@ public class PostController {
         List<Treatment> treatments = treatmentService.treatmentList(); // 모든 시술 조회
         model.addAttribute("treatments", treatments);
 
-        return "test/post/postCreateForm";
+        return "post/postCreateForm";
     }
 
 
     // 시술내역 등록 요청
-    @PostMapping("/test/post/create")
+    @PostMapping("/post/create")
+    public String createPost(PostForm postForm, Model model) throws IOException {
+        try {
+            // 서비스에 파일 처리 및 업로드 요청
+            postService.handleFileUpload(postForm);
+            postService.createPost(postForm); // Post 생성
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            model.addAttribute("errorMessage", "파일 업로드 중 오류가 발생했습니다.");
+            return "error";
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return "redirect:/post/list";
+    }
+
+    // 시술내역 삭제 요청
+    @PostMapping("/post/{postId}/delete")
+    public String deletePost(@PathVariable Long postId, Model model){
+
+        return postService.deletePost(postId);
+
+    }
+
+
+/*
+    @PostMapping("/post/create")
     public String createPost(PostForm postForm, Model model) throws IOException {
         FtpUtil ftpUtil = new FtpUtil();
         ftpUtil.connect(); // FTP 연결
@@ -91,22 +119,22 @@ public class PostController {
             ftpUtil.disconnect(); // FTP 연결 종료
         }
 
-        return "redirect:/test";
-    }
+        return "redirect:/";
+    }*/
 
 
     // 시술내역 조회
-    @GetMapping("/test/post/list")
+    @GetMapping("/post/list")
     public String list(Model model){
         List<PostForm> postForms = postService.findAll("N"); // 모든 게시물 조회
         model.addAttribute("posts", postForms); // 모델에 게시물 목록 추가
 
-        return "test/post/postList";
+        return "post/postList";
     }
 
 
     // 시술내역 수정 페이지
-    @GetMapping("/test/post/{postId}/edit")
+    @GetMapping("/post/{postId}/edit")
     public String updatePostForm(@PathVariable Long postId, Model model) throws Exception {
         Post post = postService.findById(postId);
 
@@ -122,12 +150,12 @@ public class PostController {
         List<Treatment> treatments = treatmentService.treatmentList(); // 모든 시술 조회
         model.addAttribute("treatments", treatments); // 상위 시술 목록 추가
 
-        return "test/post/postUpdateForm";
+        return "post/postUpdateForm";
     }
 
 
     // 시술내역 수정 요청
-    @PostMapping("/test/post/{id}/edit")
+    @PostMapping("/post/{id}/edit")
     public String updatePost(@PathVariable Long id, @ModelAttribute("post") PostForm form ) throws Exception {
 
         FtpUtil ftpUtil = new FtpUtil();
@@ -163,7 +191,7 @@ public class PostController {
 
             postService.updatePost(id, form.getParentTreatment(), form.getChildTreatment(),
                     form.getTreatmentDate(), form.getVisitPath(), String.valueOf(form.getRetouch()),
-                    form.getRetouchDate(), form.getInfo());
+                    form.getRetouchDate(), form.getInfo(), form.getBeforeImageUrl(), form.getAfterImageUrl());
             //form.getBeforeImageUrl(), form.getAfterImageUrl(),
 
         } catch (Exception e) {
@@ -172,7 +200,7 @@ public class PostController {
             ftpUtil.disconnect();// FTP 연결 종료
         }
 
-        return "redirect:/test/post/list";
+        return "redirect:/post/list";
     }
 
 }

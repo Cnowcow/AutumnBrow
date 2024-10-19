@@ -1,10 +1,13 @@
 package autumn.browmanagement.config;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
+import org.springframework.stereotype.Component;
 
 import java.io.*;
 
+@Component
 public class FtpUtil {
     private static final String FTP_SERVER = "hhjnn92.synology.me"; // FTP 서버 주소
     private static final int FTP_PORT = 2200; // FTP 포트 번호

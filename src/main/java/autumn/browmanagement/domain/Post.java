@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -17,9 +18,8 @@ public class Post {
     private Long id;
 
     // 시술 날짜
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Temporal(TemporalType.DATE) // 날짜만 저장
-    private Date treatmentDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    private LocalDateTime treatmentDate;
 
     // 시술 전 사진
     private String beforeImageUrl;
@@ -57,7 +57,7 @@ public class Post {
     public Post() {}
 
     // 필요한 정보를 포함하는 생성자
-    public Post(Date treatmentDate, String beforeImageUrl, String afterImageUrl, Boolean retouch, Date retouchDate, String info, User user, String isDeleted, Long visitPath, Long parentTreatment, Long childTreatment ) {
+    public Post(LocalDateTime treatmentDate, String beforeImageUrl, String afterImageUrl, Boolean retouch, Date retouchDate, String info, User user, String isDeleted, Long visitPath, Long parentTreatment, Long childTreatment ) {
         this.treatmentDate = treatmentDate;
         this.beforeImageUrl = beforeImageUrl;
         this.afterImageUrl = afterImageUrl;

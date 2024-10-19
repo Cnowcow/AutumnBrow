@@ -3,6 +3,7 @@ package autumn.browmanagement.controller;
 import autumn.browmanagement.domain.User;
 import autumn.browmanagement.service.UserService;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
@@ -22,15 +23,15 @@ public class UserController {
 
 
     // 가입 페이지
-    @GetMapping("/test/user/register")
+    @GetMapping("/user/register")
     public String registerForm(Model model){
 
-        return "test/user/userRegister";
+        return "user/userRegister";
     }
 
 
     // 가입 요청
-    @PostMapping("/test/user/register")
+    @PostMapping("/user/register")
     public String register(@RequestParam("name") String name,
                            @RequestParam("phone") String phone,
                            @RequestParam("birthDay") @DateTimeFormat(pattern = "yyyy-MM-dd") Date birthDay,
@@ -40,45 +41,75 @@ public class UserController {
             userService.register(name, phone, birthDay);
         } catch (IllegalStateException e) {
             model.addAttribute("errorMessage", e.getMessage());
-            return "test/user/userRegister";
+            return "user/userRegister";
         }
-        return "test/index";
+        return "indexx";
     }
 
 
     // 로그인 페이지
-    @GetMapping("/test/user/login")
+    @GetMapping("/user/login")
     public String LoginForm() {
         System.out.println("로그인 페이지");
-        return "test/user/userLogin";
+        return "user/userLogin";
+    }
+
+
+    // 로그인 요청
+    @PostMapping("/user/login")
+    public String Login(@RequestParam String name,
+                        @RequestParam String phone,
+                        HttpSession session,
+                        Model model) throws Exception {
+
+        User user = userService.login(name, phone);
+
+        if (user != null) {
+            session.setAttribute("user", user);
+            model.addAttribute("userInfo", user);
+            System.out.println("로그인 성공" +name+" "+phone);
+            return "index";
+        } else {
+            System.out.println("로그인 실패"+name+" "+phone);
+            return "redirect:/user/login?loginFailed=true";
+        }
+    }
+
+
+    // 로그아웃
+    @GetMapping("/user/logout")
+    public String Logout(HttpSession session){
+        session.invalidate();
+        System.out.println("로그아웃");
+        return "index";
     }
 
 
     // 회원목록
-    @GetMapping("/test/user/list")
+    @GetMapping("/user/list")
     public String List(Model model){
         List<UserForm> userForms = userService.findAll(2L);
         model.addAttribute("users", userForms);
 
-        return "test/user/userList";
+        return "user/userList";
     }
 
 
     // 사용자 수정 페이지
-    @GetMapping("/test/user/{userId}/edit")
+    @GetMapping("/user/{userId}/edit")
     public String updateUserForm(@PathVariable Long userId, Model model){
         User user = userService.findById(userId);
         model.addAttribute("user", user);
 
-        return "test/user/userUpdateForm";
+        return "user/userUpdateForm";
     }
 
 
     // 사용자 수정 요청
-    @PostMapping("/test/user/{id}/edit")
+    @PostMapping("/user/{id}/edit")
     public String updateUser(@PathVariable Long id, @ModelAttribute("user") UserForm form) throws Exception {
         userService.updateUser(id, form.getName(), form.getPhone(), form.getBirthDay(), form.getFirstVisitDate());
-        return "redirect:/test/user/list";
+        return "redirect:/user/list";
     }
 
     /*

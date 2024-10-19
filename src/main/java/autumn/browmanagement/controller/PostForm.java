@@ -1,20 +1,23 @@
 package autumn.browmanagement.controller;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 public class PostForm {
 
     private Long postId;
 
     // 시술 날짜
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date treatmentDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    private LocalDateTime treatmentDate;
 
     // 비포 애프터
     private String beforeImageUrl;
@@ -66,4 +69,12 @@ public class PostForm {
     /* 파일명 변환용 필드 */
     private MultipartFile beforeImageFile;
     private MultipartFile afterImageFile;
+
+
+    // 파일 업로드 및 URL 생성 메서드
+    public void setImageUrls(String beforeFileName, String afterFileName) {
+        this.beforeImageUrl = beforeFileName;
+        this.afterImageUrl = afterFileName;
+    }
+
 }

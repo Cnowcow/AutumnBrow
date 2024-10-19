@@ -1,284 +1,236 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-
 <head>
-
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
     <title>시술내역 수정</title>
-
-    <!-- Custom fonts for this template-->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link href="/css/all.min.css" rel="stylesheet" type="text/css">
-    <link
-            href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-            rel="stylesheet">
-
-    <!-- Custom styles for this template-->
-    <link href="/css/sb-admin-2.min.css" rel="stylesheet">
-
-    <script>
-        function updateChildTreatments() {
-            const parentTreatment = document.getElementById('parentTreatment').value;
-
-            // 선택된 값이 있는 경우에만 콘솔에 출력
-            if (parentTreatment) {
-                console.log('선택된 시술 종류:', parentTreatment);
-                // 여기서 AJAX 요청을 수행할 수 있습니다.
-            } else {
-                console.log('시술 종류가 선택되지 않았습니다.');
-            }
-        }
-
-        // 페이지가 로드되면 기본 선택 값을 확인
-        window.onload = function () {
-            updateChildTreatments(); // 페이지가 로드될 때 기본 선택 값 출력
-        };
-    </script>
+    <link href="/css/styles.css" rel="stylesheet"/>
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
 </head>
-<body id="page-top">
+<body class="sb-nav-fixed">
 
-<!-- Page Wrapper -->
-<div id="wrapper">
+<!-- header -->
+<div th:insert="~{/header.html}"></div>
 
-    <!-- Sidebar -->
+<div id="layoutSidenav">
+
+    <!-- sidebar -->
     <div th:insert="~{/sidebar.html}"></div>
 
-    <!-- Content Wrapper -->
-    <div id="content-wrapper" class="d-flex flex-column">
+    <div id="layoutSidenav_content">
 
-        <!-- Main Content -->
-        <div id="content">
-
-            <!-- Top bar -->
-            <div th:insert="~{/header.html}"></div>
-
-            <!-- Begin Page Content -->
-            <div class="container mt-5 mb-5">
-                <h2 class="text-center">시술내역 수정</h2>
-
+        <!-- 메인화면 -->
+        <main>
+            <div class="container">
                 <div class="row justify-content-center">
-                    <div class="col-md-8">
-                        <form th:object="${postUpdateForm}" method="post" enctype="multipart/form-data">
-                            <input type="hidden" th:field="*{id}"/>
-
-                            <div class="mb-3">
-                                <label for="name" class="form-label">이름</label>
-                                <input type="text" class="form-control" id="name" name="name" th:field="*{name}"
-                                       placeholder="이름을 입력하세요">
+                    <div class="col-lg-7">
+                        <div class="card shadow-lg border-0 rounded-lg mt-5">
+                            <div class="card-header"><h3 class="text-center font-weight-light my-4">시술내역 수정</h3>
                             </div>
-
-                            <div class="mb-3">
-                                <label for="phone" class="form-label">전화번호</label>
-                                <input type="text" class="form-control" id="phone" name="phone" th:field="*{phone}"
-                                       placeholder="전화번호를 입력하세요" oninput="formatPhoneNumber(this)">
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="birthDay" class="form-label">생년월일</label>
-                                <input type="date" class="form-control" id="birthDay" th:field="*{birthDay}">
-                            </div>
-
-                            <!-- 시술 종류 -->
-                            <div class="row mb-3">
-                                <label class="form-label">시술 내용</label>
-                                <div class="col-md-3">
-                                    <select class="form-control" id="parentTreatment" name="parentTreatment" onchange="updateChildTreatments()">
-                                        <option value="">시술 내용 선택</option>
-                                        <div th:each="treatment : ${parent}">
-                                            <option th:data-id="${treatment.id}" th:value="${treatment.name}" th:text="${treatment.name}" th:selected="${treatment.name == postUpdateForm.parentTreatment}"></option>
-                                        </div>
-                                    </select>
-                                </div>
-                                <div class="col-md-4">
-                                    <select class="form-control" id="childTreatment" onchange="updateInputField()">
-                                        <option value="">세부 내용 선택</option>
-                                        <!-- 하위 카테고리 옵션이 동적으로 추가될 것입니다. -->
-                                    </select>
-                                    <div style="display: none" id="compare" th:text="*{childTreatment}"></div>
-                                </div>
-                                <div class="col-md-4">
-                                    <input class="form-control" type="text" id="directInput" name="childTreatment" th:value="*{childTreatment}">
-                                </div>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="treatmentDate" class="form-label">시술 날짜</label>
-                                <input type="date" class="form-control" id="treatmentDate" name="treatmentDate"
-                                       th:field="*{treatmentDate}">
-                            </div>
-
-                            <div class="mb-4">
-                                <label for="visitPath" class="form-label">방문 경로</label>
-                                <select class="form-control" id="visitPath"
-                                        onchange="toggleInputField(this)" th:field="*{visitPath}" required>
-                                    <option value="">방문 경로 선택</option>
-                                    <div th:each="visit : ${postUpdateForm.visitPath}">
-                                        <option th:data-id="${visit}" th:value="${visit}" th:text="${visit}"></option>
+                            <div class="card-body">
+                                <form th:object="${post}" method="post" enctype="multipart/form-data">
+                                    <input type="hidden" th:field="*{id}"/>
+                                    <div class="mb-3">
+                                        <label for="name" class="form-label">이름</label>
+                                        <input class="form-control" id="name" type="text" th:field="*{user.name}" readonly />
                                     </div>
-                                </select>
-                            </div>
+                                    <div class="mb-3">
+                                        <label for="phone" class="form-label">전화번호</label>
+                                        <input class="form-control" id="phone"  type="text" th:field="*{user.phone}" oninput="formatPhoneNumber(this)" readonly />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="birthDay" class="form-label">생년월일</label>
+                                        <input class="form-control" id="birthDay" type="date" th:field="*{user.birthDay}" readonly />
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-4">
+                                            <label for="parentTreatment" class="form-label">시술 내용</label>
+                                            <select class="form-select" id="parentTreatment" name="parentTreatment" onchange="updateChildTreatments(this.value)">
+                                                <option value="" selected>시술내용 선택</option>
+                                                <th:block th:each="treatment : ${treatments}">
+                                                    <option th:value="${treatment.treatmentId}" th:text="${treatment.name}" th:selected="${treatment.treatmentId == post.parentTreatment}"></option>
+                                                </th:block>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="childTreatment" class="form-label">세부 내용</label>
+                                            <select class="form-select" id="childTreatment" onchange="updateInputField()">
+                                                <option value="">세부내용 선택</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input type="hidden" id="directInput" name="childTreatment" th:value="*{childTreatment}" />
+                                            <label class="form-label">　</label>
+                                            <input class="form-control" type="text" id="childView" readonly />
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="treatmentDate" class="form-label">시술 날짜</label>
+                                        <input class="form-control" id="treatmentDate" name="treatmentDate" type="datetime-local" th:value="${#temporals.format(post.treatmentDate, 'yyyy-MM-dd HH:mm')}" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="visitPath" class="form-label">방문 경로</label>
+                                        <select class="form-select" id="visitPath" name="visitPath">
+                                            <option value="" selected>방문 경로 선택</option>
+                                            <th:block th:each="visit : ${visits}">
+                                                <option th:value="${visit.id}" th:text="${visit.visitPath}" th:selected="${visit.id == post.visitPath}"></option>
+                                            </th:block>
+                                        </select>
+                                    </div>
 
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <label class="form-label">Before</label>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label">Atfer</label>
-                                </div>
-                            </div>
-                            <div class="row mb-5">
-                                <div class="col-md-6">
-                                    <img class="col-md-6"
-                                         th:src="@{|http://hhjnn92.synology.me/autumnBrow/*{beforeImageUrl}|}">
-                                </div>
-                                <div class="col-md-6">
-                                    <img class="col-md-6"
-                                         th:src="@{|http://hhjnn92.synology.me/autumnBrow/*{afterImageUrl}|}">
-                                </div>
-                            </div>
-                            <div class="row mb-5">
-                                <div class="col-md-6">
-                                    <label for="beforeImage" class="form-label">Before사진 변경하기</label>
-                                    <input type="file" class="form-control" id="beforeImage"
-                                           accept="image/*">
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="afterImage" class="form-label">After사진 변경하기</label>
-                                    <input type="file" class="form-control" id="afterImage"
-                                           accept="image/*">
-                                </div>
-                            </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="beforeImageFile" class="form-label">시술 전 사진</label>
+                                            <div class="mb-3">
+                                                <img id="beforeImagePreview" th:src="@{|http://hhjnn92.synology.me/autumnBrow/*{beforeImageUrl}|}" style="max-width: 200px; max-height: 200px; cursor: pointer;" onclick="openImageInNewWindow(this.src)" />
+                                            </div>
+                                            <input class="form-control" id="beforeImageFile" name="beforeImageFile" type="file" accept="image/*" onchange="previewImage(event, 'beforeImagePreview')" />
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="afterImageFile" class="form-label">시술 후 사진</label>
+                                            <div class="mb-3">
+                                                <img id="afterImagePreview" th:src="@{|http://hhjnn92.synology.me/autumnBrow/*{afterImageUrl}|}" style="max-width: 200px; max-height: 200px; cursor: pointer;" onclick="openImageInNewWindow(this.src)" />
+                                            </div>
+                                            <input class="form-control" id="afterImageFile" name="afterImageFile" type="file" accept="image/*" onchange="previewImage(event, 'afterImagePreview')" />
+                                        </div>
+                                    </div>
 
+                                    <!--                                    <div class="mb-3">
+                                                                            <label for="beforeImageFile" class="form-label">시술 전 사진</label>
+                                                                            <img id="beforeImagePreview" th:src="@{|http://hhjnn92.synology.me/autumnBrow/*{beforeImageUrl}|}" style="max-width: 200px; max-height: 200px; cursor: pointer;" onclick="openImageInNewWindow(this.src)" />
+                                                                            <input class="form-control" id="beforeImageFile" name="beforeImageFile" type="file" accept="image/*" onchange="previewImage(event, 'beforeImagePreview')" />
+                                                                        </div>
+                                                                        <div class="mb-4">
+                                                                            <label for="afterImageFile" class="form-label">시술 후 사진</label>
+                                                                            <img id="afterImagePreview" th:src="@{|http://hhjnn92.synology.me/autumnBrow/*{afterImageUrl}|}" style="max-width: 200px; max-height: 200px; cursor: pointer;" onclick="openImageInNewWindow(this.src)" />
+                                                                            <input class="form-control" id="afterImageFile" name="afterImageFile" type="file" accept="image/*" onchange="previewImage(event, 'afterImagePreview')" />
+                                                                        </div>-->
 
-                            <div class="mb-4">
-                                <label class="form-label">리터치 여부</label>
-                                <span>　</span>
-                                <input type="checkbox" id="retouch" name="retouch"
-                                       th:checked="*{retouch == true}" style="transform: scale(1.5);">
+                                    <div class="mb-4">
+                                        <label for="retouch" class="form-label">리터치 여부</label>
+                                        <input id="retouch" name="retouch" type="checkbox" th:checked="*{retouch == true}" style="transform: scale(1.5);" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="retouchDate" class="form-label">리터치 날짜</label>
+                                        <input class="form-control" id="retouchDate" name="retouchDate" type="date" th:field="*{retouchDate}" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="info" class="form-label">비고</label>
+                                        <input class="form-control" id="info" name="info" type="text" placeholder="비고사항" th:field="*{info}" />
+                                    </div>
+                                    <button type="submit" class="btn btn-success btn-block">저장</button>
+                                    <button type="button" class="btn btn-secondary btn-block" onclick="window.location.href='/post/list'" >취소</button>
+                                    <button type="button" class="btn btn-danger btn-block" th:value="${post.id}" onclick="postDelete(this.value)" >삭제</button>
+                                </form>
                             </div>
-
-                            <div class="mb-3">
-                                <label for="retouchDate" class="form-label">리터치날짜</label>
-                                <input type="date" class="form-control" id="retouchDate" name="retouchDate"
-                                       th:field="*{retouchDate}">
-                            </div>
-
-                            <div class="mb-4">
-                                <label for="info" class="form-label">비고</label>
-                                <textarea class="form-control" id="info" name="info" th:field="*{info}"
-                                          placeholder="비고를 입력하세요"></textarea>
-                            </div>
-
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <a type="button" href="/post/list" class="btn btn-secondary w-100">취소</a>
-                                </div>
-                                <div class="col-md-6">
-                                    <button type="submit" class="btn btn-primary w-100">저장</button>
-                                </div>
-                            </div>
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
-            <!-- /.container-fluid -->
+        </main>
+        <!-- 메인화면 끝 -->
 
-        </div>
-        <!-- End of Main Content -->
-
-        <!-- Footer -->
-        <footer class="sticky-footer bg-white">
-            <div class="container my-auto">
-                <div class="copyright text-center my-auto">
-                    <span>Copyright &copy; Your Website 2021</span>
-                </div>
-            </div>
-        </footer>
-        <!-- End of Footer -->
+        <!-- footer -->
+        <div th:insert="~{/footer.html}"></div>
 
     </div>
-    <!-- End of Content Wrapper -->
-
 </div>
-<!-- End of Page Wrapper -->
 
-<!-- Scroll to Top Button-->
-<a class="scroll-to-top rounded" href="#page-top">
-    <i class="fas fa-angle-up"></i>
-</a>
-
-<!-- Logout Modal-->
-<div th:insert="~{/logout.html}"></div>
-
-<!-- Bootstrap core JavaScript-->
-<script src="/js/jquery.min.js"></script>
-<script src="/js/bootstrap.bundle.min.js"></script>
-
-<!-- Core plugin JavaScript-->
-<script src="/js/jquery.easing.min.js"></script>
-
-<!-- Custom scripts for all pages-->
-<script src="/js/sb-admin-2.min.js"></script>
-
-<!-- Page level plugins -->
-<script src="/js/Chart.min.js"></script>
-
-<!-- Page level custom scripts -->
-<script src="/js/chart-area-demo.js"></script>
-<script src="/js/chart-pie-demo.js"></script>
-
-<script th:if="${param.loginFailed}">
-    alert("로그인에 실패했습니다. 아이디와 비밀번호를 확인해주세요.");
-</script>
 
 <script>
-    function updateChildTreatments() {
-        const parentSelect = document.getElementById('parentTreatment');
-        console.log("1111111111"+ parentSelect);
+    function updateChildTreatments(value) {
         const childSelect = document.getElementById('childTreatment');
-        console.log("2222222222"+ childSelect);
 
-        // 기존 옵션 삭제
         childSelect.innerHTML = '<option value="">세부 내용 선택</option>';
 
-        // 선택된 부모 시술 ID 가져오기
-        const selectedOption = parentSelect.options[parentSelect.selectedIndex];
-        const selectedParentId = selectedOption.getAttribute('data-id');
+        const directInput = document.getElementById('directInput').value;
 
-        const childTreatment = document.getElementById('compare').textContent; // 값이 없으면 빈 문자열
-        console.log("값"+childTreatment);
-
-        if (selectedParentId) {
-            // AJAX 요청을 통해 하위 시술 가져오기
-            fetch(`/find/child/${selectedParentId}`)
+        if (value) {
+            fetch(`/find/child/${value}`)
                 .then(response => response.json())
                 .then(data => {
                     data.forEach(child => {
                         const option = document.createElement('option');
-                        option.value = child.name; // child.id 설정
+                        option.value = child.treatmentId;
                         option.textContent = child.name; // child.name 설정
-                        option.selected = child.name === childTreatment;
+                        if (option.value === directInput) {
+                            option.selected = true;
+
+                            // 여기서만 childView를 업데이트
+                            const childView = document.getElementById('childView');
+                            childView.value = child.name;
+                        }
                         childSelect.appendChild(option);
                     });
                 })
-                .catch(error => console.error('Error fetching child treatments:', error));
+                .catch(error => console.error('Error', error));
         }
     }
+
 
     function updateInputField() {
         const childSelect = document.getElementById('childTreatment');
         const directInput = document.getElementById('directInput');
+        const childView = document.getElementById('childView');
 
-        // 선택한 하위 시술의 name 값을 input 필드에 설정
         directInput.value = childSelect.value;
-        // placeholder를 선택한 하위 시술의 name으로 설정
-        directInput.placeholder = "직접 입력하세요.";
+        childView.value = childSelect.options[childSelect.selectedIndex].textContent;
+    }
+
+
+    window.onload = function () {
+        const selectedParentId = document.getElementById('parentTreatment').value;
+        if (selectedParentId) {
+            updateChildTreatments(selectedParentId);
+        }
+    };
+
+    function previewImage(event, previewId) {
+        const fileInput = event.target;
+        const previewImg = document.getElementById(previewId);
+
+        if (fileInput.files && fileInput.files[0]) {
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                previewImg.src = e.target.result;
+            }
+
+            reader.readAsDataURL(fileInput.files[0]);
+        }
+    }
+
+    function openImageInNewWindow(imageSrc) {
+        window.open(imageSrc, '_blank', 'toolbar=no,scrollbars=yes,resizable=yes,width=800,height=600');
+    }
+
+    function postDelete(postId){
+        const url = `/post/${postId}/delete`;
+
+        fetch(url,{
+            method: 'POST'
+        })
+            .then(response => {
+                window.location.href = '/post/list';
+            })
+    }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+        crossorigin="anonymous"></script>
+<script src="/js/scripts.js"></script>
+<script>
+    function formatPhoneNumber(input) {
+        let value = input.value.replace(/\D/g, '');
+        if (value.length > 3 && value.length <= 7) {
+            value = value.replace(/(\d{3})(\d{0,4})/, '$1-$2');
+        } else if (value.length > 7) {
+            value = value.replace(/(\d{3})(\d{4})(\d{0,4})/, '$1-$2-$3');
+        }
+        input.value = value;
     }
 </script>
 </body>

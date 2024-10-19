@@ -10,7 +10,7 @@ import java.util.Optional;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
 
-    List<Post> findByIsDeleted(String isDeleted);
+    List<Post> findByIsDeletedOrderByTreatmentDateDesc(String isDeleted);
 
     Optional<Post> findById(Long postId); // ID로 사용자 조회
 

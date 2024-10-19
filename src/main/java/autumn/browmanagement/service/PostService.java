@@ -1,17 +1,19 @@
 package autumn.browmanagement.service;
 
 import autumn.browmanagement.config.EncryptionUtil;
+import autumn.browmanagement.config.FtpUtil;
 import autumn.browmanagement.controller.PostForm;
 import autumn.browmanagement.domain.*;
 import autumn.browmanagement.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.io.File;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Service
 @Transactional(readOnly = true)
@@ -23,8 +25,104 @@ public class PostService {
     private final RoleRepository roleRepository;
     private final TreatmentRepository treatmentRepository;
     private final VisitRepository visitRepository;
+    private final FtpUtil ftpUtil;
 
 
+    /* ------------- 시술내역 등록 메소드 ------------- */
+    public void handleFileUpload(PostForm postForm) throws IOException {
+        ftpUtil.connect(); // FTP 연결
+
+        try {
+            uploadFile(postForm.getBeforeImageFile(), postForm, true);
+            uploadFile(postForm.getAfterImageFile(), postForm, false);
+        } finally {
+            ftpUtil.disconnect(); // FTP 연결 종료
+        }
+    }
+
+    private void uploadFile(MultipartFile file, PostForm postForm, boolean isBefore) throws IOException {
+        if (file != null && !file.isEmpty()) {
+            String originalFilename = file.getOriginalFilename();
+            String fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
+            String uniqueFileName = UUID.randomUUID().toString() + fileExtension;
+            File localFile = new File(System.getProperty("java.io.tmpdir") + "/" + uniqueFileName);
+            file.transferTo(localFile);
+            ftpUtil.uploadFile("/autumnBrow/" + uniqueFileName, localFile);
+
+            if (isBefore) {
+                postForm.setBeforeImageUrl(uniqueFileName); // 비포 URL 설정
+            } else {
+                postForm.setAfterImageUrl(uniqueFileName); // 애프터 URL 설정
+            }
+            localFile.delete(); // 임시 파일 삭제
+        }
+    }
+
+    @Transactional
+    public void createPost(PostForm postForm) throws Exception {
+        Post post = new Post();
+
+        String encryptedPhone = EncryptionUtil.encrypt(postForm.getPhone());
+        Optional<User> findUser = userRepository.findByNameAndPhone(postForm.getName(), encryptedPhone);
+
+        User user;
+        if (findUser.isPresent()) {
+            user = findUser.get(); // 기존 사용자
+            user.setTreatmentCount(user.getTreatmentCount() + 1L); // treatmentCount 1 증가
+        } else {
+            user = createUser(postForm, encryptedPhone); // 새로운 사용자 생성
+        }
+
+        // Post 정보 설정
+        setPostDetails(post, postForm, user);
+        postRepository.save(post); // Post 저장
+    }
+
+    private User createUser(PostForm postForm, String encryptedPhone) {
+        User user = new User();
+        user.setName(postForm.getName());
+        user.setPhone(encryptedPhone);
+        user.setBirthDay(Optional.ofNullable(postForm.getBirthDay()).orElse(new Date()));
+        Role role = roleRepository.findById(2L)
+                .orElseThrow(() -> new IllegalArgumentException("Role ID 2 not found"));
+        user.setRole(role);
+        user.setTreatmentCount(1L);
+        user.setFirstVisitDate(new Date());
+
+        return userRepository.save(user); // 새로운 사용자 저장
+    }
+
+    private void setPostDetails(Post post, PostForm postForm, User user) {
+        post.setVisitPath(postForm.getVisitPath());
+        post.setParentTreatment(postForm.getParentTreatment());
+        post.setChildTreatment(postForm.getChildTreatment());
+        post.setTreatmentDate(Optional.ofNullable(postForm.getTreatmentDate()).orElse(LocalDateTime.now()));
+        post.setBeforeImageUrl(postForm.getBeforeImageUrl());
+        post.setAfterImageUrl(postForm.getAfterImageUrl());
+        post.setInfo(postForm.getInfo());
+        post.setIsDeleted("N");
+        post.setUser(user);
+    }
+    /* 시술내역 등록 메소드 종료 */
+
+
+    // 시술내역 삭제
+    @Transactional
+    public String deletePost(Long postId){
+        Post post = postRepository.findById(postId).orElse(null);
+
+        if (post != null) {
+            // isDeleted 값을 "Y"로 변경
+            post.setIsDeleted("Y");
+            // 포스트 업데이트
+            postRepository.save(post);
+            return null;
+        }
+        return null;
+    }
+
+
+    /*
     // 시술내역 등록
     @Transactional
     public void createPost(PostForm postForm) throws Exception {
@@ -76,12 +174,12 @@ public class PostService {
 
         postRepository.save(post);
     }
-
+*/
 
     // 시술내역 조회
     @Transactional
     public List<PostForm> findAll(String isDeleted) {
-        List<Post> posts = postRepository.findByIsDeleted(isDeleted); // 모든 게시물 조회
+        List<Post> posts = postRepository.findByIsDeletedOrderByTreatmentDateDesc(isDeleted); // 모든 게시물 조회
         List<PostForm> postForms = new ArrayList<>();
 
         for (Post post : posts) {
@@ -154,8 +252,8 @@ public class PostService {
     // 게시물 수정
     @Transactional
     public void updatePost(Long id, Long parentTreatment, Long childTreatment,
-                           Date treatmentDate, Long visitPath, String retouch,
-                           Date retouchDate, String info) {
+                           LocalDateTime treatmentDate, Long visitPath, String retouch,
+                           Date retouchDate, String info, String beforeImageFile, String afterImageFile) {
         //String beforeImageUrl, String afterImageUrl,
 
         Post post = postRepository.findById(id)
@@ -166,8 +264,19 @@ public class PostService {
         post.setChildTreatment(childTreatment);
         post.setTreatmentDate(treatmentDate);
         post.setVisitPath(visitPath);
-//        post.setBeforeImageUrl(beforeImageUrl);
-//        post.setAfterImageUrl(afterImageUrl);
+
+        if (beforeImageFile != null){
+            post.setBeforeImageUrl(beforeImageFile);
+        }else {
+            post.setBeforeImageUrl(post.getBeforeImageUrl());
+        }
+
+        if(afterImageFile != null){
+            post.setAfterImageUrl(afterImageFile);
+        }else {
+            post.setAfterImageUrl(post.getAfterImageUrl());
+        }
+
         post.setRetouch(Boolean.valueOf(retouch));
         post.setRetouchDate(retouchDate);
         post.setInfo(info);

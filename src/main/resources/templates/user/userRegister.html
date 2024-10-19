@@ -7,12 +7,22 @@
     <meta name="description" content=""/>
     <meta name="author" content=""/>
     <title>회원가입</title>
-    <link href="/test/css/styles.css" rel="stylesheet"/>
+    <link href="/css/styles.css" rel="stylesheet"/>
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
 </head>
-<body>
-<div id="layoutAuthentication">
-    <div id="layoutAuthentication_content">
+<body class="sb-nav-fixed">
+
+<!-- header -->
+<div th:insert="~{/header.html}"></div>
+
+<div id="layoutSidenav">
+
+    <!-- sidebar -->
+    <div th:insert="~{/sidebar.html}"></div>
+
+    <div id="layoutSidenav_content">
+
+        <!-- 메인화면 -->
         <main>
             <div class="container">
                 <div class="row justify-content-center">
@@ -21,7 +31,7 @@
                             <div class="card-header"><h3 class="text-center font-weight-light my-4">회원가입</h3>
                             </div>
                             <div class="card-body">
-                                <form action="/test/user/register" method="post">
+                                <form action="/user/register" method="post">
                                     <div class="mb-3">
                                         <label for="name" class="form-label">이름</label>
                                         <input class="form-control" id="name" name="name" type="text" placeholder="이름을 입력하세요." required/>
@@ -42,27 +52,24 @@
                                 </form>
                             </div>
                             <div class="card-footer text-center py-3">
-                                <div class="small"><a href="/test/user/login">아이디가 있신가요? 로그인하러 가기</a></div>
+                                <div class="small">가입하신 아이디가 있으신가요? <a class="text-decoration-none" href="/user/login"> 로그인하러 가기</a></div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </main>
-    </div>
-    <div id="layoutAuthentication_footer">
-        <footer class="py-4 bg-light mt-auto">
-            <div class="container-fluid px-4">
-                <div class="d-flex align-items-center justify-content-between small">
-                    <div class="text-muted">Copyright &copy; AutumnBrow</div>
-                </div>
-            </div>
-        </footer>
+        <!-- 메인화면 끝 -->
+
+        <!-- footer -->
+        <div th:insert="~{/footer.html}"></div>
+
     </div>
 </div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
         crossorigin="anonymous"></script>
-<script src="/test/js/scripts.js"></script>
+<script src="/js/scripts.js"></script>
 <script>
     function formatPhoneNumber(input) {
         let value = input.value.replace(/\D/g, '');
