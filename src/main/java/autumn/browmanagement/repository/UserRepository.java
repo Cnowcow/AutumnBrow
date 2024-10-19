@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByNameAndPhone(String name, String phone);
 
-    List<User> findByRoleIdOrderByIdDesc(Long roleId);
+    List<User> findByRoleIdAndIsDeletedOrderByIdDesc(Long roleId, String isDeleted);
 
     Optional<User> findById(Long userId); // ID로 사용자 조회
 

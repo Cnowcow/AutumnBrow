@@ -92,7 +92,7 @@ public class UserController {
     // 회원목록
     @GetMapping("/user/list")
     public String List(Model model){
-        List<UserForm> userForms = userService.findAll(2L);
+        List<UserForm> userForms = userService.findAll(2L, "N");
         model.addAttribute("users", userForms);
 
         return "user/userList";
@@ -114,6 +114,14 @@ public class UserController {
     public String updateUser(@PathVariable Long id, @ModelAttribute("user") UserForm form) throws Exception {
         userService.updateUser(id, form.getName(), form.getPhone(), form.getBirthDay(), form.getFirstVisitDate());
         return "redirect:/user/list";
+    }
+
+
+    // 사용자 삭제 요청
+    @PostMapping("/user/{userId}/delete")
+    public String deletePost(@PathVariable Long userId, Model model){
+
+        return userService.deletePost(userId);
     }
 
     /*

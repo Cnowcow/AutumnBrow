@@ -3,6 +3,7 @@ package autumn.browmanagement.service;
 
 import autumn.browmanagement.config.EncryptionUtil;
 import autumn.browmanagement.controller.UserForm;
+import autumn.browmanagement.domain.Post;
 import autumn.browmanagement.domain.User;
 import autumn.browmanagement.repository.UserRepository;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +38,7 @@ public class UserService {
         user.setBirthDay(birthDay);
         user.setTreatmentCount(0L);
         user.setFirstVisitDate(new Date());
+        user.setIsDeleted("N");
 
         // 중복 회원 검증
         validateDuplicateMember(user);
@@ -66,8 +68,8 @@ public class UserService {
 
 
     // 회원 목록
-    public List<UserForm> findAll(Long RoleId) {
-        List<User> users = userRepository.findByRoleIdOrderByIdDesc(RoleId);
+    public List<UserForm> findAll(Long RoleId, String isDeleted) {
+        List<User> users = userRepository.findByRoleIdAndIsDeletedOrderByIdDesc(RoleId, isDeleted);
         List<UserForm> userForms = new ArrayList<>();
 
         for(User user : users){
@@ -124,6 +126,21 @@ public class UserService {
         userRepository.save(user);
     }
 
+
+    // 회원 삭제
+    @Transactional
+    public String deletePost(Long postId){
+        User user = userRepository.findById(postId).orElse(null);
+
+        if (user != null) {
+            // isDeleted 값을 "Y"로 변경
+            user.setIsDeleted("Y");
+            // 포스트 업데이트
+            userRepository.save(user);
+            return null;
+        }
+        return null;
+    }
 
     /*
     // 로그인 요청

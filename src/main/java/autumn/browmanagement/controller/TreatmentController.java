@@ -19,17 +19,28 @@ public class TreatmentController {
     private final TreatmentService treatmentService;
 
 
+    // 세부내용 불러오기
     @GetMapping("/find/child/{parentId}")
     @ResponseBody
     public List<TreatmentForm> getChildTreatments(@PathVariable Long parentId) {
         List<TreatmentForm> childTreatments = treatmentService.findChildTreatments(parentId);
-        return childTreatments;  // parentId가 1인 세부시술
+        return childTreatments;
     }
 
+
+    // 직접입력된 시술내용 추가
     @PostMapping("/treatment/creat")
     public String creatTreatment(String name, Model model){
 
         return "redirect:/treatment/list";
     }
+
+    // 시술내용 추가 페이지
+    @GetMapping("/treatment/add")
+    public String treatmentAdd(){
+
+        return "/treatment/treatmentAdd";
+    }
+
 
 }

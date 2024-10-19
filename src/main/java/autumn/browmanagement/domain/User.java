@@ -35,6 +35,9 @@ public class User {
     @Column(name = "treatmentCount", nullable = false)
     private Long treatmentCount;
 
+    // 삭제여부
+    private String isDeleted;
+
 
     @ManyToOne // 각 사용자는 하나의 역할만 가질 수 있다.
     @JoinColumn(name = "role_id")

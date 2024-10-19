@@ -59,12 +59,9 @@
                                             <button type="submit" class="btn btn-primary btn-block">저장</button>
                                             <button type="button" class="btn btn-secondary btn-block" onclick="window.location.href='/user/list'" >취소</button>
                                         </div>
-                                            <a class="btn btn-danger">삭제</a>
+                                            <button type="button" class="btn btn-danger" th:value="${user.id}" onclick="userDelete(this.value)">휴지통</button>
                                     </div>
                                 </form>
-                            </div>
-                            <div class="card-footer text-center py-3">
-                                <div class="small"><a href="/user/login">아이디가 있신가요? 로그인하러 가기</a></div>
                             </div>
                         </div>
                     </div>
@@ -83,6 +80,18 @@
         crossorigin="anonymous"></script>
 <script src="/js/scripts.js"></script>
 <script>
+
+    function userDelete(userId){
+        const url = `/user/${userId}/delete`;
+
+        fetch(url,{
+            method: 'POST'
+        })
+            .then(response => {
+                window.location.href = '/user/list';
+            })
+    }
+
     function formatPhoneNumber(input) {
         let value = input.value.replace(/\D/g, '');
         if (value.length > 3 && value.length <= 7) {
