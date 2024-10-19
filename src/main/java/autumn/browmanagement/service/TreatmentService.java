@@ -39,4 +39,19 @@ public class TreatmentService {
     }
 
 
+    @Transactional
+    // 직접입력된 시술 추가
+    public Treatment createTreatment(TreatmentForm treatmentForm) {
+        Treatment treatment = new Treatment();
+        treatment.setName(treatmentForm.getName());
+        treatment.setDepth(1L);
+
+        if (treatmentForm.getParentId() != null) {
+            Treatment parentTreatment = new Treatment();
+            parentTreatment.setTreatmentId(treatmentForm.getParentId());
+            treatment.setParent(parentTreatment);
+        }
+
+        return treatmentRepository.save(treatment);
+    }
 }

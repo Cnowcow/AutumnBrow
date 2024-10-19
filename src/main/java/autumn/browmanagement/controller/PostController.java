@@ -10,6 +10,7 @@ import autumn.browmanagement.service.PostService;
 import autumn.browmanagement.service.TreatmentService;
 import autumn.browmanagement.service.VisitServce;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,6 +33,7 @@ public class PostController {
     private final VisitServce visitServce;
 
 
+
     // 시술내역 등록 폼
     @GetMapping("/post/create")
     public String createForm(Model model){
@@ -51,7 +53,19 @@ public class PostController {
         try {
             // 서비스에 파일 처리 및 업로드 요청
             postService.handleFileUpload(postForm);
-            postService.createPost(postForm); // Post 생성
+
+            Treatment createdTreatment = null;
+            if (postForm.getParentTreatment() != null && postForm.getParentTreatment().equals(3L)) {
+                System.out.println("아아아아ㅏ아아아");
+                System.out.println("직접입력한 값 :"+postForm.getChildView());
+                TreatmentForm treatmentForm = new TreatmentForm();
+                treatmentForm.setName(postForm.getChildView()); // 직접 입력한 값
+                treatmentForm.setParentId(postForm.getParentTreatment()); // 부모 ID 설정
+
+                createdTreatment = treatmentService.createTreatment(treatmentForm);
+            }
+
+            postService.createPost(postForm, createdTreatment); // Post 생성
 
         } catch (IOException e) {
             e.printStackTrace();

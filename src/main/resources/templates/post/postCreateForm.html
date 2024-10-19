@@ -68,13 +68,13 @@
                                         <div class="col-md-4">
                                             <label for="childTreatment" class="form-label">세부 내용</label>
                                             <select class="form-select" id="childTreatment" onchange="updateInputField()">
-                                                <option value="">세부내용 선택</option>
+                                                <option value="">세부 내용 선택</option>
                                             </select>
                                         </div>
                                         <div class="col-md-4">
                                             <input type="hidden" id="directInput" name="childTreatment" />
                                             <label class="form-label">　</label>
-                                            <input class="form-control" type="text" id="childView" />
+                                            <input class="form-control" type="text" id="childView" name="childView" readonly/>
                                         </div>
                                     </div>
 
@@ -128,12 +128,12 @@
         function updateChildTreatments() {
             const parentSelect = document.getElementById('parentTreatment');
             const childSelect = document.getElementById('childTreatment');
-
             childSelect.innerHTML = '<option value="">세부 내용 선택</option>';
 
             const selectedOption = parentSelect.options[parentSelect.selectedIndex];
             const selectedParentId = selectedOption.value;
             console.log("value" + selectedParentId);
+
 
             if (selectedParentId){
                 fetch(`/find/child/${selectedParentId}`)
@@ -144,6 +144,16 @@
                             option.value = child.treatmentId;
                             option.textContent = child.name; // child.name 설정
                             childSelect.appendChild(option);
+
+                            if(parentSelect.value === "3"){
+
+                                console.log("직접입력");
+                                childSelect.innerHTML = '<option value="">직접입력</option>';
+                                document.getElementById("childView").readOnly = false;  // 입력 필드 활성화
+                                document.getElementById("childView").value = '';
+                                document.getElementById("directInput").value = '';
+                            }
+
                         });
                     })
                     .catch(error => console.error('Error', error));

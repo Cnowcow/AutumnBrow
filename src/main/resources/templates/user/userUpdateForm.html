@@ -54,11 +54,12 @@
                                         <label for="treatmentCount" class="form-label">시술 횟수</label>
                                         <span class="form-control" id="treatmentCount" th:text="*{treatmentCount}" type="text" disabled></span>
                                     </div>
-                                    <div class="mt-4 mb-0">
-                                        <div class="d-grid">
+                                    <div class="mt-4 d-flex justify-content-between">
+                                        <div>
                                             <button type="submit" class="btn btn-primary btn-block">저장</button>
-                                            <button type="button" class="btn btn-danger btn-block" onclick="window.location.href='/user/list'" >취소</button>
+                                            <button type="button" class="btn btn-secondary btn-block" onclick="window.location.href='/user/list'" >취소</button>
                                         </div>
+                                            <a class="btn btn-danger">삭제</a>
                                     </div>
                                 </form>
                             </div>

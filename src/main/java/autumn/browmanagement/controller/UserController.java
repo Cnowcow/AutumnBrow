@@ -5,6 +5,7 @@ import autumn.browmanagement.service.UserService;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -43,14 +44,16 @@ public class UserController {
             model.addAttribute("errorMessage", e.getMessage());
             return "user/userRegister";
         }
-        return "indexx";
+
+        return "index";
     }
 
 
     // 로그인 페이지
     @GetMapping("/user/login")
-    public String LoginForm() {
+    public String LoginForm(Model model) {
         System.out.println("로그인 페이지");
+
         return "user/userLogin";
     }
 
@@ -68,7 +71,7 @@ public class UserController {
             session.setAttribute("user", user);
             model.addAttribute("userInfo", user);
             System.out.println("로그인 성공" +name+" "+phone);
-            return "index";
+            return "redirect:/";
         } else {
             System.out.println("로그인 실패"+name+" "+phone);
             return "redirect:/user/login?loginFailed=true";
@@ -78,10 +81,11 @@ public class UserController {
 
     // 로그아웃
     @GetMapping("/user/logout")
-    public String Logout(HttpSession session){
+    public String Logout(Model model, HttpSession session){
         session.invalidate();
         System.out.println("로그아웃");
-        return "index";
+
+        return "redirect:/";
     }
 
 

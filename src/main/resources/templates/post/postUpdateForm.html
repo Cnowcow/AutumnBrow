@@ -98,17 +98,6 @@
                                         </div>
                                     </div>
 
-                                    <!--                                    <div class="mb-3">
-                                                                            <label for="beforeImageFile" class="form-label">시술 전 사진</label>
-                                                                            <img id="beforeImagePreview" th:src="@{|http://hhjnn92.synology.me/autumnBrow/*{beforeImageUrl}|}" style="max-width: 200px; max-height: 200px; cursor: pointer;" onclick="openImageInNewWindow(this.src)" />
-                                                                            <input class="form-control" id="beforeImageFile" name="beforeImageFile" type="file" accept="image/*" onchange="previewImage(event, 'beforeImagePreview')" />
-                                                                        </div>
-                                                                        <div class="mb-4">
-                                                                            <label for="afterImageFile" class="form-label">시술 후 사진</label>
-                                                                            <img id="afterImagePreview" th:src="@{|http://hhjnn92.synology.me/autumnBrow/*{afterImageUrl}|}" style="max-width: 200px; max-height: 200px; cursor: pointer;" onclick="openImageInNewWindow(this.src)" />
-                                                                            <input class="form-control" id="afterImageFile" name="afterImageFile" type="file" accept="image/*" onchange="previewImage(event, 'afterImagePreview')" />
-                                                                        </div>-->
-
                                     <div class="mb-4">
                                         <label for="retouch" class="form-label">리터치 여부</label>
                                         <input id="retouch" name="retouch" type="checkbox" th:checked="*{retouch == true}" style="transform: scale(1.5);" />
@@ -121,9 +110,13 @@
                                         <label for="info" class="form-label">비고</label>
                                         <input class="form-control" id="info" name="info" type="text" placeholder="비고사항" th:field="*{info}" />
                                     </div>
-                                    <button type="submit" class="btn btn-success btn-block">저장</button>
-                                    <button type="button" class="btn btn-secondary btn-block" onclick="window.location.href='/post/list'" >취소</button>
-                                    <button type="button" class="btn btn-danger btn-block" th:value="${post.id}" onclick="postDelete(this.value)" >삭제</button>
+                                        <div class="d-flex justify-content-between">
+                                            <div>
+                                                <button type="submit" class="btn btn-primary">저장</button>
+                                                <button type="button" class="btn btn-secondary" onclick="window.location.href='/post/list'">취소</button>
+                                            </div>
+                                            <button type="button" class="btn btn-danger" th:value="${post.id}" onclick="postDelete(this.value)">삭제</button>
+                                        </div>
                                 </form>
                             </div>
                         </div>

@@ -59,7 +59,7 @@ public class PostService {
     }
 
     @Transactional
-    public void createPost(PostForm postForm) throws Exception {
+    public void createPost(PostForm postForm, Treatment createdTreatment) throws Exception {
         Post post = new Post();
 
         String encryptedPhone = EncryptionUtil.encrypt(postForm.getPhone());
@@ -75,6 +75,12 @@ public class PostService {
 
         // Post 정보 설정
         setPostDetails(post, postForm, user);
+
+        // Treatment ID 설정
+        if (createdTreatment != null) {
+            post.setChildTreatment(createdTreatment.getTreatmentId()); // 생성된 Treatment의 ID를 설정
+        }
+
         postRepository.save(post); // Post 저장
     }
 

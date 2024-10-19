@@ -38,6 +38,7 @@ public class PostForm {
     private String parentName;
     private Long childTreatment;
     private String childName;
+    private String childView;
 
     /* user Entity */
     // 사용자 id

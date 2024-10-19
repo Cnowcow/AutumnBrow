@@ -1,10 +1,13 @@
 package autumn.browmanagement.controller;
 
+import autumn.browmanagement.domain.Treatment;
 import autumn.browmanagement.service.TreatmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
@@ -23,5 +26,10 @@ public class TreatmentController {
         return childTreatments;  // parentId가 1인 세부시술
     }
 
+    @PostMapping("/treatment/creat")
+    public String creatTreatment(String name, Model model){
+
+        return "redirect:/treatment/list";
+    }
 
 }

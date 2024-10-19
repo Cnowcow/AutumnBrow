@@ -11,20 +11,10 @@
                     <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                     이벤트
                 </a>
-
-                <!-- 상위메뉴1 시작 -->
-                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#treatment" aria-expanded="false" aria-controls="collapseLayouts">
-                    <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
-                    시술
-                    <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                <a class="nav-link" href="#">
+                    <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                    후기
                 </a>
-                <div class="collapse" id="treatment" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
-                    <nav class="sb-sidenav-menu-nested nav">
-                        <a class="nav-link" href="/post/create">시술내역 등록</a>
-                        <a class="nav-link" href="/post/list">시술내역 보기</a>
-                    </nav>
-                </div>
-                <!-- 상위메뉴1 끝 -->
 
                 <!-- 상위메뉴1 시작 -->
                 <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#reservation" aria-expanded="false" aria-controls="collapseLayouts">
@@ -39,11 +29,6 @@
                     </nav>
                 </div>
                 <!-- 상위메뉴1 끝 -->
-
-                <a class="nav-link" href="/user/list">
-                    <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                    회원목록
-                </a>
 
                 <!-- 상위메뉴1 시작 -->
                 <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
@@ -60,35 +45,73 @@
                 <!-- 상위메뉴1 끝 -->
 
                 <!-- 상위메뉴2 시작 -->
-                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
+                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages2" aria-expanded="false" aria-controls="collapsePages2">
                     <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
-                    상위메뉴2
+                    관리자 메뉴
                     <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                 </a>
-                <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
-                    <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
-                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseAuth" aria-expanded="false" aria-controls="pagesCollapseAuth">
-                            1
+                <div class="collapse" id="collapsePages2" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
+                    <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages2">
+
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseAuth3" aria-expanded="false" aria-controls="pagesCollapseAuth3">
+                            시술내역
                             <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                         </a>
-                        <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
+
+                        <div class="collapse" id="pagesCollapseAuth3" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages2">
                             <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" href="#">1</a>
-                                <a class="nav-link" href="#">2</a>
-                                <a class="nav-link" href="#">3 </a>
+                                <a class="nav-link" href="/post/create">시술내역 등록</a>
+                                <a class="nav-link" href="/post/list">시술내역 관리</a>
                             </nav>
                         </div>
-                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseError" aria-expanded="false" aria-controls="pagesCollapseError">
-                            2
+
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseAuth4" aria-expanded="false" aria-controls="pagesCollapseAuth4">
+                            공지사항
                             <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                         </a>
-                        <div class="collapse" id="pagesCollapseError" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
+
+                        <div class="collapse" id="pagesCollapseAuth4" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages2">
                             <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" href="#">1</a>
-                                <a class="nav-link" href="#">2</a>
-                                <a class="nav-link" href="#">3 </a>
+                                <a class="nav-link" href="#">공지사항 등록</a>
+                                <a class="nav-link" href="#">공지사항 수정</a>
                             </nav>
                         </div>
+
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseAuth5" aria-expanded="false" aria-controls="pagesCollapseAuth5">
+                            이벤트
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+
+                        <div class="collapse" id="pagesCollapseAuth5" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages2">
+                            <nav class="sb-sidenav-menu-nested nav">
+                                <a class="nav-link" href="#">이벤트 등록</a>
+                                <a class="nav-link" href="#">이벤트 수정</a>
+                            </nav>
+                        </div>
+
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseAuth6" aria-expanded="false" aria-controls="pagesCollapseAuth6">
+                            주의사항
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+
+                        <div class="collapse" id="pagesCollapseAuth6" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages2">
+                            <nav class="sb-sidenav-menu-nested nav">
+                                <a class="nav-link" href="#">주의사항 등록</a>
+                                <a class="nav-link" href="#">주의사항 수정</a>
+                            </nav>
+                        </div>
+
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseAuth7" aria-expanded="false" aria-controls="pagesCollapseAuth7">
+                            회원
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+
+                        <div class="collapse" id="pagesCollapseAuth7" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages2">
+                            <nav class="sb-sidenav-menu-nested nav">
+                                <a class="nav-link" href="/user/list">회원 조회</a>
+                            </nav>
+                        </div>
+
                     </nav>
                 </div>
                 <!-- 상위메뉴2 끝 -->
