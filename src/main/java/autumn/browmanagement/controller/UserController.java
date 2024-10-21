@@ -1,11 +1,11 @@
 package autumn.browmanagement.controller;
 
+import autumn.browmanagement.DTO.UserDTO;
 import autumn.browmanagement.domain.User;
 import autumn.browmanagement.service.UserService;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -91,8 +91,8 @@ public class UserController {
     // 회원목록
     @GetMapping("/user/list")
     public String List(Model model){
-        List<UserForm> userForms = userService.findAll(2L, "N");
-        model.addAttribute("users", userForms);
+        List<UserDTO> userDTOS = userService.findAll(2L, "N");
+        model.addAttribute("users", userDTOS);
 
         return "user/userList";
     }
@@ -110,7 +110,7 @@ public class UserController {
 
     // 사용자 수정 요청
     @PostMapping("/user/{id}/edit")
-    public String updateUser(@PathVariable Long id, @ModelAttribute("user") UserForm form) throws Exception {
+    public String updateUser(@PathVariable Long id, @ModelAttribute("user") UserDTO form) throws Exception {
         userService.updateUser(id, form.getName(), form.getPhone(), form.getBirthDay(), form.getFirstVisitDate());
         return "redirect:/user/list";
     }

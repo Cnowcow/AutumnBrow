@@ -1,8 +1,8 @@
 
 package autumn.browmanagement.controller;
 
+import autumn.browmanagement.DTO.PostDTO;
 import autumn.browmanagement.DTO.TreatmentDTO;
-import autumn.browmanagement.config.FtpUtil;
 import autumn.browmanagement.domain.Post;
 import autumn.browmanagement.domain.Treatment;
 import autumn.browmanagement.domain.User;
@@ -18,12 +18,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.UUID;
 
 @Controller
 @RequiredArgsConstructor
@@ -50,21 +47,21 @@ public class PostController {
 
     // 시술내역 등록 요청
     @PostMapping("/post/create")
-    public String createPost(PostForm postForm, Model model) throws IOException {
+    public String createPost(PostDTO postDTO, Model model) throws IOException {
         try {
             // 서비스에 파일 처리 및 업로드 요청
-            postService.handleFileUpload(postForm);
+            postService.handleFileUpload(postDTO);
 
             Treatment createdTreatment = null;
-            if (postForm.getParentTreatment() != null && postForm.getParentTreatment().equals(1L)) {
+            if (postDTO.getParentTreatment() != null && postDTO.getParentTreatment().equals(1L)) {
                 TreatmentDTO treatmentDTO = new TreatmentDTO();
-                treatmentDTO.setName(postForm.getChildView()); // 직접 입력한 값
-                treatmentDTO.setParentId(postForm.getParentTreatment()); // 부모 ID 설정
+                treatmentDTO.setName(postDTO.getChildView()); // 직접 입력한 값
+                treatmentDTO.setParentId(postDTO.getParentTreatment()); // 부모 ID 설정
 
                 createdTreatment = treatmentService.createTreatment(treatmentDTO);
             }
 
-            postService.createPost(postForm, createdTreatment); // Post 생성
+            postService.createPost(postDTO, createdTreatment); // Post 생성
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -89,8 +86,8 @@ public class PostController {
     // 시술내역 조회
     @GetMapping("/post/list")
     public String list(Model model){
-        List<PostForm> postForms = postService.findAll("N"); // 모든 게시물 조회
-        model.addAttribute("posts", postForms); // 모델에 게시물 목록 추가
+        List<PostDTO> postDTOS = postService.findAll("N"); // 모든 게시물 조회
+        model.addAttribute("posts", postDTOS); // 모델에 게시물 목록 추가
 
         return "post/postList";
     }
@@ -99,8 +96,8 @@ public class PostController {
     // 휴지통
     @GetMapping("/post/deleted")
     public String deletedList(Model model){
-        List<PostForm> postForms = postService.findAll("Y"); // 모든 게시물 조회
-        model.addAttribute("posts", postForms); // 모델에 게시물 목록 추가
+        List<PostDTO> postDTOS = postService.findAll("Y"); // 모든 게시물 조회
+        model.addAttribute("posts", postDTOS); // 모델에 게시물 목록 추가
 
         return "post/postDeletedList";
     }
@@ -125,7 +122,40 @@ public class PostController {
 
     // 시술내역 수정 요청
     @PostMapping("/post/{id}/edit")
-    public String updatePost(@PathVariable Long id, @ModelAttribute("post") PostForm form ) throws Exception {
+    public String updatePost(@PathVariable Long id, @ModelAttribute("post") PostDTO postDTO, Model model ) throws Exception {
+
+        try {
+            // 서비스에 파일 처리 및 업로드 요청
+            postService.handleFileUpload(postDTO);
+
+            Treatment createdTreatment = null;
+            if (postDTO.getParentTreatment() != null && postDTO.getParentTreatment().equals(1L)) {
+                TreatmentDTO treatmentDTO = new TreatmentDTO();
+                treatmentDTO.setName(postDTO.getChildView()); // 직접 입력한 값
+                treatmentDTO.setParentId(postDTO.getParentTreatment()); // 부모 ID 설정
+
+                createdTreatment = treatmentService.createTreatment(treatmentDTO);
+            }
+
+            postService.updatePost(id, postDTO, createdTreatment);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            model.addAttribute("errorMessage", "파일 업로드 중 오류가 발생했습니다.");
+            return "error";
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return "redirect:/post/list";
+    }
+
+
+    /*
+    // 시술내역 수정 요청
+    @PostMapping("/post/{id}/edit")
+    public String updatePost(@PathVariable Long id, @ModelAttribute("post") PostForm form, Model model ) throws Exception {
+
         FtpUtil ftpUtil = new FtpUtil();
         ftpUtil.connect(); // FTP 연결
 
@@ -177,14 +207,15 @@ public class PostController {
 
         return "redirect:/post/list";
     }
+    */
 
 
     // 내 시술내역 자세히
     @GetMapping("/post/{postId}/view")
     public String viewPost(@PathVariable Long postId, Model model) throws Exception {
 
-        PostForm postForm = postService.findByIdView(postId);
-        model.addAttribute("post", postForm);
+        PostDTO postDTO = postService.findByIdView(postId);
+        model.addAttribute("post", postDTO);
 
         List<Visit> visits = visitServce.visitList(); // 모든 방문 경로 조회
         model.addAttribute("visits", visits);
@@ -199,8 +230,8 @@ public class PostController {
     // 관리자용 사용자별 시술내역 조회
     @GetMapping("/post/{userId}/list")
     public String ownlist(@PathVariable Long userId, Model model){
-        List<PostForm> postForms = postService.findByUserId(userId); // 모든 게시물 조회
-        model.addAttribute("posts", postForms); // 모델에 게시물 목록 추가
+        List<PostDTO> postDTOS = postService.findByUserId(userId); // 모든 게시물 조회
+        model.addAttribute("posts", postDTOS); // 모델에 게시물 목록 추가
 
         return "post/postOwnList";
     }
@@ -217,8 +248,8 @@ public class PostController {
         }
 */
 
-        List<PostForm> postForms = postService.findByUserId(userId); // 모든 게시물 조회
-        model.addAttribute("posts", postForms); // 모델에 게시물 목록 추가
+        List<PostDTO> postDTOS = postService.findByUserId(userId); // 모든 게시물 조회
+        model.addAttribute("posts", postDTOS); // 모델에 게시물 목록 추가
 
         return "post/postUserList";
     }
@@ -238,8 +269,8 @@ public class PostController {
             return "권한이 없습니다."; // 다른 사용자의 시술 내역을 조회하려고 하면 홈으로 리다이렉트
         }
 
-        List<PostForm> postForms = postService.findByUserId(userId); // 모든 게시물 조회
-        model.addAttribute("posts", postForms); // 모델에 게시물 목록 추가
+        List<PostDTO> postDTOS = postService.findByUserId(userId); // 모든 게시물 조회
+        model.addAttribute("posts", postDTOS); // 모델에 게시물 목록 추가
 
         return "post/postOwnList";
     }

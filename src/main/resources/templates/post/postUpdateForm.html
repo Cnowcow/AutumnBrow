@@ -85,14 +85,14 @@
                                         <div class="col-md-6">
                                             <label for="beforeImageFile" class="form-label">시술 전 사진</label>
                                             <div class="mb-3">
-                                                <img id="beforeImagePreview" th:src="@{|http://hhjnn92.synology.me/autumnBrow/*{beforeImageUrl}|}" style="max-width: 200px; max-height: 200px; cursor: pointer;" onclick="openImageInNewWindow(this.src)" />
+                                                <img id="beforeImagePreview" th:src="@{|http://hhjnn92.synology.me/autumnBrow/BeforeAndAfter/*{beforeImageUrl}|}" style="max-width: 200px; max-height: 200px; cursor: pointer;" onclick="openImageInNewWindow(this.src)" />
                                             </div>
                                             <input class="form-control" id="beforeImageFile" name="beforeImageFile" type="file" accept="image/*" onchange="previewImage(event, 'beforeImagePreview')" />
                                         </div>
                                         <div class="col-md-6">
                                             <label for="afterImageFile" class="form-label">시술 후 사진</label>
                                             <div class="mb-3">
-                                                <img id="afterImagePreview" th:src="@{|http://hhjnn92.synology.me/autumnBrow/*{afterImageUrl}|}" style="max-width: 200px; max-height: 200px; cursor: pointer;" onclick="openImageInNewWindow(this.src)" />
+                                                <img id="afterImagePreview" th:src="@{|http://hhjnn92.synology.me/autumnBrow/BeforeAndAfter/*{afterImageUrl}|}" style="max-width: 200px; max-height: 200px; cursor: pointer;" onclick="openImageInNewWindow(this.src)" />
                                             </div>
                                             <input class="form-control" id="afterImageFile" name="afterImageFile" type="file" accept="image/*" onchange="previewImage(event, 'afterImagePreview')" />
                                         </div>

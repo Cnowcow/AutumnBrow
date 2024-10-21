@@ -2,8 +2,7 @@
 package autumn.browmanagement.service;
 
 import autumn.browmanagement.config.EncryptionUtil;
-import autumn.browmanagement.controller.UserForm;
-import autumn.browmanagement.domain.Post;
+import autumn.browmanagement.DTO.UserDTO;
 import autumn.browmanagement.domain.User;
 import autumn.browmanagement.repository.UserRepository;
 import org.springframework.transaction.annotation.Transactional;
@@ -68,22 +67,22 @@ public class UserService {
 
 
     // 회원 목록
-    public List<UserForm> findAll(Long RoleId, String isDeleted) {
+    public List<UserDTO> findAll(Long RoleId, String isDeleted) {
         List<User> users = userRepository.findByRoleIdAndIsDeletedOrderByIdDesc(RoleId, isDeleted);
-        List<UserForm> userForms = new ArrayList<>();
+        List<UserDTO> userDTOS = new ArrayList<>();
 
         for(User user : users){
-            UserForm userForm = new UserForm();
-            userForm.setUserId(user.getId());
-            userForm.setName(user.getName());
-            userForm.setPhone(user.getPhone());
-            userForm.setBirthDay(user.getBirthDay());
-            userForm.setFirstVisitDate(user.getFirstVisitDate());
-            userForm.setTreatmentCount(user.getTreatmentCount());
+            UserDTO userDTO = new UserDTO();
+            userDTO.setUserId(user.getId());
+            userDTO.setName(user.getName());
+            userDTO.setPhone(user.getPhone());
+            userDTO.setBirthDay(user.getBirthDay());
+            userDTO.setFirstVisitDate(user.getFirstVisitDate());
+            userDTO.setTreatmentCount(user.getTreatmentCount());
 
-            userForms.add(userForm);
+            userDTOS.add(userDTO);
         }
-        return userForms;
+        return userDTOS;
     }
 
 

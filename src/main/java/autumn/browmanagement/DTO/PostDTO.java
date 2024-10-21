@@ -1,4 +1,4 @@
-package autumn.browmanagement.controller;
+package autumn.browmanagement.DTO;
 
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -11,7 +11,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class PostForm {
+public class PostDTO {
 
     private Long postId;
 

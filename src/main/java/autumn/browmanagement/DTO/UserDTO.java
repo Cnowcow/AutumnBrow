@@ -1,4 +1,4 @@
-package autumn.browmanagement.controller;
+package autumn.browmanagement.DTO;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -8,7 +8,7 @@ import java.util.Date;
 
 @Getter @Setter
 
-public class UserForm {
+public class UserDTO {
 
     private Long userId;
 
