@@ -61,19 +61,18 @@ public class UserController {
     // 로그인 요청
     @PostMapping("/user/login")
     public String Login(@RequestParam String name,
-                        @RequestParam String phone,
+                        @RequestParam String password,
                         HttpSession session,
                         Model model) throws Exception {
 
-        User user = userService.login(name, phone);
-
+        User user = userService.login(name, password);
         if (user != null) {
             session.setAttribute("user", user);
             model.addAttribute("userInfo", user);
-            System.out.println("로그인 성공" +name+" "+phone);
+            System.out.println("로그인 성공" +name+" "+password);
             return "redirect:/";
         } else {
-            System.out.println("로그인 실패"+name+" "+phone);
+            System.out.println("로그인 실패"+name+" "+password);
             return "redirect:/user/login?loginFailed=true";
         }
     }

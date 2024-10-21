@@ -12,6 +12,11 @@
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
         <script type="text/javascript" th:src="'//dapi.kakao.com/v2/maps/sdk.js?appkey=' + ${kakaoMapKey} + '&libraries=services'"></script>
     </head>
+    <style>
+        #map > div > div > div > div > div > div > div > div > div {
+            width: 200px;
+        }
+    </style>
 <body class="sb-nav-fixed">
 
     <!-- header -->
@@ -33,18 +38,6 @@
                         </div>
 
                         <div class="row justify-content-center">
-                            <div class="card mb-4 col-lg-6">
-                                <div class="card-header">찾아오시는 길</div>
-                                <div class="card-body">
-                                    <div id="map" style="width: 100%; height: 500px;"></div>
-                                </div>
-                                <div class="card-footer">
-                                    <p><strong>서울특별시 강서구 마곡중앙로 165 (마곡동) 마곡나루역 프라이빗타워 1차 12층 1209호</strong></p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row justify-content-center">
                             <div class="col-xl-3 col-md-6">
                             </div>
                         </div>
@@ -63,6 +56,19 @@
                         </div>
 
                     </div>
+
+                        <div class="row justify-content-center">
+                            <div class="card mb-4 col-lg-6">
+                                <div class="card-header">찾아오시는 길</div>
+                                <div class="card-body">
+                                    <div id="map" style="width: 100%; height: 500px;"></div>
+                                </div>
+                                <div class="card-footer">
+                                    <p><strong>서울특별시 강서구 마곡중앙로 165 (마곡동) 마곡나루역 프라이빗타워 1차 12층 1209호</strong></p>
+                                </div>
+                            </div>
+                        </div>
+
                 </main>
                 <!-- 메인화면 끝 -->
 
@@ -89,16 +95,18 @@
 
         var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
 
-        // 마커가 표시될 위치입니다
-        var markerPosition  = new kakao.maps.LatLng(37.5685606, 126.827738);
 
-        // 마커를 생성합니다
-        var marker = new kakao.maps.Marker({
-            position: markerPosition
+        var iwContent = '<div style="padding:0px 50px"><a href="http://map.naver.com/p/directions/-/14118399.401865814,4518660.919161124,%EB%A7%88%EA%B3%A1%EB%82%98%EB%A3%A8%EC%97%AD%ED%94%84%EB%9D%BC%EC%9D%B4%EB%B9%97%ED%83%80%EC%9B%8C1%EC%B0%A8,61727348,PLACE_POI/-/car" target="_blank"><img src="http://hhjnn92.synology.me/image/AutumnBrow.png" style="width: 50px; height: 50px;"></a></div>',
+            iwPosition = new kakao.maps.LatLng(37.5685606, 126.827738); //인포윈도우 표시 위치입니다
+
+        // 인포윈도우를 생성합니다
+        var infowindow = new kakao.maps.InfoWindow({
+            position : iwPosition,
+            content : iwContent
         });
 
-        // 마커가 지도 위에 표시되도록 설정합니다
-        marker.setMap(map);
+        // 마커 위에 인포윈도우를 표시합니다. 두번째 파라미터인 marker를 넣어주지 않으면 지도 위에 표시됩니다
+        infowindow.open(map);
     </script>
 </body>
 </html>

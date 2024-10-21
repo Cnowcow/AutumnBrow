@@ -64,7 +64,7 @@
                                         <div class="col-md-4">
                                             <input type="hidden" id="directInput" name="childTreatment" th:value="*{childTreatment}" />
                                             <label class="form-label">　</label>
-                                            <input class="form-control" type="text" id="childView" readonly />
+                                            <input class="form-control" type="text" id="childView" name="childView" readonly />
                                         </div>
                                     </div>
                                     <div class="mb-3">
@@ -135,12 +135,25 @@
 
 <script>
     function updateChildTreatments(value) {
+        const parentSelect = document.getElementById('parentTreatment');
         const childSelect = document.getElementById('childTreatment');
-
         childSelect.innerHTML = '<option value="">세부 내용 선택</option>';
 
         const directInput = document.getElementById('directInput').value;
 
+        const selectedOption = parentSelect.options[parentSelect.selectedIndex];
+        const selectedParentId = selectedOption.value;
+        console.log("value" + selectedParentId);
+
+/*        if(selectedParentId === "1"){
+            console.log("직접입력");
+            childSelect.innerHTML = '<option value="">직접입력</option>';
+            document.getElementById("childView").readOnly = false;  // 입력 필드 활성화
+            document.getElementById("childView").value = '';
+            document.getElementById("directInput").value = '';
+            return;
+        }
+        */
         if (value) {
             fetch(`/find/child/${value}`)
                 .then(response => response.json())
@@ -171,8 +184,9 @@
 
         directInput.value = childSelect.value;
         childView.value = childSelect.options[childSelect.selectedIndex].textContent;
-    }
+        childView.readOnly = true;
 
+    }
 
     window.onload = function () {
         const selectedParentId = document.getElementById('parentTreatment').value;

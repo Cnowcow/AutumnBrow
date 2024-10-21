@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>시술내역</title>
+        <title>나의 시술내역</title>
         <link href="/css/simple-datatables@7.1.2-style.min.css" rel="stylesheet" />
         <link href="/css/styles.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
@@ -26,11 +26,11 @@
             <!-- 메인화면 -->
             <main>
                 <div class="container-fluid px-4">
-                    <h1 class="mt-4">시술내역</h1>
+                    <h1 class="mt-4">나의 시술내역</h1>
 
                     <div class="card mb-4">
                         <div class="card-body">
-                            설명을 쓸 수 있는 네모칸
+                            시술내역입니다. (사용자용)
                         </div>
                     </div>
 
@@ -50,10 +50,8 @@
                                     <th>전화번호</th>
                                     <th>시술내용</th>
                                     <th>세부내용</th>
-                                    <th>방문경로</th>
                                     <th>리터치</th>
                                     <th>리터치 날짜</th>
-                                    <th>비고</th>
                                     <th></th>
                                 </tr>
                                 </thead>
@@ -61,20 +59,16 @@
                                 <tr th:each="post : ${posts}">
                                     <td th:text="${post.postId}"></td>
                                     <td th:text="${#temporals.format(post.treatmentDate, 'yyyy.MM.dd. HH:mm')}"></td>
-                                    <td>
-                                        <a class="d-block text-decoration-none" th:href="@{/user/{id}/edit (id=${post.userId})}" th:text="${post.name}"></a>
-                                    </td>
+                                    <td th:text="${post.name}"></td>
                                     <td th:text="${post.phone}"></td>
                                     <td th:text="${post.parentName}"></td>
                                     <td th:text="${post.childName}"></td>
-                                    <td th:text="${post.visitName}"></td>
                                     <td style="text-align: center;">
                                         <input type="checkbox" th:checked="${post.retouch == true}" style="transform: scale(1.5);" disabled>
                                     </td>
                                     <td th:text="${post.retouchDate}"></td>
-                                    <td th:text="${post.info}"></td>
                                     <td>
-                                        <a href="#" th:href="@{/post/{id}/edit (id=${post.postId})}" class="btn btn-primary" role="button">수정</a>
+                                        <a href="#" th:href="@{/post/{id}/view (id=${post.postId})}" class="btn btn-primary" role="button">자세히</a>
                                     </td>
                                 </tr>
                                 </tbody>

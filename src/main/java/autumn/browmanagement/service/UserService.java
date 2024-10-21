@@ -28,9 +28,9 @@ public class UserService {
     public Long register(String name, String phone, Date birthDay){
         User user = new User();
         user.setName(name);
-        user.setPassword(phone);
+        user.setPhone(phone);
         try {
-            user.setPhone(EncryptionUtil.encrypt(phone));
+            user.setPassword(EncryptionUtil.encrypt(phone));
         } catch (Exception e) {
             throw new IllegalStateException("전화번호 암호화 실패", e);
         }
@@ -59,9 +59,9 @@ public class UserService {
 
     // 로그인 요청
     @Transactional
-    public User login(String name, String phone) throws Exception {
+    public User login(String name, String password) throws Exception {
         // 전화번호를 해시 처리하여 사용자 조회
-        Optional<User> users = userRepository.findByNameAndPhone(name, EncryptionUtil.encrypt(phone));
+        Optional<User> users = userRepository.findByNameAndPassword(name, EncryptionUtil.encrypt(password));
         // 사용자가 존재하면 true 반환
         return users.isEmpty() ? null : users.get();
     }
@@ -76,15 +76,7 @@ public class UserService {
             UserForm userForm = new UserForm();
             userForm.setUserId(user.getId());
             userForm.setName(user.getName());
-
-            String decryptedPhone = null;
-            try {
-                decryptedPhone = EncryptionUtil.decrypt(user.getPhone());
-            } catch (Exception e){
-                System.out.println("전화번호 복호화 실패" + e.getMessage());
-            }
-            userForm.setPhone(decryptedPhone); // 복호화된 전화번호 설정
-
+            userForm.setPhone(user.getPhone());
             userForm.setBirthDay(user.getBirthDay());
             userForm.setFirstVisitDate(user.getFirstVisitDate());
             userForm.setTreatmentCount(user.getTreatmentCount());
@@ -100,30 +92,25 @@ public class UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다. ID: " + userId));
 
-        // 전화번호 복호화
-        try {
-            String decryptedPhone = EncryptionUtil.decrypt(user.getPhone());
-            user.setPhone(decryptedPhone);
-        } catch (Exception e) {
-            System.out.println("전화번호 복호화 실패: " + e.getMessage());
-        }
-
         return user;
     }
 
 
     // 사용자 정보 수정
     @Transactional
-    public void updateUser(Long id, String name, String phone, Date birthDay, Date firstVisitDate) throws Exception {
+    public Long updateUser(Long id, String name, String phone, Date birthDay, Date firstVisitDate) throws Exception {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다. ID: " + id));
 
         user.setName(name);
-        user.setPhone(EncryptionUtil.encrypt(phone)); // 전화번호 암호화
+        user.setPhone(phone);
+        user.setPassword(EncryptionUtil.encrypt(phone)); // 전화번호 암호화
         user.setBirthDay(birthDay);
         user.setFirstVisitDate(firstVisitDate);
 
         userRepository.save(user);
+
+        return user.getId();
     }
 
 
@@ -142,14 +129,4 @@ public class UserService {
         return null;
     }
 
-    /*
-    // 로그인 요청
-    @Transactional
-    public User login(String name, String phone) throws Exception {
-        // 전화번호를 해시 처리하여 사용자 조회
-        List<User> users = userRepository.findByUser(name, EncryptionUtil.encrypt(phone));
-        // 사용자가 존재하면 true 반환
-        return users.isEmpty() ? null : users.get(0);
-    }
-    */
 }

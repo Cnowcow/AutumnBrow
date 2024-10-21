@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>사용자별 시술내역</title>
+    <link href="/css/simple-datatables@7.1.2-style.min.css" rel="stylesheet" />
+    <link href="/css/styles.css" rel="stylesheet" />
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+</head>
+<body class="sb-nav-fixed">
+
+<!-- header -->
+<div th:insert="~{/header.html}"></div>
+
+<div id="layoutSidenav">
+
+    <!-- sidebar -->
+    <div th:insert="~{/sidebar.html}"></div>
+
+    <div id="layoutSidenav_content">
+
+        <!-- 메인화면 -->
+        <main>
+            <div class="container-fluid px-4">
+                <h1 class="mt-4">사용자별 시술내역</h1>
+
+                <div class="card mb-4">
+                    <div class="card-body">
+                        설명란
+                    </div>
+                </div>
+
+                <div class="card mb-4">
+
+                    <div class="card-header">
+                        <i class="fas fa-table me-1"></i>
+                    </div>
+
+                    <div class="card-body">
+                        <table id="datatablesSimple">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>시술 날짜</th>
+                                <th>이름</th>
+                                <th>전화번호</th>
+                                <th>시술내용</th>
+                                <th>세부내용</th>
+                                <th>방문경로</th>
+                                <th>리터치</th>
+                                <th>리터치 날짜</th>
+                                <th>비고</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="post : ${posts}">
+                                <td th:text="${post.postId}"></td>
+                                <td th:text="${#temporals.format(post.treatmentDate, 'yyyy.MM.dd. HH:mm')}"></td>
+                                <td>
+                                    <a class="d-block text-decoration-none" th:href="@{/user/{id}/edit (id=${post.userId})}" th:text="${post.name}"></a>
+                                </td>
+                                <td th:text="${post.phone}"></td>
+                                <td th:text="${post.parentName}"></td>
+                                <td th:text="${post.childName}"></td>
+                                <td th:text="${post.visitName}"></td>
+                                <td style="text-align: center;">
+                                    <input type="checkbox" th:checked="${post.retouch == true}" style="transform: scale(1.5);" disabled>
+                                </td>
+                                <td th:text="${post.retouchDate}"></td>
+                                <td th:text="${post.info}"></td>
+                                <td>
+                                    <a th:href="@{/post/{id}/edit (id=${post.postId})}" class="btn btn-primary" role="button">수정</a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <!-- 메인화면 끝 -->
+
+        <!-- footer -->
+        <div th:insert="~{/footer.html}"></div>
+
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+<script src="/js/scripts.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+<script src="/js/chart-area-demo.js"></script>
+<script src="/js/chart-bar-demo.js"></script>
+<script src="/js/simple-datatables.min.js" crossorigin="anonymous"></script>
+<script src="/js/datatables-simple-demo.js"></script>
+</body>
+</html>

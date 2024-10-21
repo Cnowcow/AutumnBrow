@@ -61,6 +61,7 @@ public class PostForm {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date birthDay;
 
+    private String isDeletedUser;
 
     /* visit Entity*/
     // 방문 경로

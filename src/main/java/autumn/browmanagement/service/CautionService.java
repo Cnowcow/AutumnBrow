@@ -69,9 +69,10 @@ public class CautionService {
     }
 
 
+    // 시술 전 주의사항
     @Transactional
-    public List<CautionDTO> cautionFindAll(){
-        List<Caution> cautions = cautionRepository.findAll();
+    public List<CautionDTO> cautionFindBefore(){
+        List<Caution> cautions = cautionRepository.findAllOrderByAfterTitleIsNull();
         List<CautionDTO> cautionDTOs = new ArrayList<>();
 
         for (Caution caution : cautions){
@@ -80,13 +81,30 @@ public class CautionService {
             cautionDTO.setBeforeTitle(caution.getBeforeTitle());
             cautionDTO.setBeforeUrl(caution.getBeforeUrl());
             cautionDTO.setBeforeText(caution.getBeforeText());
-            cautionDTO.setAfterTitle(caution.getAfterTitle());
-            cautionDTO.setAfterUrl(caution.getAfterUrl());
-            cautionDTO.setAfterText(caution.getAfterText());
+            cautionDTO.setAfterTitle("null");
 
             cautionDTOs.add(cautionDTO);
         }
         return cautionDTOs;
     }
 
+
+    // 시술 후 주의사항
+    @Transactional
+    public List<CautionDTO> cautionFindAfter(){
+        List<Caution> cautions = cautionRepository.findAllOrderByBeforeTitleIsNull();
+        List<CautionDTO> cautionDTOs = new ArrayList<>();
+
+        for (Caution caution : cautions){
+            CautionDTO cautionDTO = new CautionDTO();
+            cautionDTO.setCautionId(caution.getCautionId());
+            cautionDTO.setAfterTitle(caution.getAfterTitle());
+            cautionDTO.setAfterUrl(caution.getAfterUrl());
+            cautionDTO.setAfterText(caution.getAfterText());
+            cautionDTO.setBeforeTitle("null");
+
+            cautionDTOs.add(cautionDTO);
+        }
+        return cautionDTOs;
+    }
 }

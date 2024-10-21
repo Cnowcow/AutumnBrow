@@ -23,7 +23,7 @@ public class CautionController {
     @GetMapping("/caution/before")
     public String beforeNotice(Model model){
 
-        List<CautionDTO> caution = cautionService.cautionFindAll();
+        List<CautionDTO> caution = cautionService.cautionFindBefore();
         model.addAttribute("cautions", caution);
 
         return "caution/beforeCaution";
@@ -34,7 +34,7 @@ public class CautionController {
     @GetMapping("/caution/after")
     public String afterNotice(Model model){
 
-        List<CautionDTO> caution = cautionService.cautionFindAll();
+        List<CautionDTO> caution = cautionService.cautionFindAfter();
         model.addAttribute("cautions", caution);
 
         return "caution/afterCaution";
