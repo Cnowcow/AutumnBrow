@@ -47,7 +47,7 @@ public class PostService {
             String uniqueFileName = UUID.randomUUID().toString() + fileExtension;
             File localFile = new File(System.getProperty("java.io.tmpdir") + "/" + uniqueFileName);
             file.transferTo(localFile);
-            ftpUtil.uploadFile("/autumnBrow/BeforeAndAfter" + uniqueFileName, localFile);
+            ftpUtil.uploadFile("/AutumnBrow/BeforeAndAfter" + uniqueFileName, localFile);
 
             if (isBefore) {
                 postDTO.setBeforeImageUrl(uniqueFileName); // 비포 URL 설정

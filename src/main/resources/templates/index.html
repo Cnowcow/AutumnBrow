@@ -9,13 +9,28 @@
         <title>Autumn Brow</title>
         <link href="/css/simple-datatables@7.1.2-style.min.css" rel="stylesheet" />
         <link href="/css/styles.css" rel="stylesheet" />
+        <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
         <script type="text/javascript" th:src="'//dapi.kakao.com/v2/maps/sdk.js?appkey=' + ${kakaoMapKey} + '&libraries=services'"></script>
     </head>
     <style>
-        #map > div > div > div > div > div > div > div > div > div {
-            width: 200px;
+        .swiper-container1, .swiper-container2 {
+            width: 100%; /* 컨테이너의 가로 크기를 100%로 설정 */
+            max-width: 600px; /* 최대 가로 크기 */
         }
+
+        .swiper-container3 {
+            width: 100%; /* 컨테이너의 가로 크기를 100%로 설정 */
+            max-width: 1280px; /* 최대 가로 크기 */
+        }
+
+        #swiper-container1, #swiper-container2, #swiper-container3  {
+            justify-content: center;
+            align-items: center;
+            width: auto; /* 슬라이드의 너비를 자동으로 설정 */
+            height: auto; /* 슬라이드의 높이도 자동으로 설정 */
+        }
+
     </style>
 <body class="sb-nav-fixed">
 
@@ -31,44 +46,88 @@
 
                 <!-- 메인화면 -->
                 <main>
-                    <div class="container-fluid px-4">
+                    <div class="container">
 
-                        <div class="row justify-content-center">
+                        <div class="text-center">
                             <img src="http://hhjnn92.synology.me/image/AutumnBrow.png" style="width: 400px; height: 400px;">
                         </div>
 
-                        <div class="row justify-content-center">
-                            <div class="col-xl-3 col-md-6">
+                        <div class="row d-flex justify-content-between mb-5">
+
+                            <div class="row justify-content-center col-md-6" >
+                                <div class="card mb-5" style="padding: 0px;">
+                                    <h5 class="card-header">공지사항</h5>
+                                    <div class="card-body d-flex justify-content-around">
+                                        <div class="swiper-container1" style="overflow: hidden;">
+                                            <div class="swiper-wrapper">
+                                                <div id="swiper-container1" class="swiper-slide" th:each="notice : ${notices}">
+                                                    <img class="mt-3 mb-3" th:src="@{|http://hhjnn92.synology.me/AutumnBrow/notice/${notice.noticeUrl}|}" style="width: 100%; height: 120px;">
+                                                    <p class="text-center"><strong class="card-text mt-5" th:text="${notice.title}"></strong></p>
+                                                </div>
+                                            </div>
+                                            <div class="swiper-pagination"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row justify-content-center col-md-6">
+                                <div class="card mb-5" style="padding: 0px;">
+                                    <h5 class="card-header">이벤트</h5>
+                                    <div class="card-body d-flex justify-content-around">
+                                        <div class="swiper-container2" style="overflow: hidden;">
+                                            <div class="swiper-wrapper">
+                                                <div id="swiper-container2" class="swiper-slide" th:each="event : ${events}">
+                                                    <img class="mt-3 mb-3" th:src="@{|http://hhjnn92.synology.me/AutumnBrow/event/${event.eventUrl}|}" style="width: 100%; height: 120px;">
+                                                    <p class="text-center"><strong class="card-text mt-5" th:text="${event.title}"></strong></p>
+                                                </div>
+                                            </div>
+                                            <div class="swiper-pagination"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="row d-flex justify-content-center mb-5">
+
+                            <div class="row justify-content-center col-md-12">
+                                <div class="card mb-5" style="padding: 0px;">
+                                    <h5 class="card-header">후기</h5>
+                                    <div class="card-body d-flex justify-content-around">
+                                        <div class="swiper-container3" style="overflow: hidden;">
+                                            <div class="swiper-wrapper" style="justify-content: space-around;">
+                                                <!-- 후기 이미지 및 제목 출력 -->
+                                                <div id="swiper-container3" class="swiper-slide" th:each="review : ${reviews}">
+                                                    <img class="mt-3 mb-3" th:src="@{|http://hhjnn92.synology.me/AutumnBrow/review/${review.reviewUrl}|}" style="width: 100%; height: 160px;">
+                                                    <p class="text-center"><strong class="card-text mt-5" th:text="${review.title}"></strong></p>
+                                                </div>
+                                            </div>
+                                            <!-- Swiper Pagination -->
+                                            <div class="swiper-pagination"></div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div class="col-xl-6">
+                        <div class="row d-flex justify-content-center mb-5">
 
+                            <div class="row justify-content-center">
+                                <div class="row card col-md-12 mb-5" style="padding: 0px;">
+                                    <div class="card-header">찾아오시는 길</div>
+                                    <div class="card-body" id="map" style="width: 100%; height: 350px;">
+                                    </div>
+                                    <div class="card-footer">
+                                        <p><strong>서울특별시 강서구 마곡중앙로 165 (마곡동) 마곡나루역 프라이빗타워 1차 12층 1209호</strong></p>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-xl-6">
-
-                            </div>
-                        </div>
-
-                        <div class="card mb-4">
 
                         </div>
 
                     </div>
-
-                        <div class="row justify-content-center">
-                            <div class="card mb-4 col-lg-6">
-                                <div class="card-header">찾아오시는 길</div>
-                                <div class="card-body">
-                                    <div id="map" style="width: 100%; height: 500px;"></div>
-                                </div>
-                                <div class="card-footer">
-                                    <p><strong>서울특별시 강서구 마곡중앙로 165 (마곡동) 마곡나루역 프라이빗타워 1차 12층 1209호</strong></p>
-                                </div>
-                            </div>
-                        </div>
-
                 </main>
                 <!-- 메인화면 끝 -->
 
@@ -85,7 +144,7 @@
         <script src="/js/chart-bar-demo.js"></script>
         <script src="/js/simple-datatables.min.js" crossorigin="anonymous"></script>
         <script src="/js/datatables-simple-demo.js"></script>
-
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     <script>
         var mapContainer = document.getElementById('map'), // 지도를 표시할 div
             mapOption = {
@@ -107,6 +166,72 @@
 
         // 마커 위에 인포윈도우를 표시합니다. 두번째 파라미터인 marker를 넣어주지 않으면 지도 위에 표시됩니다
         infowindow.open(map);
+    </script>
+    <script>
+        var swiper1 = new Swiper('.swiper-container1', {
+            slidesPerView: 2, // 기본적으로 1개의 슬라이드만 보이게 설정
+            spaceBetween: 20, // 슬라이드 간의 간격
+            centeredSlides: true, // 슬라이드가 적을 경우 중앙 정렬
+            breakpoints: {
+                576: { // 화면 크기 576px 이상
+                    slidesPerView: 2, // 2개의 슬라이드 보이기
+                    centeredSlides: false, // 작은 화면에서는 중앙 정렬 해제
+                },
+                992: { // 화면 크기 992px 이상
+                    slidesPerView: 3, // 최대 3개의 슬라이드 보이기
+                    centeredSlides: false, // 큰 화면에서는 중앙 정렬 해제
+                },
+            },
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true, // 페이지네이션 클릭 가능
+            },
+        });
+
+
+        var swiper2 = new Swiper('.swiper-container2', {
+            slidesPerView: 2, // 기본적으로 1개의 슬라이드만 보이게 설정
+            spaceBetween: 20, // 슬라이드 간의 간격
+            centeredSlides: true, // 슬라이드가 적을 경우 중앙 정렬
+            breakpoints: {
+                576: { // 화면 크기 576px 이상
+                    slidesPerView: 2, // 2개의 슬라이드 보이기
+                    centeredSlides: false, // 작은 화면에서는 중앙 정렬 해제
+                },
+                992: { // 화면 크기 992px 이상
+                    slidesPerView: 3, // 최대 3개의 슬라이드 보이기
+                    centeredSlides: false, // 큰 화면에서는 중앙 정렬 해제
+                },
+            },
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true, // 페이지네이션 클릭 가능
+            },
+        });
+
+
+        var swiper3 = new Swiper('.swiper-container3', {
+            slidesPerView: 2,
+            spaceBetween: 20,
+            breakpoints: {
+                576: { // 화면 크기 576px 이상
+                    slidesPerView: 2,
+                },
+                768: { // 화면 크기 768px 이상
+                    slidesPerView: 3,
+                },
+                992: { // 화면 크기 992px 이상
+                    slidesPerView: 4,
+                },
+                1200: { // 화면 크기 1200px 이상
+                    slidesPerView: 5,
+                },
+            },
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+        });
     </script>
 </body>
 </html>
