@@ -8,6 +8,7 @@
     <meta name="author" content=""/>
     <title>시술목록 관리</title>
     <link href="/css/styles.css" rel="stylesheet"/>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
 </head>
 <body class="sb-nav-fixed">
@@ -24,28 +25,32 @@
 
         <!-- 메인화면 -->
         <main>
-            <div class="container">
+            <div class="container mb-5">
                 <div class="row justify-content-center">
-                    <div class="col-lg-7">
+                    <div class="col-md-8">
                         <div class="card shadow-lg border-0 rounded-lg mt-5">
-                            <div class="card-header"><h3 class="text-center font-weight-light my-4">시술목록 관리</h3>
+                            <div class="card-header">
+                                <h3 class="text-center font-weight-light my-4">시술목록 관리</h3>
+                                    <div class="d-flex justify-content-end">
+                                        <a class="fs-5 btn btn-primary text-decoration-none text-white" href="/treatment/add">시술목록 추가 +</a>
+                                    </div>
                             </div>
+
                             <div class="card-body">
-                                <form action="/treatment/creat" method="post">
-                                    <table class="table table-bordered mt-3">
-                                        <thead>
-                                        <tr>
-                                            <th>시술 내용</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr th:each="treatment : ${treatmentList}">
-                                            <td th:text="${treatment.name}"></td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </form>
+                                <ul class="list-group">
+                                    <!-- 최상위 시술 반복 -->
+                                    <li class="list-group-item" th:each="treatment : ${treatments}">
+                                        <span class="fs-4 fw-bold" th:text="${treatment.name}"></span>&nbsp;
+                                        <span style="cursor: pointer" class="badge text-bg-danger rounded-pill p-2 m-1" th:data-name="${treatment.treatmentId}" onclick="confirmed(this)">x</span>
+                                        <div th:each="child : ${treatment.child}">
+                                            <!-- 자식 시술이 있으면 반복 -->
+                                            <span class="fs-4 ms-4 m-1" th:text="${child.name}"></span>&nbsp;
+                                            <span style="cursor: pointer" class="badge text-bg-danger rounded-pill p-2 m-1" th:data-name="${child.treatmentId}" onclick="confirmed(this)">x</span>
+                                        </div>
+                                    </li>
+                                </ul>
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -62,71 +67,45 @@
 
 <script>
 
-    function updateValue(value){
-        const text = value.options[value.selectedIndex].text;
-        console.log(text);
-        const parentName = document.getElementById('parentName');
-        parentName.value = text;
-        parentName.readOnly = true;
-        if (text === "직접입력"){
-            console.log("직접입력할거임");
-            parentName.value = '';
-            parentName.readOnly = false;
-            parentName.placeholder = '직접 입력하세요.'
+    function confirmed(elements) {
+
+        const confirmed = confirm("정말로 삭제하시겠습니까?");
+        const treatmentId = elements.getAttribute('data-name');
+
+        if (confirmed) {
+            $.ajax({
+                url: '/treatment/delete/' + treatmentId,
+                type: 'POST',
+                success: function(response) {
+                    console.log(response);
+                    location.reload();
+                },
+                error: function(xhr, status, error) {
+                    const errorMessage = xhr.responseText;
+                    alert(errorMessage);
+                }
+            });
+        }else {
 
         }
     }
 
-    function updateChildTreatments(value) {
-        const parentSelect = document.getElementById('parentTreatment');
-        const childSelect = document.getElementById('childTreatment');
-        childSelect.innerHTML = '<option value="">세부 내용 선택</option>';
+    function deleteChild(treatmentId){
 
-        const directInput = document.getElementById('directInput').value;
+        $.ajax({
+            url: '/treatment/delete/' + treatmentId,
+            type: 'POST',
+            success: function(response) {
+                console.log(response);
+                location.reload();
+            },
+            error: function(xhr, status, error) {
+                const errorMessage = xhr.responseText;
+                alert(errorMessage);
+            }
+        });
 
-        const selectedOption = parentSelect.options[parentSelect.selectedIndex];
-        const selectedParentId = selectedOption.value;
-        console.log("value" + selectedParentId);
-
-        if(selectedParentId === "1"){
-            console.log("직접입력");
-            childSelect.innerHTML = '<option value="">직접입력</option>';
-            document.getElementById("childView").readOnly = false;  // 입력 필드 활성화
-            document.getElementById("childView").value = '';
-            document.getElementById("directInput").value = '';
-            return;
-        }
-
-        if (value) {
-            fetch(`/find/child/${value}`)
-                .then(response => response.json())
-                .then(data => {
-                    data.forEach(child => {
-                        const option = document.createElement('option');
-                        option.value = child.treatmentId;
-                        option.textContent = child.name; // child.name 설정
-                        if (option.value === directInput) {
-                            option.selected = true;
-
-                            // 여기서만 childView를 업데이트
-                            const childView = document.getElementById('childView');
-                            childView.value = child.name;
-                        }
-                        childSelect.appendChild(option);
-                    });
-                })
-                .catch(error => console.error('Error', error));
-        }
     }
-
-
-    window.onload = function () {
-        const selectedParentId = document.getElementById('parentTreatment').value;
-        if (selectedParentId) {
-            updateChildTreatments(selectedParentId);
-        }
-    };
-
 
 </script>
 

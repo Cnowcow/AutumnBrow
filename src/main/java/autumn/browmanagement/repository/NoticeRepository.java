@@ -11,6 +11,8 @@ public interface NoticeRepository extends JpaRepository<Notice, Long> {
 
     List<Notice> findAllByOrderByNoticeIdDesc();
 
+    List<Notice> findAllByOrderByNoticeDateDesc();
+
 
 
 }

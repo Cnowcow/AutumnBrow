@@ -18,6 +18,59 @@ public class TreatmentService {
     private final TreatmentRepository treatmentRepository;
 
 
+    // 상위 시술 조회
+    public List<Treatment> treatmentList() {
+        return treatmentRepository.findByParentIsNullOrderByTreatmentIdDesc();
+    }
+
+
+    // 상위 시술 조회
+    public String findParentTreatments(Long parentId){
+        Optional<Treatment> treatment = treatmentRepository.findById(parentId);
+
+        if(treatment.isPresent()){
+            String name = treatment.get().getName();
+            System.out.println("name" + name);
+        }
+
+        return treatment.get().getName();
+    }
+
+
+    // 하위 시술 조회
+    public List<TreatmentDTO> findChildTreatments(Long parentId) {
+        List<Treatment> treatments = treatmentRepository.findByParent_TreatmentId(parentId);
+        return treatments.stream()
+                .map(treatment -> {
+                    TreatmentDTO form = new TreatmentDTO();
+                    form.setTreatmentId(treatment.getTreatmentId());
+                    form.setName(treatment.getName());
+                    form.setParentId(treatment.getParent() != null ? treatment.getParent().getTreatmentId() : null);
+                    return form;
+                })
+                .collect(Collectors.toList());
+    }
+
+
+    @Transactional
+    // 직접입력된 시술 추가
+    public Treatment createTreatment(TreatmentDTO treatmentDTO) {
+        Treatment treatment = new Treatment();
+        treatment.setName(treatmentDTO.getName());
+
+        if (treatmentDTO.getParentId() != null) {
+            Treatment parentTreatment = new Treatment();
+            parentTreatment.setTreatmentId(treatmentDTO.getParentId());
+
+            treatment.setParent(parentTreatment);
+
+        }
+
+        return treatmentRepository.save(treatment);
+    }
+
+
+
     // 시술내용 추가
     @Transactional
     public Treatment addTreatment(TreatmentDTO treatmentDTO) {
@@ -53,59 +106,55 @@ public class TreatmentService {
     }
 
 
-    // 상위 시술 조회
-    public List<Treatment> treatmentList() {
-        return treatmentRepository.findByParentIsNullOrderByTreatmentIdDesc();
-    }
 
 
-    // 상위 시술 조회
-    public String findParentTreatments(Long parentId){
-        Optional<Treatment> treatment = treatmentRepository.findById(parentId);
+    // Entity -> DTO
+    public TreatmentDTO convertToDTO(Treatment treatment) {
+        TreatmentDTO dto = new TreatmentDTO();
+        dto.setTreatmentId(treatment.getTreatmentId());
+        dto.setName(treatment.getName());
 
-        if(treatment.isPresent()){
-            String name = treatment.get().getName();
-            System.out.println("name" + name);
+        // 부모 시술 정보
+        if (treatment.getParent() != null) {
+            dto.setParentId(treatment.getParent().getTreatmentId());
+            dto.setParentName(treatment.getParent().getName());
         }
 
-        return treatment.get().getName();
+        // 자식 시술 정보 (재귀적으로 처리)
+        if (treatment.getChild() != null && !treatment.getChild().isEmpty()) {
+            List<TreatmentDTO> childDTOs = treatment.getChild().stream()
+                    .map(this::convertToDTO)
+                    .toList();
+            dto.setChild(childDTOs);
+        }
+
+        return dto;
     }
 
-    // 하위 시술 조회
-    public List<TreatmentDTO> findChildTreatments(Long parentId) {
-        List<Treatment> treatments = treatmentRepository.findByParent_TreatmentId(parentId);
+    // 전체 시술 목록을 계층적으로 가져오는 메서드
+    public List<TreatmentDTO> getAllTreatments() {
+        List<Treatment> treatments = treatmentRepository.findAll();
         return treatments.stream()
-                .map(treatment -> {
-                    TreatmentDTO form = new TreatmentDTO();
-                    form.setTreatmentId(treatment.getTreatmentId());
-                    form.setName(treatment.getName());
-                    form.setParentId(treatment.getParent() != null ? treatment.getParent().getTreatmentId() : null);
-                    return form;
-                })
-                .collect(Collectors.toList());
+                .filter(treatment -> treatment.getParent() == null) // 최상위 시술만 필터링
+                .map(this::convertToDTO)
+                .toList();
     }
 
 
+    // 시술내용 삭제 요청
     @Transactional
-    // 직접입력된 시술 추가
-    public Treatment createTreatment(TreatmentDTO treatmentDTO) {
-        Treatment treatment = new Treatment();
-        treatment.setName(treatmentDTO.getName());
+    public void deleteTreatment(Long treatmentId) {
+        Treatment treatment = treatmentRepository.findById(treatmentId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 시술내용이 없습니다."));
 
-        if (treatmentDTO.getParentId() != null) {
-            Treatment parentTreatment = new Treatment();
-            parentTreatment.setTreatmentId(treatmentDTO.getParentId());
-
-            treatment.setParent(parentTreatment);
-
+        if (treatment.getChild() != null && !treatment.getChild().isEmpty()) {
+            throw new IllegalStateException("세부 시술내용이 있으면 삭제할 수 없습니다.");
         }
 
-        return treatmentRepository.save(treatment);
+        treatmentRepository.deleteById(treatmentId);
     }
 
 
-    public List<Treatment> findAll(){
 
-        return treatmentRepository.findAll();
-    }
+
 }
