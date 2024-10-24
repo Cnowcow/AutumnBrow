@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -24,10 +25,14 @@ public class Notice {
 
     private String important;
 
-    // 리터치 날짜
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Temporal(TemporalType.DATE)
-    private Date noticeDate;
+    private Long noticeHits = 0L;
+
+    private Long noticeLike = 0L;
+
+    // 공지사항 등록 날짜
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    private LocalDateTime noticeDate;
+
 
     // 사용자 정보 - 이름, 전화번호 등은 User 엔티티에서 참조
     @ManyToOne

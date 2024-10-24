@@ -74,6 +74,7 @@ public class PostController {
         return "redirect:/post/list";
     }
 
+
     // 시술내역 삭제 요청
     @PostMapping("/post/{postId}/delete")
     public String deletePost(@PathVariable Long postId, Model model){

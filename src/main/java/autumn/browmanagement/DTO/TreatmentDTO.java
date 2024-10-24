@@ -2,6 +2,8 @@ package autumn.browmanagement.DTO;
 
 import lombok.*;
 
+import java.util.List;
+
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,4 +17,7 @@ public class TreatmentDTO {
 
     private String parentName;
     private String childName;
+
+    private List<TreatmentDTO> child;
+
 }
