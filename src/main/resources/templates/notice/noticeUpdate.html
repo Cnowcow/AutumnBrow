@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
     <meta name="description" content=""/>
     <meta name="author" content=""/>
-    <title>공지사항</title>
+    <title>공지사항 관리</title>
     <link href="/css/simple-datatables@7.1.2-style.min.css" rel="stylesheet"/>
     <link href="/css/styles.css" rel="stylesheet"/>
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
@@ -26,14 +26,14 @@
         <!-- 메인화면 -->
         <main>
             <div class="container mb-5">
-                <h1 class="mt-4 mb-5">공지사항</h1>
+                <h1 class="mt-4 mb-5">공지사항 관리</h1>
 
                 <ul class="list-group">
                     <li class="col-md-12 p-3 fw-bold" style="display: table; border-top: 2px solid; border-bottom: 2px solid #c3c3c3;">
                         <div class="text-center" style="display: table-cell; width: 50px; border-right: 1px solid #ddd;">번호</div>
                         <div class="text-center" style="display: table-cell; border-right: 1px solid #ddd;">제목</div>
                         <div class="text-center" style="display: table-cell; width: 110px; border-right: 1px solid #ddd;">날짜</div>
-                        <div class="text-center" style="display: table-cell; width: 70px;">조회수</div>
+                        <div class="text-center" style="display: table-cell; width: 70px;"></div>
                     </li>
                 </ul>
                 <ul class="list-group">
@@ -41,7 +41,9 @@
                         <div class="text-center" style="display: table-cell; width: 50px; border-right: 1px solid #ddd;" th:text="${stat.index + 1}"></div>
                         <div style="padding-left: 20px; border-right: 1px solid #ddd; ; display: table-cell;"><a class="text-decoration-none text-dark" th:href="@{/notice/{id}/detail (id=${notice.noticeId})}" th:text="${notice.title}"></a></div>
                         <div class="text-center" style="display: table-cell; width: 110px; border-right: 1px solid #ddd;" th:text="${#temporals.format(notice.noticeDate, 'YY.MM.dd')}"></div>
-                        <div class="text-center" style="display: table-cell; width: 70px;" th:text="${notice.noticeHits}"></div>
+                        <div class="text-center" style="display: table-cell; width: 70px;">
+                            <a class="btn btn-primary" th:href="@{/notice/{noticeId}/update (noticeId=${notice.noticeId})}">수정</a>
+                        </div>
                     </li>
                 </ul>
             </div>
@@ -58,8 +60,6 @@
         crossorigin="anonymous"></script>
 <script src="/js/scripts.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
-<script src="/js/chart-area-demo.js"></script>
-<script src="/js/chart-bar-demo.js"></script>
 <script src="/js/simple-datatables.min.js" crossorigin="anonymous"></script>
 <script src="/js/datatables-simple-demo.js"></script>
 </body>

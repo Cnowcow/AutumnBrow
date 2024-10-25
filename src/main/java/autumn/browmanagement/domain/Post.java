@@ -14,8 +14,7 @@ import java.util.Date;
 public class Post {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "post_id")
-    private Long id;
+    private Long postId;
 
     // 시술 날짜
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")

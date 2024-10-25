@@ -9,7 +9,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class VisitServce {
+public class VisitService {
 
     private final VisitRepository visitRepository;
 

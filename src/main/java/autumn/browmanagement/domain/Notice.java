@@ -6,7 +6,8 @@ import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -27,8 +28,6 @@ public class Notice {
 
     private Long noticeHits = 0L;
 
-    private Long noticeLike = 0L;
-
     // 공지사항 등록 날짜
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime noticeDate;
@@ -38,5 +37,8 @@ public class Notice {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @OneToMany(mappedBy = "notice", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Likey> likeys = new ArrayList<>();
 
 }

@@ -39,11 +39,11 @@
                                         <i class="fa fa-eye"></i> <span th:text="${notices.noticeHits}"></span>
                                     </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <div class="text-secondary p-1">
-                                        <i class="fa fa-thumbs-up"></i> <span th:text="${notices.noticeLike}"></span>
+                                        <i class="fa fa-thumbs-up"></i> <span th:text="${notices.likesCount}"></span>
                                     </div>
                                 </div>
                             <div class="text-secondary p-2">
-                                <i class="fa fa-clock-o"></i> <span th:text="${#temporals.format(notices.noticeDate, 'YYYY.MM.dd HH:mm')}"></span>
+                                <i class="fas fa-clock"></i> <span th:text="${#temporals.format(notices.noticeDate, 'YYYY.MM.dd HH:mm')}"></span>
                             </div>
                         </div>
                     </div>
@@ -58,7 +58,7 @@
 
                     <div id="noticeLike" class="mt-3 text-center">
                         <button class="bg-light" th:data-name="${notices.noticeId}" onclick="like(this)" style="width:90px; height: 90px; border-radius: 50px;">
-                            <span class="fs-3" th:text="${notices.noticeLike}"></span><br/>
+                            <span class="fs-3" th:text="${notices.likesCount}"></span><br/>
                             <i class="fa fa-thumbs-up fs-3"></i>
                         </button>
                     </div>
@@ -80,10 +80,10 @@
 
 <script>
 
+
     function like(elements){
         const noticeId = elements.getAttribute('data-name');
         console.log(noticeId);
-
 
         $.ajax({
             url: '/notice/like/' + noticeId,
@@ -97,7 +97,6 @@
                 alert(errorMessage);
             }
         });
-
 
     }
 

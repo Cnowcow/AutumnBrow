@@ -50,7 +50,7 @@
                                         <select class="form-select" id="visitPath" name="visitPath">
                                             <option value="" selected>방문 경로 선택</option>
                                             <th:block th:each="visit : ${visits}">
-                                                <option th:value="${visit.id}" th:text="${visit.visitPath}"></option>
+                                                <option th:value="${visit.visitId}" th:text="${visit.visitPath}"></option>
                                             </th:block>
                                         </select>
                                     </div>

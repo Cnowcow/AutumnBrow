@@ -32,7 +32,7 @@
                             </div>
                             <div class="card-body">
                                 <form th:object="${user}" method="post">
-                                    <input type="hidden" th:field="*{id}" />
+                                    <input type="hidden" th:field="*{userId}" />
 
                                     <div class="mb-3">
                                         <label for="name" class="form-label">이름</label>
@@ -59,7 +59,7 @@
                                             <button type="submit" class="btn btn-primary btn-block">저장</button>
                                             <button type="button" class="btn btn-secondary btn-block" onclick="window.location.href='/user/list'" >취소</button>
                                         </div>
-                                            <button type="button" class="btn btn-danger" th:value="${user.id}" onclick="userDelete(this.value)">휴지통</button>
+                                            <button type="button" class="btn btn-danger" th:value="${user.userId}" onclick="userDelete(this.value)">휴지통</button>
                                     </div>
                                 </form>
                             </div>

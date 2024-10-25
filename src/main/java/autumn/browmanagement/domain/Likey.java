@@ -6,11 +6,17 @@ import lombok.Setter;
 
 @Entity
 @Getter @Setter
-public class Visit {
+public class Likey {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long visitId;
+    private Long likeyId;
 
-    private String visitPath;
+    @ManyToOne
+    @JoinColumn(name = "notice_id")
+    private Notice notice;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
 }

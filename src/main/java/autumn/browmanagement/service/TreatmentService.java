@@ -26,7 +26,7 @@ public class TreatmentService {
 
     // 상위 시술 조회
     public String findParentTreatments(Long parentId){
-        Optional<Treatment> treatment = treatmentRepository.findById(parentId);
+        Optional<Treatment> treatment = treatmentRepository.findByTreatmentId(parentId);
 
         if(treatment.isPresent()){
             String name = treatment.get().getName();
@@ -96,7 +96,7 @@ public class TreatmentService {
                 throw new IllegalArgumentException("시술 내용이 필요합니다.");
             }
         } else {
-            Treatment parent = treatmentRepository.findById(treatmentId)
+            Treatment parent = treatmentRepository.findByTreatmentId(treatmentId)
                     .orElseThrow(() -> new IllegalArgumentException("시술 내용을 찾을 수 없습니다."));
 
             treatment.setParent(parent);
@@ -144,7 +144,7 @@ public class TreatmentService {
     // 시술내용 삭제 요청
     @Transactional
     public void deleteTreatment(Long treatmentId) {
-        Treatment treatment = treatmentRepository.findById(treatmentId)
+        Treatment treatment = treatmentRepository.findByTreatmentId(treatmentId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 시술내용이 없습니다."));
 
         if (treatment.getChild() != null && !treatment.getChild().isEmpty()) {
