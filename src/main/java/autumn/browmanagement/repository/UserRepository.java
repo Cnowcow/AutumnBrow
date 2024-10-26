@@ -1,6 +1,6 @@
 package autumn.browmanagement.repository;
 
-import autumn.browmanagement.domain.User;
+import autumn.browmanagement.Entity.User;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -14,8 +14,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     
     Optional<User> findByNameAndPhone(String name, String phone);
 
-    List<User> findByRoleIdAndIsDeletedOrderByIdDesc(Long roleId, String isDeleted);
+    List<User> findByRole_RoleIdAndIsDeletedOrderByUserIdDesc(Long roleId, String isDeleted);
 
-    Optional<User> findById(Long userId); // ID로 사용자 조회
+    Optional<User> findByUserId(Long userId); // ID로 사용자 조회
 
 }

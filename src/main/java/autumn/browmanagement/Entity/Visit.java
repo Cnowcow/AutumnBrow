@@ -1,4 +1,4 @@
-package autumn.browmanagement.domain;
+package autumn.browmanagement.Entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -6,12 +6,11 @@ import lombok.Setter;
 
 @Entity
 @Getter @Setter
-public class Role {
+public class Visit {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "role_id")
-    private Long id;
+    private Long visitId;
 
-    private String name;
+    private String visitPath;
 
 }

@@ -58,14 +58,14 @@
                                     <td th:text="${user.userId}"></td>
                                     <!--<td th:text="${user.name}"></td>-->
                                     <td>
-                                        <a class="d-block text-decoration-none" th:href="@{/post/{id}/list (id=${user.userId})}" th:text="${user.name}"></a>
+                                        <a class="d-block text-decoration-none" th:href="@{/post/{userId}/list (userId=${user.userId})}" th:text="${user.name}"></a>
                                     </td>
                                     <td th:text="${user.phone}"></td>
                                     <td th:text="${user.birthDay}"></td>
                                     <td th:text="${user.firstVisitDate}"></td>
                                     <td th:text="${user.treatmentCount}"></td>
                                     <td>
-                                        <a href="#" th:href="@{/user/{id}/edit (id=${user.userId})}" class="btn btn-primary" role="button">수정</a>
+                                        <a href="#" th:href="@{/user/{userId}/update (userId=${user.userId})}" class="btn btn-primary" role="button">수정</a>
                                     </td>
                                 </tr>
                                 </tbody>

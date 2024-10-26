@@ -32,7 +32,7 @@
                             </div>
                             <div class="card-body">
                                 <form th:object="${post}" method="post" enctype="multipart/form-data">
-                                    <input type="hidden" th:field="*{id}"/>
+                                    <input type="hidden" th:field="*{postId}"/>
                                     <div class="mb-3">
                                         <label for="name" class="form-label">이름</label>
                                         <input class="form-control" id="name" type="text" th:field="*{user.name}" readonly />
@@ -76,7 +76,7 @@
                                         <select class="form-select" id="visitPath" name="visitPath">
                                             <option value="" selected>방문 경로 선택</option>
                                             <th:block th:each="visit : ${visits}">
-                                                <option th:value="${visit.id}" th:text="${visit.visitPath}" th:selected="${visit.id == post.visitPath}"></option>
+                                                <option th:value="${visit.visitId}" th:text="${visit.visitPath}" th:selected="${visit.visitId == post.visitPath}"></option>
                                             </th:block>
                                         </select>
                                     </div>
@@ -115,7 +115,7 @@
                                                 <button type="submit" class="btn btn-primary">저장</button>
                                                 <button type="button" class="btn btn-secondary" onclick="window.location.href='/post/list'">취소</button>
                                             </div>
-                                            <button type="button" class="btn btn-danger" th:value="${post.id}" onclick="postDelete(this.value)">휴지통</button>
+                                            <button type="button" class="btn btn-danger" th:value="${post.postId}" onclick="postDelete(this.value)">휴지통</button>
                                         </div>
                                 </form>
                             </div>

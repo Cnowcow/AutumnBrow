@@ -1,9 +1,7 @@
 package autumn.browmanagement.service;
 
-import autumn.browmanagement.DTO.EventDTO;
 import autumn.browmanagement.DTO.ReviewDTO;
-import autumn.browmanagement.domain.Event;
-import autumn.browmanagement.domain.Review;
+import autumn.browmanagement.Entity.Review;
 import autumn.browmanagement.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

@@ -9,6 +9,7 @@
     <title>사용자별 시술내역</title>
     <link href="/css/simple-datatables@7.1.2-style.min.css" rel="stylesheet" />
     <link href="/css/styles.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
 </head>
 <body class="sb-nav-fixed">
@@ -62,7 +63,7 @@
                                 <td th:text="${post.postId}"></td>
                                 <td th:text="${#temporals.format(post.treatmentDate, 'yyyy.MM.dd. HH:mm')}"></td>
                                 <td>
-                                    <a class="d-block text-decoration-none" th:href="@{/user/{id}/edit (id=${post.userId})}" th:text="${post.name}"></a>
+                                    <a class="d-block text-decoration-none" th:href="@{/user/{userId}/update (userId=${post.userId})}" th:text="${post.name}"></a>
                                 </td>
                                 <td th:text="${post.phone}"></td>
                                 <td th:text="${post.parentName}"></td>
@@ -74,7 +75,7 @@
                                 <td th:text="${post.retouchDate}"></td>
                                 <td th:text="${post.info}"></td>
                                 <td>
-                                    <a th:href="@{/post/{id}/edit (id=${post.postId})}" class="btn btn-primary" role="button">수정</a>
+                                    <a th:href="@{/post/{postId}/update (postId=${post.postId})}" class="btn btn-primary" role="button">수정</a>
                                 </td>
                             </tr>
                             </tbody>

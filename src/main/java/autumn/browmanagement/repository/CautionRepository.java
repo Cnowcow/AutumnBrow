@@ -1,6 +1,6 @@
 package autumn.browmanagement.repository;
 
-import autumn.browmanagement.domain.Caution;
+import autumn.browmanagement.Entity.Caution;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

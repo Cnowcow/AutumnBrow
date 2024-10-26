@@ -1,7 +1,7 @@
 package autumn.browmanagement.controller;
 
 import autumn.browmanagement.DTO.UserDTO;
-import autumn.browmanagement.domain.User;
+import autumn.browmanagement.Entity.User;
 import autumn.browmanagement.service.UserService;
 
 import jakarta.servlet.http.HttpSession;
@@ -99,7 +99,7 @@ public class UserController {
 
 
     // 사용자 수정 페이지
-    @GetMapping("/user/{userId}/edit")
+    @GetMapping("/user/{userId}/update")
     public String updateUserForm(@PathVariable Long userId, Model model){
         User user = userService.findById(userId);
         model.addAttribute("user", user);
@@ -109,9 +109,9 @@ public class UserController {
 
 
     // 사용자 수정 요청
-    @PostMapping("/user/{id}/edit")
-    public String updateUser(@PathVariable Long id, @ModelAttribute("user") UserDTO form) throws Exception {
-        userService.updateUser(id, form.getName(), form.getPhone(), form.getBirthDay(), form.getFirstVisitDate());
+    @PostMapping("/user/{userId}/update")
+    public String updateUser(@PathVariable Long userId, @ModelAttribute("user") UserDTO form) throws Exception {
+        userService.updateUser(userId, form.getName(), form.getPhone(), form.getBirthDay(), form.getFirstVisitDate());
         return "redirect:/user/list";
     }
 

@@ -3,13 +3,13 @@ package autumn.browmanagement.controller;
 
 import autumn.browmanagement.DTO.PostDTO;
 import autumn.browmanagement.DTO.TreatmentDTO;
-import autumn.browmanagement.domain.Post;
-import autumn.browmanagement.domain.Treatment;
-import autumn.browmanagement.domain.User;
-import autumn.browmanagement.domain.Visit;
+import autumn.browmanagement.Entity.Post;
+import autumn.browmanagement.Entity.Treatment;
+import autumn.browmanagement.Entity.User;
+import autumn.browmanagement.Entity.Visit;
 import autumn.browmanagement.service.PostService;
 import autumn.browmanagement.service.TreatmentService;
-import autumn.browmanagement.service.VisitServce;
+import autumn.browmanagement.service.VisitService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -28,7 +28,7 @@ public class PostController {
 
     private final TreatmentService treatmentService;
     private final PostService postService;
-    private final VisitServce visitServce;
+    private final VisitService visitServce;
 
 
 
@@ -105,7 +105,7 @@ public class PostController {
 
 
     // 시술내역 수정 페이지
-    @GetMapping("/post/{postId}/edit")
+    @GetMapping("/post/{postId}/update")
     public String updatePostForm(@PathVariable Long postId, Model model) throws Exception {
 
         Post post = postService.findById(postId);
@@ -122,8 +122,8 @@ public class PostController {
 
 
     // 시술내역 수정 요청
-    @PostMapping("/post/{id}/edit")
-    public String updatePost(@PathVariable Long id, @ModelAttribute("post") PostDTO postDTO, Model model ) throws Exception {
+    @PostMapping("/post/{postId}/update")
+    public String updatePost(@PathVariable Long postId, @ModelAttribute("post") PostDTO postDTO, Model model ) throws Exception {
 
         try {
             // 서비스에 파일 처리 및 업로드 요청
@@ -138,7 +138,7 @@ public class PostController {
                 createdTreatment = treatmentService.createTreatment(treatmentDTO);
             }
 
-            postService.updatePost(id, postDTO, createdTreatment);
+            postService.updatePost(postId, postDTO, createdTreatment);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -261,12 +261,12 @@ public class PostController {
     public String postOwnList(@PathVariable Long userId, Model model, HttpSession session){
         User sessionUser = (User) session.getAttribute("user");
 
-        if (sessionUser.getRole().getId() == 1){
-            System.out.println("sessionUser.getRole().getId() = " + sessionUser.getRole().getId());
+        if (sessionUser.getRole().getRoleId() == 1){
+            System.out.println("sessionUser.getRole().getId() = " + sessionUser.getRole().getRoleId());
             return "post/postOwnList";
         }
         
-        if (!sessionUser.getId().equals(userId)) {
+        if (!sessionUser.getUserId().equals(userId)) {
             return "권한이 없습니다."; // 다른 사용자의 시술 내역을 조회하려고 하면 홈으로 리다이렉트
         }
 

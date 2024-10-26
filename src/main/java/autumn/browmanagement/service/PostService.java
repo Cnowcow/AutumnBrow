@@ -3,7 +3,7 @@ package autumn.browmanagement.service;
 import autumn.browmanagement.config.EncryptionUtil;
 import autumn.browmanagement.config.FtpUtil;
 import autumn.browmanagement.DTO.PostDTO;
-import autumn.browmanagement.domain.*;
+import autumn.browmanagement.Entity.*;
 import autumn.browmanagement.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -137,8 +137,8 @@ public class PostService {
 
         for (Post post : posts) {
             PostDTO postDTO = new PostDTO();
-            postDTO.setPostId(post.getId());
-            postDTO.setUserId(post.getUser().getId()); //유저아이디
+            postDTO.setPostId(post.getPostId());
+            postDTO.setUserId(post.getUser().getUserId()); //유저아이디
             postDTO.setName(post.getUser().getName()); // 이름
             postDTO.setPhone(post.getUser().getPhone()); // 전화번호
             postDTO.setBirthDay(post.getUser().getBirthDay()); // 생년월일
@@ -200,11 +200,11 @@ public class PostService {
 
     // 시술내역 수정 메소드
     @Transactional
-    public void updatePost(Long id, PostDTO postDTO, Treatment treatment) {
+    public void updatePost(Long postId, PostDTO postDTO, Treatment treatment) {
         //String beforeImageUrl, String afterImageUrl,
 
-        Post post = postRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("게시물을 찾을 수 없습니다. :" + id));
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("게시물을 찾을 수 없습니다. :" + postId));
 
         // 게시물 정보 업데이트
         post.setParentTreatment(postDTO.getParentTreatment());
@@ -283,13 +283,13 @@ public class PostService {
     // 사용자별 시술내역 조회
     @Transactional
     public List<PostDTO> findByUserId(Long userId) {
-        List<Post> posts = postRepository.findByUserIdAndIsDeletedOrderByTreatmentDateDesc(userId, "N"); // 사용자별 게시물 조회
+        List<Post> posts = postRepository.findByUser_UserIdAndIsDeletedOrderByTreatmentDateDesc(userId, "N"); // 사용자별 게시물 조회
         List<PostDTO> postDTOS = new ArrayList<>();
 
         for (Post post : posts) {
             PostDTO postDTO = new PostDTO();
-            postDTO.setPostId(post.getId());
-            postDTO.setUserId(post.getUser().getId()); //유저아이디
+            postDTO.setPostId(post.getPostId());
+            postDTO.setUserId(post.getUser().getUserId()); //유저아이디
             postDTO.setName(post.getUser().getName()); // 이름
             postDTO.setPhone(post.getUser().getPhone()); // 전화번호
             postDTO.setBirthDay(post.getUser().getBirthDay()); // 생년월일
@@ -341,7 +341,7 @@ public class PostService {
                 .orElseThrow(() -> new IllegalArgumentException("게시물을 찾을 수 없습니다. :" + postId));
 
         PostDTO postDTO = new PostDTO();
-        postDTO.setUserId(post.getUser().getId());
+        postDTO.setUserId(post.getUser().getUserId());
         postDTO.setName(post.getUser().getName());
         postDTO.setPhone(post.getUser().getPhone());
 

@@ -1,7 +1,7 @@
 package autumn.browmanagement.controller;
 
 import autumn.browmanagement.DTO.TreatmentDTO;
-import autumn.browmanagement.domain.Treatment;
+import autumn.browmanagement.Entity.Treatment;
 import autumn.browmanagement.service.TreatmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

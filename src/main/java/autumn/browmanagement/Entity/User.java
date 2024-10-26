@@ -1,4 +1,4 @@
-package autumn.browmanagement.domain;
+package autumn.browmanagement.Entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -12,8 +12,7 @@ import java.util.*;
 public class User {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
-    private Long id;
+    private Long userId;
 
     // 이름
     private String name;
@@ -50,11 +49,14 @@ public class User {
     protected void roleId() {
         if (this.role == null) {
             Role defaultRole = new Role();
-            defaultRole.setId(2L); // 기본 역할의 ID 설정
+            defaultRole.setRoleId(2L); // 기본 역할의 ID 설정
             this.role = defaultRole; // Role 객체 설정
         }
     }
 
     @OneToMany(mappedBy = "user")
     private List<Post> posts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Likey> likeys = new ArrayList<>();
 }

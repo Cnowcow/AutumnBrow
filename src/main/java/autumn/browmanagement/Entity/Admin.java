@@ -1,4 +1,4 @@
-package autumn.browmanagement.domain;
+package autumn.browmanagement.Entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -10,8 +10,7 @@ public class Admin {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "admin_id")
-    private Long id;
+    private Long adminId;
 
     private String name;
 

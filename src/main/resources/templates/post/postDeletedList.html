@@ -62,7 +62,7 @@
                                     <td th:text="${post.postId}"></td>
                                     <td th:text="${#temporals.format(post.treatmentDate, 'yyyy.MM.dd. HH:mm')}"></td>
                                     <td>
-                                        <a class="d-block text-decoration-none" th:href="@{/post/{id}/userList (id=${post.userId})}" th:text="${post.name}+${post.isDeletedUser != null ? ' ('+post.isDeletedUser+')' : ''}"></a>
+                                        <a class="d-block text-decoration-none" th:href="@{/post/{userId}/userList (userId=${post.userId})}" th:text="${post.name}+${post.isDeletedUser != null ? ' ('+post.isDeletedUser+')' : ''}"></a>
                                     </td>
                                     <td th:text="${post.phone}"></td>
                                     <td th:text="${post.parentName}"></td>
@@ -74,7 +74,7 @@
                                     <td th:text="${post.retouchDate}"></td>
                                     <td th:text="${post.info}"></td>
                                     <td>
-                                        <a href="#" th:href="@{/post/{id}/edit (id=${post.postId})}" class="btn btn-primary" role="button">수정</a>
+                                        <a href="#" th:href="@{/post/{postId}/update (postId=${post.postId})}" class="btn btn-primary" role="button">수정</a>
                                     </td>
                                 </tr>
                                 </tbody>
