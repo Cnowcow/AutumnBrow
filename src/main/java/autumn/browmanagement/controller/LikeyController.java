@@ -1,6 +1,6 @@
 package autumn.browmanagement.controller;
 
-import autumn.browmanagement.domain.User;
+import autumn.browmanagement.Entity.User;
 import autumn.browmanagement.service.LikeyService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;

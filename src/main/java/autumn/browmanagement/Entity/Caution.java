@@ -1,4 +1,4 @@
-package autumn.browmanagement.domain;
+package autumn.browmanagement.Entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

@@ -1,7 +1,7 @@
 package autumn.browmanagement.controller;
 
 import autumn.browmanagement.DTO.UserDTO;
-import autumn.browmanagement.domain.User;
+import autumn.browmanagement.Entity.User;
 import autumn.browmanagement.service.UserService;
 
 import jakarta.servlet.http.HttpSession;

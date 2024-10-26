@@ -3,7 +3,7 @@ package autumn.browmanagement.service;
 
 import autumn.browmanagement.config.EncryptionUtil;
 import autumn.browmanagement.DTO.UserDTO;
-import autumn.browmanagement.domain.User;
+import autumn.browmanagement.Entity.User;
 import autumn.browmanagement.repository.UserRepository;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;

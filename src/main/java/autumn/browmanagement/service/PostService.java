@@ -3,7 +3,7 @@ package autumn.browmanagement.service;
 import autumn.browmanagement.config.EncryptionUtil;
 import autumn.browmanagement.config.FtpUtil;
 import autumn.browmanagement.DTO.PostDTO;
-import autumn.browmanagement.domain.*;
+import autumn.browmanagement.Entity.*;
 import autumn.browmanagement.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

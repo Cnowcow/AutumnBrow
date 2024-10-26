@@ -44,6 +44,30 @@
                         <div class="text-center" style="display: table-cell; width: 70px;" th:text="${notice.noticeHits}"></div>
                     </li>
                 </ul>
+
+                <ul class="list-group">
+                    <li class="list-group-item fw-bold" style="border-top: 2px solid; border-bottom: 2px solid #c3c3c3;">
+                        <div class="row">
+                            <div class="col-2 text-center">번호</div>
+                            <div class="col" style="padding-left: 20px;">제목</div>
+                            <div class="col-2 text-center">날짜</div>
+                            <div class="col-3 text-center">조회수</div>
+                        </div>
+                    </li>
+                </ul>
+                <ul class="list-group">
+                    <li class="list-group-item" th:each="notice, stat : ${notices}" th:classappend="${notice.important == 'Y'} ? 'bg-light fw-bold' : ''">
+                        <div class="row">
+                            <div class="col-2 text-center" th:text="${stat.index + 1}"></div>
+                            <div class="col" style="padding-left: 20px;">
+                                <a class="text-decoration-none text-dark" th:href="@{/notice/{id}/detail (id=${notice.noticeId})}" th:text="${notice.title}"></a>
+                            </div>
+                            <div class="col-2 text-center" th:text="${#temporals.format(notice.noticeDate, 'YY.MM.dd')}"></div>
+                            <div class="col-3 text-center" id="hits" th:text="${notice.noticeHits}"></div>
+                        </div>
+                    </li>
+                </ul>
+
             </div>
         </main>
         <!-- 메인화면 끝 -->
@@ -53,6 +77,19 @@
 
     </div>
 </div>
+
+<script>
+    function formatNumber(number) {
+        return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
+    const hits = document.getElementById('hits');
+    const formating = parseInt(hits.textContent.trim(), 10);
+    if (!isNaN(formating)) {
+        hits.textContent = formatNumber(formating);
+    }
+
+</script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
         crossorigin="anonymous"></script>

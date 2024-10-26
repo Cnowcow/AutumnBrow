@@ -1,4 +1,4 @@
-package autumn.browmanagement.domain;
+package autumn.browmanagement.Entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -7,28 +7,36 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
+
 @Entity
 @Getter
 @Setter
-public class Review {
+public class Event {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long reviewId;
+    private Long eventId;
 
     private String title;
 
     private String content;
 
-    private String reviewUrl;
+    private String eventUrl;
 
-    // 리뷰 작성 날짜
+    private String important;
+
+    // 이벤트 작성 날짜
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Temporal(TemporalType.DATE)
-    private Date revieDate;
+    private Date eventDate;
 
     // 사용자 정보 - 이름, 전화번호 등은 User 엔티티에서 참조
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+
 }
+
+
+

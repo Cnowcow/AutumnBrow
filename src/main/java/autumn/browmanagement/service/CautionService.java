@@ -2,7 +2,7 @@ package autumn.browmanagement.service;
 
 import autumn.browmanagement.DTO.CautionDTO;
 import autumn.browmanagement.config.FtpUtil;
-import autumn.browmanagement.domain.Caution;
+import autumn.browmanagement.Entity.Caution;
 import autumn.browmanagement.repository.CautionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

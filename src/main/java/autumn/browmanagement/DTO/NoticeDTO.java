@@ -1,14 +1,12 @@
 package autumn.browmanagement.DTO;
 
-import autumn.browmanagement.domain.User;
-import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
-import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -19,8 +17,6 @@ public class NoticeDTO {
     private String title;
 
     private String content;
-
-    private String noticeUrl;
 
     private String important;
 
@@ -38,5 +34,9 @@ public class NoticeDTO {
     // 사용자 정보
     private Long userId;
 
+
     private MultipartFile noticeImage;
+
+    private List<String> imageUrls;
+
 }

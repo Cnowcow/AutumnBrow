@@ -1,7 +1,7 @@
 package autumn.browmanagement.service;
 
 import autumn.browmanagement.DTO.EventDTO;
-import autumn.browmanagement.domain.Event;
+import autumn.browmanagement.Entity.Event;
 import autumn.browmanagement.repository.EventRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

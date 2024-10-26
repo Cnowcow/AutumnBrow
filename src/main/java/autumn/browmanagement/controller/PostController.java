@@ -3,10 +3,10 @@ package autumn.browmanagement.controller;
 
 import autumn.browmanagement.DTO.PostDTO;
 import autumn.browmanagement.DTO.TreatmentDTO;
-import autumn.browmanagement.domain.Post;
-import autumn.browmanagement.domain.Treatment;
-import autumn.browmanagement.domain.User;
-import autumn.browmanagement.domain.Visit;
+import autumn.browmanagement.Entity.Post;
+import autumn.browmanagement.Entity.Treatment;
+import autumn.browmanagement.Entity.User;
+import autumn.browmanagement.Entity.Visit;
 import autumn.browmanagement.service.PostService;
 import autumn.browmanagement.service.TreatmentService;
 import autumn.browmanagement.service.VisitService;

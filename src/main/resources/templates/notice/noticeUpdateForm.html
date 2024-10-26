@@ -8,6 +8,7 @@
     <meta name="author" content=""/>
     <title>공지사항 수정</title>
     <link href="/css/styles.css" rel="stylesheet"/>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
 </head>
 <body class="sb-nav-fixed">
@@ -25,89 +26,64 @@
         <!-- 메인화면 -->
         <main>
             <div class="container mb-5">
-                <div class="row justify-content-center">
-                    <div class="col-lg-7">
-                        <div class="card shadow-lg border-0 rounded-lg mt-5">
-                            <div class="card-header"><h3 class="text-center font-weight-light my-4">공지사항 수정</h3>
+                <article class="col-md-12 justify-content-center">
+                    <form action="/notice/update" method="post" enctype="multipart/form-data">
+                        <input type="hidden" name="noticeId" th:value="${notices.noticeId}"/>
+                        <div id="noticeTitle" class="justify-content-center mt-5 mb-3 border">
+
+                            <h2><input type="text" name="title" class="p-3 fw-bold w-100" th:value="${notices.title}" placeholder="제목을 입력하세요."></h2>
+                            <div class="bg-light p-3 d-flex justify-content-between">
+                                <div class="d-flex p-2">
+                                    <label for="important" class="form-label">중요 공지사항</label>
+                                    <input id="important" name="important" type="checkbox" th:checked="*{notices.important == 'Y'}" style="margin-left: 10px; transform: scale(1.5);" />
+                                </div>
                             </div>
-                            <div class="card-body">
-                                <form th:object="${notices}" method="post" enctype="multipart/form-data">
-                                    <input type="hidden" th:field="*{noticeId}"/>
-                                    <div class="mb-3">
-                                        <label for="title" class="form-label">제목</label>
-                                        <input class="form-control" id="title" name="title" type="text" th:field="*{title}" placeholder="제목을 입력하세요."/>
-                                    </div>
 
-                                    <div class="mb-3">
-                                        <label for="content" class="form-label">내용</label>
-                                        <textarea class="form-control" id="content" name="content" placeholder="내용을 입력하세요."
-                                                  style="height: 200px;" maxlength="1000" th:field="*{content}"></textarea>
-                                    </div>
-
-                                    <div class="row mb-5">
-                                        <div class="col-md-6">
-                                            <label for="noticeImage" class="form-label">사진 변경</label>
-                                            <div class="mb-3">
-                                                <img id="beforeImagePreview" th:src="@{|http://hhjnn92.synology.me/AutumnBrow/notice/*{noticeUrl}|}" style="max-width: 400px; max-height: 300px; cursor: pointer;" onclick="openImageInNewWindow(this.src)" />
-                                            </div>
-                                            <input class="form-control" id="noticeImage" name="noticeImage" type="file" accept="image/*" onchange="previewImage(event, 'beforeImagePreview')" />
-                                        </div>
-                                    </div>
-
-                                    <div class="mb-4">
-                                        <label for="important" class="form-label">중요 공지사항</label>
-                                        <input id="important" name="important" type="checkbox" th:checked="*{important == 'Y'}" style="margin-left: 10px; transform: scale(1.5);" />
-                                    </div>
-
-                                    <div class="d-flex justify-content-between">
-                                        <div>
-                                            <button type="submit" class="btn btn-primary">저장</button>
-                                            <button type="button" class="btn btn-secondary" onclick="window.location.href='/notice/update'">취소</button>
-                                        </div>
-                                        <button type="button" class="btn btn-danger" th:value="${noticeId}" onclick="postDelete(this.value)">삭제</button>
-                                    </div>
-
-                                </form>
-                            </div>
                         </div>
-                    </div>
-                </div>
+
+                        <div id="noticeBody" class="col-md-12 mt-5 mb-5">
+
+                            <div class="mb-4" id="beforeImagePreview">
+                                <div th:if="${notices.imageUrls != null and !notices.imageUrls.isEmpty()}">
+                                    <div class="text-center" th:each="imageurl : ${notices.imageUrls}">
+                                        <img th:id="${imageurl}" th:src="'http://hhjnn92.synology.me/AutumnBrow/notice/'+${imageurl}" style="width: 60%;"/>
+                                        <a class="btn btn-danger" th:data-name="${imageurl}" style="position: relative; top: 0;" onclick="deleteImage(this)">삭제</a>
+                                    </div>
+                                </div>
+                                <div th:if="${notices.imageUrls == null or notices.imageUrls.isEmpty()}">
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="noticeImages" class="form-label">사진 변경</label>
+                                <input class="form-control" id="noticeImages" name="noticeImages" type="file" accept="image/*" multiple onchange="previewMultipleImages(event, 'beforeImagePreview')" />
+                            </div>
+
+                            <div class="mb-4">
+                                <textarea class="form-control col-md-12" name="content"
+                                          placeholder="내용을 입력하세요."
+                                          style="height: 200px;" maxlength="1000"
+                                          th:utext="${notices.content}"></textarea>
+                            </div>
+
+                        </div>
+
+                        <div id="noticeComment">
+
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <button type="submit" class="btn btn-primary">저장</button>
+                                <button type="button" class="btn btn-secondary" onclick="window.location.href='/notice/update'">취소</button>
+                            </div>
+                            <button type="button" class="btn btn-danger" th:value="${notices.noticeId}" onclick="postDelete(this.value)">삭제</button>
+                        </div>
+                    </form>
+
+                </article>
             </div>
         </main>
-
-
-        <!--<main>
-            <div class="container mb-5">
-                <article class="col-md-12 justify-content-center">
-
-                    <div id="noticeTitle" class="justify-content-center mt-5 mb-3 border">
-                        <h2><input type="text" class="p-3 fw-bold w-100" th:value="${notices.title}" placeholder="제목을 입력하세요."></h2>
-                        <div class="bg-light p-3 d-flex justify-content-between">
-                            <div class="d-flex p-2">
-                                <label for="important" class="form-label">중요 공지사항</label>
-                                <input id="important" name="important" type="checkbox" th:checked="*{notices.important == 'Y'}" style="margin-left: 10px; transform: scale(1.5);" />
-                            </div>
-                            <div class="text-secondary p-2">
-                                <i class="fas fa-clock"></i> <span th:text="${#temporals.format(notices.noticeDate, 'YYYY.MM.dd HH:mm')}"></span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="noticeImage" class="text-center">
-                        <img class="col-md-8" th:src="'http://hhjnn92.synology.me/AutumnBrow/notice/'+${notices.noticeUrl}" width="100%"/>
-                    </div>
-
-                    <div id="noticeBody" class="col-md-11 mt-5 mb-5 p-2 row justify-content-center">
-                        <span class="fs-5" th:text="${notices.content}"></span>
-                    </div>
-
-                    <div id="noticeComment">
-                    </div>
-                </article>
-
-
-            </div>
-        </main>-->
         <!-- 메인화면 끝 -->
 
         <!-- footer -->
@@ -118,23 +94,70 @@
 
 
 <script>
-    function previewImage(event, previewId) {
+
+    function previewMultipleImages(event, previewId) {
         const fileInput = event.target;
         const previewImg = document.getElementById(previewId);
 
-        if (fileInput.files && fileInput.files[0]) {
-            const reader = new FileReader();
-
-            reader.onload = function(e) {
-                previewImg.src = e.target.result;
-            }
-
-            reader.readAsDataURL(fileInput.files[0]);
+        if (fileInput.files) {
+            Array.from(fileInput.files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.style.width = '100%'; // 미리보기 이미지 크기 조정
+                    previewImg.appendChild(img);
+                };
+                reader.readAsDataURL(file);
+            });
         }
     }
 
-    function openImageInNewWindow(imageSrc) {
-        window.open(imageSrc, '_blank', 'toolbar=no,scrollbars=yes,resizable=yes,width=800,height=600');
+    function deleteImage(images) {
+        const imageUrl = images.getAttribute('data-name');
+        console.log(imageUrl);
+
+        if (confirm("이 이미지를 삭제하시겠습니까?")){
+            $.ajax({
+                url: '/notice/deleteImage/' + imageUrl,
+                type: 'POST',
+                success: function(response) {
+                    console.log(response);
+                    const imageDiv = document.getElementById(imageUrl).parentElement;
+                    imageDiv.remove();
+                    alert('이미지가 삭제되었습니다.');
+                },
+                error: function(xhr, status, error) {
+                    alert('이미지 삭제에 실패했습니다.');
+                    const errorMessage = xhr.responseText;
+                }
+            });
+        }
+
+
+        /*if (confirm("이 이미지를 삭제하시겠습니까?")) {
+            fetch('/notice/deleteImage', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ imageUrl: imageUrl })
+            })
+                .then(response => {
+                    if (response.ok) {
+                        // 이미지 삭제 성공 시, DOM에서 해당 이미지 제거
+                        const imageDiv = document.getElementById(imageUrl).parentElement;
+                        imageDiv.remove();
+                        alert('이미지가 삭제되었습니다.');
+                    } else {
+                        alert('이미지 삭제에 실패했습니다.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('오류가 발생했습니다.');
+                });
+        }*/
     }
 
 </script>

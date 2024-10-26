@@ -1,8 +1,8 @@
 package autumn.browmanagement.service;
 
-import autumn.browmanagement.domain.Likey;
-import autumn.browmanagement.domain.Notice;
-import autumn.browmanagement.domain.User;
+import autumn.browmanagement.Entity.Likey;
+import autumn.browmanagement.Entity.Notice;
+import autumn.browmanagement.Entity.User;
 import autumn.browmanagement.repository.LikeyRepository;
 import autumn.browmanagement.repository.NoticeRepository;
 import autumn.browmanagement.repository.UserRepository;

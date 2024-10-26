@@ -27,7 +27,7 @@ public class HomeController {
     @GetMapping("/")
     public String Home(Model model) {
 
-        List<NoticeDTO> noticeDTOS = noticeService.noticeList();
+        List<NoticeDTO> noticeDTOS = noticeService.noticeListIndex();
         model.addAttribute("notices", noticeDTOS);
 
         List<EventDTO> eventDTOS = eventService.eventList();

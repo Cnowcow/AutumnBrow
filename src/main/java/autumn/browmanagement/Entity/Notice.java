@@ -1,4 +1,4 @@
-package autumn.browmanagement.domain;
+package autumn.browmanagement.Entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -22,8 +22,6 @@ public class Notice {
 
     private String content;
 
-    private String noticeUrl;
-
     private String important;
 
     private Long noticeHits = 0L;
@@ -40,5 +38,8 @@ public class Notice {
 
     @OneToMany(mappedBy = "notice", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Likey> likeys = new ArrayList<>();
+
+    @OneToMany(mappedBy = "notice", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Image> images = new ArrayList<>();
 
 }

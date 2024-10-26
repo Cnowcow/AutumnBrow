@@ -1,7 +1,6 @@
 package autumn.browmanagement.controller;
 
 import autumn.browmanagement.DTO.CautionDTO;
-import autumn.browmanagement.domain.Caution;
 import autumn.browmanagement.service.CautionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;

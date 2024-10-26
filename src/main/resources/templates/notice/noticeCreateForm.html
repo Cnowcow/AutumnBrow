@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <title>공지사항 등록</title>
+    <link href="/css/styles.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
+
+</head>
+<body class="sb-nav-fixed">
+
+<!-- header -->
+<div th:insert="~{/header.html}"></div>
+
+<div id="layoutSidenav">
+
+    <!-- sidebar -->
+    <div th:insert="~{/sidebar.html}"></div>
+
+    <div id="layoutSidenav_content">
+
+        <!-- 메인화면 -->
+        <!--<main>
+            <div class="container mb-5">
+                <div class="row justify-content-center">
+                    <div class="col-lg-7">
+                        <div class="card shadow-lg border-0 rounded-lg mt-5">
+                            <div class="card-header"><h3 class="text-center font-weight-light my-4">공지사항 수정</h3>
+                            </div>
+                            <div class="card-body">
+                                <form th:object="${notices}" method="post" enctype="multipart/form-data">
+                                    <input type="hidden" th:field="*{noticeId}"/>
+                                    <div class="mb-3">
+                                        <label for="title" class="form-label">제목</label>
+                                        <input class="form-control" id="title" name="title" type="text" th:field="*{title}" placeholder="제목을 입력하세요."/>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="content" class="form-label">내용</label>
+                                        <textarea class="form-control" id="content" name="content" placeholder="내용을 입력하세요."
+                                                  style="height: 200px;" maxlength="1000" th:field="*{content}"></textarea>
+                                    </div>
+
+                                    <div class="row mb-5">
+                                        <div class="col-md-6">
+                                            <label for="noticeImage" class="form-label">사진 변경</label>
+                                            <div class="mb-3">
+                                                <img id="beforeImagePreview" th:src="@{|http://hhjnn92.synology.me/AutumnBrow/notice/*{noticeUrl}|}" style="max-width: 400px; max-height: 300px; cursor: pointer;" onclick="openImageInNewWindow(this.src)" />
+                                            </div>
+                                            <input class="form-control" id="noticeImage" name="noticeImage" type="file" accept="image/*" onchange="previewImage(event, 'beforeImagePreview')" />
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <label for="important" class="form-label">중요 공지사항</label>
+                                        <input id="important" name="important" type="checkbox" th:checked="*{important == 'Y'}" style="margin-left: 10px; transform: scale(1.5);" />
+                                    </div>
+
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <button type="submit" class="btn btn-primary">저장</button>
+                                            <button type="button" class="btn btn-secondary" onclick="window.location.href='/notice/update'">취소</button>
+                                        </div>
+                                        <button type="button" class="btn btn-danger" th:value="${noticeId}" onclick="postDelete(this.value)">삭제</button>
+                                    </div>
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>-->
+
+
+        <main>
+            <div class="container mb-5">
+                <h1 class="mt-4 mb-5">공지사항 등록</h1>
+
+                <article class="col-md-12 justify-content-center">
+                    <form action="/notice/create" method="post" enctype="multipart/form-data">
+                        <!--<input type="hidden" name="userId" th:if="${session.user != null}" th:value="${session.user.userId}" required>-->
+                        <input type="text" name="userId" required>
+
+                        <div id="noticeTitle" class="justify-content-center mt-5 mb-3 border">
+                            <h2><input type="text" class="p-3 fw-bold w-100" name="title" placeholder="제목을 입력하세요." required></h2>
+                            <div class="bg-light p-3 d-flex justify-content-between">
+                                <div class="d-flex p-2">
+                                    <label for="important" class="form-label">중요 공지사항</label>
+                                    <input id="important" name="important" type="checkbox" style="margin-left: 10px; transform: scale(1.5);" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-center mb-4" id="beforeImagePreview"></div>
+                        <label for="noticeImages" class="form-label">사진 등록</label>
+                        <div id="fileInput" class="d-flex justify-content-between">
+                            <input class="form-control" id="noticeImages" name="noticeImages" type="file" accept="image/*" multiple onchange="previewMultipleImages(event, 'beforeImagePreview')" />
+                            <i class="fa-solid fa-circle-plus fs-3 p-1" style="margin-left: 5px;" onclick="addFileInput()"></i>
+                        </div>
+
+                        <div id="noticeBody" class="col-md-12 mt-5 mb-5">
+                            <textarea class="fs-5 col-md-12" name="content" style="height: 300px;" placeholder="내용을 입력하세요."></textarea>
+                        </div>
+
+                        <div id="noticeComment">
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <button type="submit" class="btn btn-primary">저장</button>
+                                <button type="button" class="btn btn-secondary" onclick="window.location.href='/notice/update'">취소</button>
+                            </div>
+                        </div>
+                    </form>
+
+                </article>
+            </div>
+        </main>
+        <!-- 메인화면 끝 -->
+
+        <!-- footer -->
+        <div th:insert="~{/footer.html}"></div>
+
+    </div>
+</div>
+
+<script>
+    function addFileInput(){
+        console.log("zzzz");
+
+    }
+</script>
+
+<script>
+    let selectedFiles = []; // 선택한 파일을 저장할 배열
+
+    function previewMultipleImages(event, previewId) {
+        const fileInput = event.target;
+        const previewImg = document.getElementById(previewId);
+        previewImg.innerHTML = ''; // 기존 이미지를 초기화
+        selectedFiles = []; // 배열 초기화
+
+        if (fileInput.files) {
+            Array.from(fileInput.files).forEach((file, index) => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.style.width = '60%';
+                    img.id = `img${index}`;
+                    previewImg.appendChild(img);
+
+                    // 파일 배열에 추가
+                    selectedFiles.push(file);
+
+                    const a = document.createElement('a');
+                    a.className = 'btn btn-danger';
+                    a.innerText = '삭제';
+                    a.style.marginLeft = '10px';
+
+                    // 삭제 버튼 클릭 시 파일 배열에서 제거
+                    a.onclick = function() {
+                        // 미리보기에서 이미지 제거
+                        previewImg.removeChild(img);
+                        previewImg.removeChild(a);
+
+                        // 배열에서 파일 제거
+                        selectedFiles.splice(selectedFiles.indexOf(file), 1); // 선택된 파일 배열에서 삭제
+
+                        // 파일 입력 요소의 FileList 업데이트
+                        updateFileInput(fileInput);
+                    };
+
+                    previewImg.appendChild(a);
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+    }
+
+    function updateFileInput(fileInput) {
+        const dataTransfer = new DataTransfer();
+
+        // 현재 선택된 파일을 dataTransfer에 추가
+        selectedFiles.forEach(file => {
+            dataTransfer.items.add(file);
+        });
+
+        // fileInput의 파일 목록을 업데이트
+        fileInput.files = dataTransfer.files;
+    }
+</script>
+
+
+<!--<script>
+
+    function previewMultipleImages(event, previewId) {
+        const fileInput = event.target;
+        const previewImg = document.getElementById(previewId);
+        previewImg.innerHTML = ''; // 기존 이미지를 초기화
+
+
+        if (fileInput.files) {
+            Array.from(fileInput.files).forEach((file, index) => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.style.width = '60%';
+                    img.id =  `img${index}`;
+                    previewImg.appendChild(img);
+
+                    const a = document.createElement('a');
+                    a.className = 'btn btn-danger';
+                    a.innerText = '삭제';
+                    a.style.marginLeft = '10px';
+
+                    a.onclick = function() {
+                        const deleteImage = document.getElementById(`img${index}`);
+                        deleteImage.src = '';
+                        a.remove();
+                    };
+
+                    previewImg.appendChild(a);
+
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+    }
+
+</script>-->
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+        crossorigin="anonymous"></script>
+<script src="/js/scripts.js"></script>
+
+</body>
+</html>
