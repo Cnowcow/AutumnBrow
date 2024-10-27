@@ -17,7 +17,7 @@ public class LikeyController {
 
 
     @PostMapping("/notice/like/{noticeId}")
-    public ResponseEntity<?> likePost(@PathVariable Long noticeId, HttpSession session) {
+    public ResponseEntity<?> likeNotice(@PathVariable Long noticeId, HttpSession session) {
 
         User user = (User) session.getAttribute("user"); // 세션에서 User 객체 가져오기
 
@@ -28,6 +28,22 @@ public class LikeyController {
         Long userId = user.getUserId();
 
         likeyService.likeNotice(noticeId, userId);
+
+        return ResponseEntity.ok("좋아요");
+    }
+
+    @PostMapping("/event/like/{eventId}")
+    public ResponseEntity<?> likeEvent(@PathVariable Long eventId, HttpSession session) {
+
+        User user = (User) session.getAttribute("user"); // 세션에서 User 객체 가져오기
+
+        if (user == null) {
+            return ResponseEntity.badRequest().body("로그인 후 이용 가능합니다."); // 세션이 없을 때 에러 메시지
+        }
+
+        Long userId = user.getUserId();
+
+        likeyService.likeEvent(eventId, userId);
 
         return ResponseEntity.ok("좋아요");
     }

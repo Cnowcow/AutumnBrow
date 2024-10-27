@@ -27,57 +27,57 @@
         <main>
             <div class="container mb-5">
                 <article class="col-md-12 justify-content-center">
-                    <form th:action="'/notice/'+${notices.noticeId}+'/update'" method="post" enctype="multipart/form-data">
-                        <input type="hidden" name="noticeId" th:value="${notices.noticeId}"/>
-                        <div id="noticeTitle" class="justify-content-center mt-5 mb-3 border">
+                    <form th:action="'/event/'+${events.eventId}+'/update'" method="post" enctype="multipart/form-data">
+                        <input type="hidden" name="eventId" th:value="${events.eventId}"/>
+                        <div id="eventTitle" class="justify-content-center mt-5 mb-3 border">
 
-                            <h2><input type="text" name="title" class="p-3 fw-bold w-100" th:value="${notices.title}" placeholder="제목을 입력하세요."></h2>
+                            <h2><input type="text" name="title" class="p-3 fw-bold w-100" th:value="${events.title}" placeholder="제목을 입력하세요."></h2>
                             <div class="bg-light p-3 d-flex justify-content-between">
                                 <div class="d-flex p-2">
                                     <label for="important" class="form-label">중요 공지사항</label>
-                                    <input id="important" name="important" type="checkbox" th:checked="*{notices.important == 'Y'}" style="margin-left: 10px; transform: scale(1.5);" />
+                                    <input id="important" name="important" type="checkbox" th:checked="*{events.important == 'Y'}" style="margin-left: 10px; transform: scale(1.5);" />
                                 </div>
                             </div>
 
                         </div>
 
-                        <div id="noticeBody" class="col-md-12 mt-5 mb-5">
+                        <div id="eventBody" class="col-md-12 mt-5 mb-5">
 
                             <div class="mb-4" id="beforeImagePreview">
-                                <div th:if="${notices.imageUrls != null and !notices.imageUrls.isEmpty()}">
-                                    <div class="text-center" th:each="imageurl : ${notices.imageUrls}">
-                                        <img th:id="${imageurl}" th:src="'http://hhjnn92.synology.me/AutumnBrow/notice/'+${imageurl}" style="width: 60%;"/>
+                                <div th:if="${events.imageUrls != null and !events.imageUrls.isEmpty()}">
+                                    <div class="text-center" th:each="imageurl : ${events.imageUrls}">
+                                        <img th:id="${imageurl}" th:src="'http://hhjnn92.synology.me/AutumnBrow/event/'+${imageurl}" style="width: 60%;"/>
                                         <a class="btn btn-danger" th:data-name="${imageurl}" style="position: relative; top: 0;" onclick="deleteImage(this)">삭제</a>
                                     </div>
                                 </div>
-                                <div th:if="${notices.imageUrls == null or notices.imageUrls.isEmpty()}">
+                                <div th:if="${events.imageUrls == null or events.imageUrls.isEmpty()}">
                                 </div>
                             </div>
 
                             <div class="mb-4">
-                                <label for="noticeImages" class="form-label">사진 변경</label>
-                                <input class="form-control" id="noticeImages" name="noticeImages" type="file" accept="image/*" multiple onchange="previewMultipleImages(event, 'beforeImagePreview')" />
+                                <label for="eventImages" class="form-label">사진 변경</label>
+                                <input class="form-control" id="eventImages" name="eventImages" type="file" accept="image/*" multiple onchange="previewMultipleImages(event, 'beforeImagePreview')" />
                             </div>
 
                             <div class="mb-4">
                                 <textarea class="form-control col-md-12" name="content"
                                           placeholder="내용을 입력하세요."
                                           style="height: 200px;" maxlength="1000"
-                                          th:utext="${notices.content}"></textarea>
+                                          th:utext="${events.content}"></textarea>
                             </div>
 
                         </div>
 
-                        <div id="noticeComment">
+                        <div id="eventComment">
 
                         </div>
 
                         <div class="d-flex justify-content-between">
                             <div>
                                 <button type="submit" class="btn btn-primary">저장</button>
-                                <button type="button" class="btn btn-secondary" onclick="window.location.href='/notice/update'">취소</button>
+                                <button type="button" class="btn btn-secondary" onclick="window.location.href='/event/update'">취소</button>
                             </div>
-                            <button type="button" class="btn btn-danger" th:value="${notices.noticeId}" onclick="noticeDelete(this.value)">삭제</button>
+                            <button type="button" class="btn btn-danger" th:value="${events.eventId}" onclick="eventDelete(this.value)">삭제</button>
                         </div>
                     </form>
                 </article>
@@ -118,7 +118,7 @@
 
         if (confirm("이 이미지를 삭제하시겠습니까?")){
             $.ajax({
-                url: '/notice/deleteImage/' + imageUrl,
+                url: '/event/'+ imageUrl + '/deleteImage/',
                 type: 'POST',
                 success: function(response) {
                     console.log(response);
@@ -136,12 +136,12 @@
     }
 
 
-    function noticeDelete(elements) {
+    function eventDelete(elements) {
         console.log(elements);
 
         if (confirm("정말 삭제하시겠습니까?")) {
             $.ajax({
-                url: '/notice/'+ elements + '/delete',
+                url: '/event/'+ elements + '/delete',
                 type: 'DELETE',
                 success: function(response) {
                     alert('삭제가 완료되었습니다.');
@@ -156,6 +156,7 @@
             });
         }
     }
+
 
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"

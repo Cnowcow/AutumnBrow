@@ -16,4 +16,8 @@ public class Image {
     @ManyToOne
     @JoinColumn(name = "notice_id")
     private Notice notice;
+
+    @ManyToOne
+    @JoinColumn(name = "event_id")
+    private Event event;
 }

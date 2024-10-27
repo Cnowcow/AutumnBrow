@@ -1,18 +1,17 @@
 package autumn.browmanagement.controller;
 
 import autumn.browmanagement.DTO.NoticeDTO;
-import autumn.browmanagement.Entity.Notice;
-import autumn.browmanagement.service.ImageService;
-import autumn.browmanagement.service.LikeyService;
-import autumn.browmanagement.service.NoticeService;
+import autumn.browmanagement.service.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -87,11 +86,10 @@ public class NoticeController {
 
 
     // 공지사항 수정 요청
-    @PostMapping("/notice/update")
-    public String noticeUpdate(@ModelAttribute NoticeDTO noticeDTO, @RequestParam("noticeImages") MultipartFile[] noticeImages) {
+    @PostMapping("/notice/{noticeId}/update")
+    public String noticeUpdate(@PathVariable Long noticeId, @ModelAttribute NoticeDTO noticeDTO, @RequestParam("noticeImages") MultipartFile[] noticeImages) {
 
         noticeService.noticeUpdate(noticeDTO, noticeImages);
-        Long noticeId = noticeDTO.getNoticeId();
 
         return "redirect:/notice/"+ noticeId + "/detail";
     }
@@ -105,4 +103,14 @@ public class NoticeController {
     }
 
 
+    // 이벤트 삭제 요청
+    @DeleteMapping("/notice/{noticeId}/delete")
+    public ResponseEntity<Map<String, String>> noticeDelete(@PathVariable Long noticeId) {
+
+        noticeService.noticeDelete(noticeId);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("redirectUrl", "/notice/update");
+        return ResponseEntity.ok(response);
+    }
 }

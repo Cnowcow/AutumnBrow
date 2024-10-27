@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
     <meta name="description" content=""/>
     <meta name="author" content=""/>
-    <title>공지사항</title>
+    <title>이벤트</title>
     <link href="/css/simple-datatables@7.1.2-style.min.css" rel="stylesheet"/>
     <link href="/css/styles.css" rel="stylesheet"/>
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
@@ -26,7 +26,7 @@
         <!-- 메인화면 -->
         <main>
             <div class="container mb-5">
-                <h1 class="mt-4 mb-5">공지사항</h1>
+                <h1 class="mt-4 mb-5">이벤트</h1>
 
                 <ul class="list-group">
                     <li class="col-md-12 p-3 fw-bold" style="display: table; border-top: 2px solid; border-bottom: 2px solid #c3c3c3;">
@@ -37,15 +37,15 @@
                     </li>
                 </ul>
                 <ul class="list-group">
-                    <li class="col-md-12 p-3" style="display: table; border-bottom: 1px solid #ddd;" th:each="notice, stat : ${notices}" th:classappend="${notice.important == 'Y'} ? 'bg-light fw-bold' : ''">
+                    <li class="col-md-12 p-3" style="display: table; border-bottom: 1px solid #ddd;" th:each="event, stat : ${events}" th:classappend="${event.important == 'Y'} ? 'bg-light fw-bold' : ''">
                         <div class="text-center" style="display: table-cell; width: 50px; border-right: 1px solid #ddd;" th:text="${stat.index + 1}"></div>
-                        <div style="padding-left: 20px; border-right: 1px solid #ddd; ; display: table-cell;"><a class="text-decoration-none text-dark" th:href="@{/notice/{id}/detail (id=${notice.noticeId})}" th:text="${notice.title}"></a></div>
-                        <div class="text-center" style="display: table-cell; width: 110px; border-right: 1px solid #ddd;" th:text="${#temporals.format(notice.noticeDate, 'YY.MM.dd')}"></div>
-                        <div class="text-center" style="display: table-cell; width: 70px;" th:text="${notice.noticeHits}"></div>
+                        <div style="padding-left: 20px; border-right: 1px solid #ddd; ; display: table-cell;"><a class="text-decoration-none text-dark" th:href="@{/event/{id}/detail (id=${event.eventId})}" th:text="${event.title}"></a></div>
+                        <div class="text-center" style="display: table-cell; width: 110px; border-right: 1px solid #ddd;" th:text="${#temporals.format(event.eventDate, 'YY.MM.dd')}"></div>
+                        <div class="text-center" style="display: table-cell; width: 70px;" th:text="${event.eventHits}"></div>
                     </li>
                 </ul>
 
-                <br><br><br><br>
+                <br><br><br>
 
                 <ul class="list-group">
                     <li class="list-group-item fw-bold" style="border-top: 2px solid; border-bottom: 2px solid #c3c3c3;">
@@ -58,14 +58,14 @@
                     </li>
                 </ul>
                 <ul class="list-group">
-                    <li class="list-group-item" th:each="notice, stat : ${notices}" th:classappend="${notice.important == 'Y'} ? 'bg-light fw-bold' : ''">
+                    <li class="list-group-item" th:each="event, stat : ${events}" th:classappend="${event.important == 'Y'} ? 'bg-light fw-bold' : ''">
                         <div class="row">
                             <div class="col-2 text-center" th:text="${stat.index + 1}"></div>
                             <div class="col" style="padding-left: 20px;">
-                                <a class="text-decoration-none text-dark" th:href="@{/notice/{id}/detail (id=${notice.noticeId})}" th:text="${notice.title}"></a>
+                                <a class="text-decoration-none text-dark" th:href="@{/event/{id}/detail (id=${event.eventId})}" th:text="${event.title}"></a>
                             </div>
-                            <div class="col-2 text-center" th:text="${#temporals.format(notice.noticeDate, 'YY.MM.dd')}"></div>
-                            <div class="col-3 text-center" id="hits" th:text="${notice.noticeHits}"></div>
+                            <div class="col-2 text-center" th:text="${#temporals.format(event.eventDate, 'YY.MM.dd')}"></div>
+                            <div class="col-3 text-center" id="hits" th:text="${event.eventHits}"></div>
                         </div>
                     </li>
                 </ul>
