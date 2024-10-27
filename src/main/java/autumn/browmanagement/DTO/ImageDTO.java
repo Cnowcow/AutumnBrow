@@ -12,4 +12,6 @@ public class ImageDTO {
     private String imageUrl;
 
     private Long noticeId;
+
+    private Long eventId;
 }

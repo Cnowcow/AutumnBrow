@@ -12,11 +12,14 @@ public class Likey {
     private Long likeyId;
 
     @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @ManyToOne
     @JoinColumn(name = "notice_id")
     private Notice notice;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-
+    @JoinColumn(name = "event_id")
+    private Event event;
 }

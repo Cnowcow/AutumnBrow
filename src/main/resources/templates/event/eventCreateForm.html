@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
     <meta name="description" content=""/>
     <meta name="author" content=""/>
-    <title>공지사항 등록</title>
+    <title>이벤트 등록</title>
     <link href="/css/styles.css" rel="stylesheet"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
 
@@ -79,39 +79,39 @@
 
         <main>
             <div class="container mb-5">
-                <h1 class="mt-4 mb-5">공지사항 등록</h1>
+                <h1 class="mt-4 mb-5">이벤트 등록</h1>
 
                 <article class="col-md-12 justify-content-center">
-                    <form action="/notice/create" method="post" enctype="multipart/form-data">
+                    <form action="/event/create" method="post" enctype="multipart/form-data">
                         <input type="text" name="userId" th:if="${session.user != null}" th:value="${session.user.userId}" required>
                         <input type="text" name="userId" th:unless="${session.user != null}" value="1" required>
 
-                        <div id="noticeTitle" class="justify-content-center mt-5 mb-3 border">
+                        <div id="eventTitle" class="justify-content-center mt-5 mb-3 border">
                             <h2><input type="text" class="p-3 fw-bold w-100" name="title" placeholder="제목을 입력하세요." required></h2>
                             <div class="bg-light p-3 d-flex justify-content-between">
                                 <div class="d-flex p-2">
-                                    <label for="important" class="form-label">중요 공지사항</label>
+                                    <label for="important" class="form-label">중요 이벤트</label>
                                     <input id="important" name="important" type="checkbox" style="margin-left: 10px; transform: scale(1.5);" />
                                 </div>
                             </div>
                         </div>
 
                         <div class="text-center mb-4" id="beforeImagePreview"></div>
-                        <label for="noticeImages" class="form-label">사진 등록</label>
+                        <label for="eventImages" class="form-label">사진 등록</label>
                         <div id="fileInput">
-                            <input class="form-control" id="noticeImages" name="noticeImages" type="file" accept="image/*" multiple onchange="previewMultipleImages(event, 'beforeImagePreview')" />
+                            <input class="form-control" id="eventImages" name="eventImages" type="file" accept="image/*" multiple onchange="previewMultipleImages(event, 'beforeImagePreview')" />
                         </div>
 
-                        <div id="noticeBody" class="col-md-12 mt-5 mb-5">
+                        <div id="eventBody" class="col-md-12 mt-5 mb-5">
                             <textarea class="fs-5 col-md-12" name="content" style="height: 300px;" placeholder="내용을 입력하세요."></textarea>
                         </div>
 
-                        <div id="noticeComment">
+                        <div id="eventComment">
                         </div>
                         <div class="d-flex justify-content-between">
                             <div>
                                 <button type="submit" class="btn btn-primary">저장</button>
-                                <button type="button" class="btn btn-secondary" onclick="window.location.href='/notice/update'">취소</button>
+                                <button type="button" class="btn btn-secondary" onclick="window.location.href='/event/update'">취소</button>
                             </div>
                         </div>
                     </form>

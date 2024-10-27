@@ -1,5 +1,6 @@
 package autumn.browmanagement.repository;
 
+import autumn.browmanagement.Entity.Event;
 import autumn.browmanagement.Entity.Likey;
 import autumn.browmanagement.Entity.Notice;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,5 +14,7 @@ public interface LikeyRepository extends JpaRepository<Likey, Long> {
     Optional<Likey> findByNotice_NoticeIdAndUser_UserId(Long postId, Long userId);
 
     Long countByNotice(Notice notice);
+
+    Long countByEvent(Event event);
 
 }

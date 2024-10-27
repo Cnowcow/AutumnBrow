@@ -17,4 +17,10 @@ public class ImageService {
         System.out.println("zzzzzzzzzzzz = " + imageUrl);
         imageRepository.deleteByImageUrl(imageUrl);
     }
+
+    @Transactional
+    public void eventImageDelete(String imageUrl){
+        System.out.println("zzzzzzzzzzzz = " + imageUrl);
+        imageRepository.deleteByImageUrl(imageUrl);
+    }
 }

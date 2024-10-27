@@ -1,12 +1,9 @@
 package autumn.browmanagement.service;
 
 import autumn.browmanagement.DTO.NoticeDTO;
-import autumn.browmanagement.config.FtpUtil;
 import autumn.browmanagement.Entity.*;
-import autumn.browmanagement.repository.ImageRepository;
-import autumn.browmanagement.repository.LikeyRepository;
-import autumn.browmanagement.repository.NoticeRepository;
-import autumn.browmanagement.repository.UserRepository;
+import autumn.browmanagement.config.FtpUtil;
+import autumn.browmanagement.repository.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -100,7 +97,7 @@ public class NoticeService {
         List<NoticeDTO> noticeDTOS = new ArrayList<>();
 
         for(Notice notice : notices){
-//        for(Notice notice : limitedNotices){
+//        for(Notice notice : limitedNotices){ 최대갯수 지정시 for문
             List<Image> images = imageRepository.findByNotice_NoticeId(notice.getNoticeId());
 
             NoticeDTO noticeDTO = new NoticeDTO();
@@ -177,6 +174,7 @@ public class NoticeService {
     }
 
 
+    // 공지사항 수정 폼
     public NoticeDTO noticeUpdateForm(Long noticeId) {
         Notice notice = noticeRepository.findById(noticeId)
                 .orElseThrow(() -> new IllegalArgumentException("공지사항을 찾을 수 없습니다. :" + noticeId));
@@ -263,6 +261,12 @@ public class NoticeService {
         noticeRepository.save(notice);
     }
 
+
+    // 이벤트 삭제
+    @Transactional
+    public void noticeDelete(Long noticeId){
+        noticeRepository.deleteById(noticeId);
+    }
 
 
     /* ip기준 조회수 시작 */
