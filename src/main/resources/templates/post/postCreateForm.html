@@ -45,14 +45,21 @@
                                         <input class="form-control" id="birthDay" name="birthDay" type="date" />
                                     </div>
 
-                                    <div class="mb-3">
-                                        <label for="visitPath" class="form-label">방문 경로</label>
-                                        <select class="form-select" id="visitPath" name="visitPath">
-                                            <option value="" selected>방문 경로 선택</option>
-                                            <th:block th:each="visit : ${visits}">
-                                                <option th:value="${visit.visitId}" th:text="${visit.visitPath}"></option>
-                                            </th:block>
-                                        </select>
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="visitPath" class="form-label">방문 경로</label>
+                                            <select class="form-select" id="visitPath" onchange="updateVisitPath()">
+                                                <option value="" selected>방문 경로 선택</option>
+                                                <th:block th:each="visit : ${visits}">
+                                                    <option th:value="${visit.visitId}" th:text="${visit.visitPath}"></option>
+                                                </th:block>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <input type="text" id="visitPathDirectInput" name="visitId" />
+                                            <label class="form-label">　</label>
+                                            <input class="form-control" type="text" id="visitView" name="visitView" readonly/>
+                                        </div>
                                     </div>
 
                                     <div class="row mb-3">
@@ -72,7 +79,7 @@
                                             </select>
                                         </div>
                                         <div class="col-md-4">
-                                            <input type="hidden" id="directInput" name="childTreatment" />
+                                            <input type="hidden" id="treatmentDirectInput" name="childTreatment" />
                                             <label class="form-label">　</label>
                                             <input class="form-control" type="text" id="childView" name="childView" readonly/>
                                         </div>
@@ -119,6 +126,41 @@
 </div>
 
     <script>
+
+        function updateVisitPath() {
+            const visitPath = document.getElementById('visitPath');
+
+            const selectedOption = visitPath.options[visitPath.selectedIndex];
+            const selectedOptionId = selectedOption.value;
+            console.log("selectedOptionId" + selectedOptionId);
+
+
+            if(selectedOptionId === "1"){
+                console.log("직접입력");
+
+                document.getElementById("visitView").readOnly = false;  // 입력 필드 활성화
+                document.getElementById("visitView").value = '';
+                document.getElementById("visitPathDirectInput").value = '';
+            }else {
+                fetch(`/find/visitPath/${selectedOptionId}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error("");
+                        }
+                        return response.text();
+                    })
+                    .then(data => {
+                        console.log("방문경로" + data);
+                        document.getElementById("visitView").readOnly = true;
+                        document.getElementById("visitView").value = data;
+                        document.getElementById("visitPathDirectInput").value = selectedOptionId;
+                    })
+                    .catch(error => console.error('Error', error));
+            }
+
+
+        }
+
         function updateChildTreatments() {
             const parentSelect = document.getElementById('parentTreatment');
             const childSelect = document.getElementById('childTreatment');
@@ -133,7 +175,7 @@
                 childSelect.innerHTML = '<option value="">직접입력</option>';
                 document.getElementById("childView").readOnly = false;  // 입력 필드 활성화
                 document.getElementById("childView").value = '';
-                document.getElementById("directInput").value = '';
+                document.getElementById("treatmentDirectInput").value = '';
                 return;
             }
 
@@ -154,10 +196,10 @@
 
         function updateInputField() {
             const childSelect = document.getElementById('childTreatment');
-            const directInput = document.getElementById('directInput');
+            const treatmentDirectInput = document.getElementById('treatmentDirectInput');
             const childView = document.getElementById('childView');
 
-            directInput.value = childSelect.value;
+            treatmentDirectInput.value = childSelect.value;
             childView.value = childSelect.options[childSelect.selectedIndex].textContent;
             childView.readOnly = true;
         }

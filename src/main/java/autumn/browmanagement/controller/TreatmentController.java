@@ -22,8 +22,7 @@ public class TreatmentController {
     @GetMapping("/find/parent/{parentId}")
     @ResponseBody
     public String getParentTreatments(@PathVariable Long parentId) {
-        String parentTreatments = treatmentService.findParentTreatments(parentId);
-        return parentTreatments;
+        return treatmentService.findParentTreatments(parentId);
     }
 
 
@@ -31,8 +30,7 @@ public class TreatmentController {
     @GetMapping("/find/child/{parentId}")
     @ResponseBody
     public List<TreatmentDTO> getChildTreatments(@PathVariable Long parentId) {
-        List<TreatmentDTO> childTreatments = treatmentService.findChildTreatments(parentId);
-        return childTreatments;
+        return treatmentService.findChildTreatments(parentId);
     }
 
 

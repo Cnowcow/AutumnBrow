@@ -94,22 +94,62 @@
 
 <script>
 
+    let selectedFiles = []; // 선택한 파일을 저장할 배열
+
     function previewMultipleImages(event, previewId) {
         const fileInput = event.target;
         const previewImg = document.getElementById(previewId);
 
+        selectedFiles = []; // 배열 초기화
+
         if (fileInput.files) {
-            Array.from(fileInput.files).forEach(file => {
+            Array.from(fileInput.files).forEach((file, index) => {
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     const img = document.createElement('img');
                     img.src = e.target.result;
-                    img.style.width = '100%'; // 미리보기 이미지 크기 조정
+                    img.style.width = '60%'; // 미리보기 이미지 크기 조정
+                    img.id = `img${index}`;
                     previewImg.appendChild(img);
+
+                    // 파일 배열에 추가
+                    selectedFiles.push(file);
+
+                    const a = document.createElement('a');
+                    a.className = 'btn btn-danger';
+                    a.innerText = '삭제';
+                    a.style.marginLeft = '10px';
+
+                    a.onclick = function() {
+                        // 미리보기에서 이미지 제거
+                        previewImg.removeChild(img);
+                        previewImg.removeChild(a);
+
+                        // 배열에서 파일 제거
+                        selectedFiles.splice(selectedFiles.indexOf(file), 1); // 선택된 파일 배열에서 삭제
+
+                        // 파일 입력 요소의 FileList 업데이트
+                        updateFileInput(fileInput);
+                    };
+
+                    previewImg.appendChild(a);
+
                 };
                 reader.readAsDataURL(file);
             });
         }
+    }
+
+    function updateFileInput(fileInput) {
+        const dataTransfer = new DataTransfer();
+
+        // 현재 선택된 파일을 dataTransfer에 추가
+        selectedFiles.forEach(file => {
+            dataTransfer.items.add(file);
+        });
+
+        // fileInput의 파일 목록을 업데이트
+        fileInput.files = dataTransfer.files;
     }
 
     function deleteImage(images) {
@@ -124,7 +164,6 @@
                     console.log(response);
                     const imageDiv = document.getElementById(imageUrl).parentElement;
                     imageDiv.remove();
-                    alert('이미지가 삭제되었습니다.');
                 },
                 error: function(xhr, status, error) {
                     alert('이미지 삭제에 실패했습니다.');

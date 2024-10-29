@@ -3,6 +3,7 @@ package autumn.browmanagement.controller;
 
 import autumn.browmanagement.DTO.PostDTO;
 import autumn.browmanagement.DTO.TreatmentDTO;
+import autumn.browmanagement.DTO.VisitDTO;
 import autumn.browmanagement.Entity.Post;
 import autumn.browmanagement.Entity.Treatment;
 import autumn.browmanagement.Entity.User;
@@ -28,14 +29,14 @@ public class PostController {
 
     private final TreatmentService treatmentService;
     private final PostService postService;
-    private final VisitService visitServce;
+    private final VisitService visitService;
 
 
 
     // 시술내역 등록 폼
     @GetMapping("/post/create")
     public String createForm(Model model){
-        List<Visit> visits = visitServce.visitList(); // 모든 방문 경로 조회
+        List<Visit> visits = visitService.visitList(); // 모든 방문 경로 조회
         model.addAttribute("visits", visits);
 
         List<Treatment> treatments = treatmentService.treatmentList(); // 모든 시술 조회
@@ -47,7 +48,7 @@ public class PostController {
 
     // 시술내역 등록 요청
     @PostMapping("/post/create")
-    public String createPost(PostDTO postDTO, Model model) throws IOException {
+    public String createPost(PostDTO postDTO, Model model) {
         try {
             // 서비스에 파일 처리 및 업로드 요청
             postService.handleFileUpload(postDTO);
@@ -61,7 +62,21 @@ public class PostController {
                 createdTreatment = treatmentService.createTreatment(treatmentDTO);
             }
 
-            postService.createPost(postDTO, createdTreatment); // Post 생성
+            Visit createVisitPath = null;
+            // visitView 값 처리 (직접 입력된 방문 경로 추가)
+            if (postDTO.getVisitId() == null) {
+
+                System.out.println("id = " + postDTO.getVisitId());
+                System.out.println("view = " + postDTO.getVisitView());
+                System.out.println("path = " + postDTO.getVisitPath());
+                VisitDTO visitDTO = new VisitDTO();
+                visitDTO.setVisitPath(postDTO.getVisitView());
+
+                createVisitPath = visitService.createVisit(visitDTO);
+            }
+
+
+            postService.createPost(postDTO, createdTreatment, createVisitPath); // Post 생성
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -111,7 +126,7 @@ public class PostController {
         Post post = postService.findById(postId);
         model.addAttribute("post", post);
 
-        List<Visit> visits = visitServce.visitList(); // 모든 방문 경로 조회
+        List<Visit> visits = visitService.visitList(); // 모든 방문 경로 조회
         model.addAttribute("visits", visits);
 
         List<Treatment> treatments = treatmentService.treatmentList(); // 모든 시술 조회
@@ -218,7 +233,7 @@ public class PostController {
         PostDTO postDTO = postService.findByIdView(postId);
         model.addAttribute("post", postDTO);
 
-        List<Visit> visits = visitServce.visitList(); // 모든 방문 경로 조회
+        List<Visit> visits = visitService.visitList(); // 모든 방문 경로 조회
         model.addAttribute("visits", visits);
 
         List<Treatment> treatments = treatmentService.treatmentList(); // 모든 시술 조회
