@@ -45,15 +45,41 @@
                                         <input class="form-control" id="birthDay" name="birthDay" type="date" />
                                     </div>
 
-                                    <div class="mb-3">
-                                        <label for="visitPath" class="form-label">방문 경로</label>
-                                        <select class="form-select" id="visitPath" name="visitPath">
-                                            <option value="" selected>방문 경로 선택</option>
-                                            <th:block th:each="visit : ${visits}">
-                                                <option th:value="${visit.visitId}" th:text="${visit.visitPath}"></option>
-                                            </th:block>
-                                        </select>
+
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="visitId" class="form-label">방문 경로</label>
+                                            <select class="form-select" id="visitId" name="visitId" onchange="updateVisitPath()">
+                                                <option value="" selected>방문 경로 선택</option>
+                                                <th:block th:each="visit : ${visits}">
+                                                    <option th:value="${visit.visitId}" th:text="${visit.visitPath}"></option>
+                                                </th:block>
+                                                <option>직접입력</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="visitPath" class="form-label">　</label>
+                                            <input class="form-control" type="text" id="visitPath" name="visitPath" readonly/>
+                                        </div>
                                     </div>
+
+
+                                    <!--<div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="visitPath" class="form-label">방문 경로</label>
+                                            <select class="form-select" id="visitPath" onchange="updateVisitPath()">
+                                                <option value="" selected>방문 경로 선택</option>
+                                                <th:block th:each="visit : ${visits}">
+                                                    <option th:value="${visit.visitId}" th:text="${visit.visitPath}"></option>
+                                                </th:block>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <input type="text" id="visitPathDirectInput" name="visitId" />
+                                            <label class="form-label">　</label>
+                                            <input class="form-control" type="text" id="visitView" name="visitView" readonly/>
+                                        </div>
+                                    </div>-->
 
                                     <div class="row mb-3">
                                         <div class="col-md-4">
@@ -72,7 +98,7 @@
                                             </select>
                                         </div>
                                         <div class="col-md-4">
-                                            <input type="hidden" id="directInput" name="childTreatment" />
+                                            <input type="hidden" id="treatmentDirectInput" name="childTreatment" />
                                             <label class="form-label">　</label>
                                             <input class="form-control" type="text" id="childView" name="childView" readonly/>
                                         </div>
@@ -83,14 +109,24 @@
                                         <input class="form-control" id="treatmentDate" name="treatmentDate" type="datetime-local" />
                                     </div>
 
-                                    <div class="mb-3">
-                                        <label for="beforeImageFile" class="form-label">시술 전 사진</label>
-                                        <input class="form-control" id="beforeImageFile" name="beforeImageFile" type="file" accept="image/*" />
-                                    </div>
+                                    <div class="row mb-3">
 
-                                    <div class="mb-3">
-                                        <label for="afterImageFile" class="form-label">시술 후 사진</label>
-                                        <input class="form-control" id="afterImageFile" name="afterImageFile" type="file" accept="image/*" />
+                                        <div class="col-md-6">
+                                            <label for="beforeImageFile" class="form-label">시술 전 사진</label>
+                                            <div>
+                                                <img id="beforeImagePreview" style="max-width: 260px; max-height: 230px;">
+                                            </div>
+                                            <input class="form-control" id="beforeImageFile" name="beforeImageFile" type="file" accept="image/*" onchange="previewImage(event, 'beforeImagePreview')" />
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <label for="afterImageFile" class="form-label">시술 후 사진</label>
+                                            <div>
+                                                <img id="afterImagePreview" style="max-width: 260px; max-height: 230px;">
+                                            </div>
+                                            <input class="form-control" id="afterImageFile" name="afterImageFile" type="file" accept="image/*" onchange="previewImage(event, 'afterImagePreview')" />
+                                        </div>
+
                                     </div>
 
                                     <div class="mb-3">
@@ -119,6 +155,59 @@
 </div>
 
     <script>
+        // 방문경로 처리 함수
+        function updateVisitPath() {
+            const select = document.getElementById("visitId");
+            const visitPathInput = document.getElementById("visitPath");
+
+            if (select.value === "directInput") {
+                visitPathInput.removeAttribute("readonly");
+                visitPathInput.value = ""; // 사용자가 직접 입력할 수 있도록 초기화
+            } else {
+                visitPathInput.setAttribute("readonly", true);
+                visitPathInput.value = select.options[select.selectedIndex].text; // 선택한 값으로 표시
+            }
+        }
+
+
+        // 이미지 프리뷰 함수
+        function previewImage(event, previewId) {
+            const fileInput = event.target;
+            const previewImg = document.getElementById(previewId);
+            if(previewImg.parentElement.querySelector('.btn.btn-danger')){
+                previewImg.parentElement.removeChild(previewImg.parentElement.querySelector('.btn.btn-danger'));
+            }
+
+            if (fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    previewImg.src = e.target.result;
+
+                    const a = document.createElement('a');
+                    a.className = 'btn btn-danger';
+                    a.innerText = '삭제';
+                    a.style.marginLeft = '10px';
+
+                    a.onclick = function() {
+                        previewImg.src = '';
+                        const fileInput = previewImg.closest('.col-md-6').querySelector('input[type="file"]');
+                        if (fileInput) {
+                            fileInput.value = ''; // 파일 입력 값 초기화
+                        }
+                        previewImg.parentElement.removeChild(a); // 삭제 버튼 제거
+                    };
+
+                    previewImg.parentElement.appendChild(a);
+                }
+
+                reader.readAsDataURL(fileInput.files[0]);
+            }
+
+        }
+
+
+        // 시술내역 처리 함수
         function updateChildTreatments() {
             const parentSelect = document.getElementById('parentTreatment');
             const childSelect = document.getElementById('childTreatment');
@@ -133,7 +222,7 @@
                 childSelect.innerHTML = '<option value="">직접입력</option>';
                 document.getElementById("childView").readOnly = false;  // 입력 필드 활성화
                 document.getElementById("childView").value = '';
-                document.getElementById("directInput").value = '';
+                document.getElementById("treatmentDirectInput").value = '';
                 return;
             }
 
@@ -152,12 +241,13 @@
             }
         }
 
+
         function updateInputField() {
             const childSelect = document.getElementById('childTreatment');
-            const directInput = document.getElementById('directInput');
+            const treatmentDirectInput = document.getElementById('treatmentDirectInput');
             const childView = document.getElementById('childView');
 
-            directInput.value = childSelect.value;
+            treatmentDirectInput.value = childSelect.value;
             childView.value = childSelect.options[childSelect.selectedIndex].textContent;
             childView.readOnly = true;
         }

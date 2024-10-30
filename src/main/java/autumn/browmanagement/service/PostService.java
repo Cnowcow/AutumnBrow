@@ -47,7 +47,7 @@ public class PostService {
             String uniqueFileName = UUID.randomUUID().toString() + fileExtension;
             File localFile = new File(System.getProperty("java.io.tmpdir") + "/" + uniqueFileName);
             file.transferTo(localFile);
-            ftpUtil.uploadFile("/AutumnBrow/BeforeAndAfter" + uniqueFileName, localFile);
+            ftpUtil.uploadFile("/AutumnBrow/BeforeAndAfter/" + uniqueFileName, localFile);
 
             if (isBefore) {
                 postDTO.setBeforeImageUrl(uniqueFileName); // 비포 URL 설정
@@ -80,6 +80,28 @@ public class PostService {
             post.setChildTreatment(createdTreatment.getTreatmentId()); // 생성된 Treatment의 ID를 설정
         }
 
+        // visitId 설정
+        Long visitId = postDTO.getVisitId();
+        if (visitId != null) {
+            post.setVisitId(visitId); // 선택한 visitId 할당
+        } else {
+            if (postDTO.getVisitPath() != null && !postDTO.getVisitPath().isEmpty()) {
+                Visit existingVisit = visitRepository.findByVisitPath(postDTO.getVisitPath());
+
+                if (existingVisit != null) {
+                    // 이미 존재하는 경우, 기존 visitId를 사용
+                    post.setVisitId(existingVisit.getVisitId());
+                } else {
+
+                    Visit newVisit = new Visit();
+                    newVisit.setVisitPath(postDTO.getVisitPath()); // 새로운 visitPath 설정
+                    visitRepository.save(newVisit); // 새로운 Visit 저장
+
+                    post.setVisitId(newVisit.getVisitId()); // 새로 생성된 visitId를 Post에 할당
+                }
+            }
+        }
+
         postRepository.save(post); // Post 저장
     }
 
@@ -100,7 +122,7 @@ public class PostService {
     }
 
     private void setPostDetails(Post post, PostDTO postDTO, User user) {
-        post.setVisitPath(postDTO.getVisitPath());
+        post.setPostId(postDTO.getPostId());
         post.setParentTreatment(postDTO.getParentTreatment());
         post.setChildTreatment(postDTO.getChildTreatment());
         post.setTreatmentDate(Optional.ofNullable(postDTO.getTreatmentDate()).orElse(LocalDateTime.now()));
@@ -166,13 +188,13 @@ public class PostService {
             } // 세부내용
 
             postDTO.setTreatmentDate(post.getTreatmentDate()); // 시술날짜
-            postDTO.setVisitPath(post.getVisitPath()); // 방문경로
+            postDTO.setVisitId(post.getVisitId()); // 방문경로
 
-            if (post.getVisitPath() != null) {
-                Optional<Visit> visitPath = visitRepository.findById(post.getVisitPath());
+            if (post.getVisitId() != null) {
+                Optional<Visit> visitPath = visitRepository.findById(post.getVisitId());
                 if (visitPath.isPresent()) {
-                    postDTO.setVisitPath(post.getVisitPath()); // ID 설정
-                    postDTO.setVisitName(visitPath.get().getVisitPath()); // 이름 설정
+                    postDTO.setVisitId(post.getVisitId()); // ID 설정
+                    postDTO.setVisitPath(visitPath.get().getVisitPath()); // 이름 설정
                 }
             } // 방문 경로
 
@@ -210,7 +232,7 @@ public class PostService {
         post.setParentTreatment(postDTO.getParentTreatment());
         post.setChildTreatment(postDTO.getChildTreatment());
         post.setTreatmentDate(postDTO.getTreatmentDate());
-        post.setVisitPath(postDTO.getVisitPath());
+        post.setVisitId(postDTO.getVisitId());
 
         if (postDTO.getBeforeImageUrl() != null) {
             post.setBeforeImageUrl(postDTO.getBeforeImageUrl());
@@ -313,13 +335,13 @@ public class PostService {
             } // 세부내용
 
             postDTO.setTreatmentDate(post.getTreatmentDate()); // 시술날짜
-            postDTO.setVisitPath(post.getVisitPath()); // 방문경로
+            postDTO.setVisitId(post.getVisitId()); // 방문경로
 
-            if (post.getVisitPath() != null) {
-                Optional<Visit> visitPath = visitRepository.findById(post.getVisitPath());
+            if (post.getVisitId() != null) {
+                Optional<Visit> visitPath = visitRepository.findById(post.getVisitId());
                 if (visitPath.isPresent()) {
-                    postDTO.setVisitPath(post.getVisitPath()); // ID 설정
-                    postDTO.setVisitName(visitPath.get().getVisitPath()); // 이름 설정
+                    postDTO.setVisitId(post.getVisitId()); // ID 설정
+                    postDTO.setVisitPath(visitPath.get().getVisitPath()); // 이름 설정
                 }
             } // 방문 경로
 

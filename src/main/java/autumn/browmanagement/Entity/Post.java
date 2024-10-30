@@ -41,7 +41,7 @@ public class Post {
     private String isDeleted;
 
     // 방문경로
-    private Long visitPath;
+    private Long visitId;
 
     // 사용자 정보 - 이름, 전화번호 등은 User 엔티티에서 참조
     @ManyToOne
@@ -56,7 +56,7 @@ public class Post {
     public Post() {}
 
     // 필요한 정보를 포함하는 생성자
-    public Post(LocalDateTime treatmentDate, String beforeImageUrl, String afterImageUrl, Boolean retouch, Date retouchDate, String info, User user, String isDeleted, Long visitPath, Long parentTreatment, Long childTreatment ) {
+    public Post(LocalDateTime treatmentDate, String beforeImageUrl, String afterImageUrl, Boolean retouch, Date retouchDate, String info, User user, String isDeleted, Long visitId, Long parentTreatment, Long childTreatment ) {
         this.treatmentDate = treatmentDate;
         this.beforeImageUrl = beforeImageUrl;
         this.afterImageUrl = afterImageUrl;
@@ -65,7 +65,7 @@ public class Post {
         this.info = info;
         this.user = user;
         this.isDeleted = isDeleted;
-        this.visitPath = visitPath;
+        this.visitId = visitId;
         this.parentTreatment = parentTreatment;
         this.childTreatment = childTreatment;
     }
