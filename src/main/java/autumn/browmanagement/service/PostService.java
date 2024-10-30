@@ -59,7 +59,7 @@ public class PostService {
     }
 
     @Transactional
-    public void createPost(PostDTO postDTO, Treatment createdTreatment, Visit createVisitPath) throws Exception {
+    public void createPost(PostDTO postDTO, Treatment createdTreatment) throws Exception {
         Post post = new Post();
 
         Optional<User> findUser = userRepository.findByNameAndPhone(postDTO.getName(), postDTO.getPhone());
@@ -80,8 +80,26 @@ public class PostService {
             post.setChildTreatment(createdTreatment.getTreatmentId()); // 생성된 Treatment의 ID를 설정
         }
 
-        if (createVisitPath != null) {
-            post.setVisitId(createVisitPath.getVisitId());
+        // visitId 설정
+        Long visitId = postDTO.getVisitId();
+        if (visitId != null) {
+            post.setVisitId(visitId); // 선택한 visitId 할당
+        } else {
+            if (postDTO.getVisitPath() != null && !postDTO.getVisitPath().isEmpty()) {
+                Visit existingVisit = visitRepository.findByVisitPath(postDTO.getVisitPath());
+
+                if (existingVisit != null) {
+                    // 이미 존재하는 경우, 기존 visitId를 사용
+                    post.setVisitId(existingVisit.getVisitId());
+                } else {
+
+                    Visit newVisit = new Visit();
+                    newVisit.setVisitPath(postDTO.getVisitPath()); // 새로운 visitPath 설정
+                    visitRepository.save(newVisit); // 새로운 Visit 저장
+
+                    post.setVisitId(newVisit.getVisitId()); // 새로 생성된 visitId를 Post에 할당
+                }
+            }
         }
 
         postRepository.save(post); // Post 저장

@@ -14,6 +14,7 @@ public interface VisitRepository extends JpaRepository<Visit, Long> {
 
     Optional<Visit> findByVisitId(Long visitId); // id로 시술 내용을 찾는 메서드
 
-    Optional<Visit> findByVisitPath(String visitPath); // id로 시술 내용을 찾는 메서드
+    Visit findByVisitPath(String visitPath); // id로 시술 내용을 찾는 메서드
+
 
 }

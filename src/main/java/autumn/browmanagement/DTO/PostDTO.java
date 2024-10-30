@@ -67,7 +67,7 @@ public class PostDTO {
     // 방문 경로
     private Long visitId; // 방문경로 id
     private String visitPath; // 방문경로
-    private String visitView;
+
 
     /* 파일명 변환용 필드 */
     private MultipartFile beforeImageFile;

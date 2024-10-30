@@ -106,11 +106,15 @@
             Array.from(fileInput.files).forEach((file, index) => {
                 const reader = new FileReader();
                 reader.onload = function(e) {
+                    const div = document.createElement('div');
+                    div.className = 'text-center';
+
                     const img = document.createElement('img');
                     img.src = e.target.result;
                     img.style.width = '60%'; // 미리보기 이미지 크기 조정
                     img.id = `img${index}`;
-                    previewImg.appendChild(img);
+                    div.appendChild(img);
+                    previewImg.appendChild(div);
 
                     // 파일 배열에 추가
                     selectedFiles.push(file);
@@ -122,8 +126,7 @@
 
                     a.onclick = function() {
                         // 미리보기에서 이미지 제거
-                        previewImg.removeChild(img);
-                        previewImg.removeChild(a);
+                        previewImg.removeChild(div);
 
                         // 배열에서 파일 제거
                         selectedFiles.splice(selectedFiles.indexOf(file), 1); // 선택된 파일 배열에서 삭제
@@ -132,7 +135,7 @@
                         updateFileInput(fileInput);
                     };
 
-                    previewImg.appendChild(a);
+                    div.appendChild(a);
 
                 };
                 reader.readAsDataURL(file);

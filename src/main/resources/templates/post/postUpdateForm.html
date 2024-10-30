@@ -31,20 +31,38 @@
                             <div class="card-header"><h3 class="text-center font-weight-light my-4">시술내역 수정</h3>
                             </div>
                             <div class="card-body">
-                                <form th:object="${post}" method="post" enctype="multipart/form-data">
-                                    <input type="hidden" th:field="*{postId}"/>
+                                <form th:action="'/post/'+${post.postId}+'/update'" method="post" enctype="multipart/form-data">
+                                    <input type="hidden" name="postId" th:value="${post.postId}"/>
                                     <div class="mb-3">
                                         <label for="name" class="form-label">이름</label>
-                                        <input class="form-control" id="name" type="text" th:field="*{user.name}" readonly />
+                                        <input class="form-control" id="name" type="text" th:value="${post.user.name}" readonly />
                                     </div>
                                     <div class="mb-3">
                                         <label for="phone" class="form-label">전화번호</label>
-                                        <input class="form-control" id="phone"  type="text" th:field="*{user.phone}" oninput="formatPhoneNumber(this)" readonly />
+                                        <input class="form-control" id="phone" type="text" th:value="${post.user.phone}" oninput="formatPhoneNumber(this)" readonly />
                                     </div>
                                     <div class="mb-3">
                                         <label for="birthDay" class="form-label">생년월일</label>
-                                        <input class="form-control" id="birthDay" type="date" th:field="*{user.birthDay}" readonly />
+                                        <input class="form-control" id="birthDay" type="date" th:value="${post.user.birthDay}" readonly />
                                     </div>
+
+
+
+
+                                    <div class="mb-3">
+                                        <label for="visitPath" class="form-label">방문 경로</label>
+                                        <select class="form-select" id="visitPath" name="visitPath">
+                                            <option value="" selected>방문 경로 선택</option>
+                                            <th:block th:each="visit : ${visits}">
+                                                <option th:value="${visit.visitId}" th:text="${visit.visitPath}" th:selected="${visit.visitId == post.visitId}"></option>
+                                            </th:block>
+                                        </select>
+                                    </div>
+
+
+
+
+
                                     <div class="row mb-3">
                                         <div class="col-md-4">
                                             <label for="parentTreatment" class="form-label">시술 내용</label>
@@ -62,37 +80,31 @@
                                             </select>
                                         </div>
                                         <div class="col-md-4">
-                                            <input type="hidden" id="directInput" name="childTreatment" th:value="*{childTreatment}" />
+                                            <input type="hidden" id="directInput" name="childTreatment" th:value="${post.childTreatment}" />
                                             <label class="form-label">　</label>
                                             <input class="form-control" type="text" id="childView" name="childView" readonly />
                                         </div>
                                     </div>
+
+
+
                                     <div class="mb-3">
                                         <label for="treatmentDate" class="form-label">시술 날짜</label>
                                         <input class="form-control" id="treatmentDate" name="treatmentDate" type="datetime-local" th:value="${#temporals.format(post.treatmentDate, 'yyyy-MM-dd HH:mm')}" />
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="visitPath" class="form-label">방문 경로</label>
-                                        <select class="form-select" id="visitPath" name="visitPath">
-                                            <option value="" selected>방문 경로 선택</option>
-                                            <th:block th:each="visit : ${visits}">
-                                                <option th:value="${visit.visitId}" th:text="${visit.visitPath}" th:selected="${visit.visitId == post.visitId}"></option>
-                                            </th:block>
-                                        </select>
                                     </div>
 
                                     <div class="row mb-3">
                                         <div class="col-md-6">
                                             <label for="beforeImageFile" class="form-label">시술 전 사진</label>
                                             <div class="mb-3">
-                                                <img id="beforeImagePreview" th:src="@{|http://hhjnn92.synology.me/AutumnBrow/BeforeAndAfter/*{beforeImageUrl}|}" style="max-width: 200px; max-height: 200px; cursor: pointer;" onclick="openImageInNewWindow(this.src)" />
+                                                <img id="beforeImagePreview" th:src="@{|http://hhjnn92.synology.me/AutumnBrow/BeforeAndAfter/${post.beforeImageUrl}|}" style="max-width: 200px; max-height: 200px; cursor: pointer;" onclick="openImageInNewWindow(this.src)" />
                                             </div>
                                             <input class="form-control" id="beforeImageFile" name="beforeImageFile" type="file" accept="image/*" onchange="previewImage(event, 'beforeImagePreview')" />
                                         </div>
                                         <div class="col-md-6">
                                             <label for="afterImageFile" class="form-label">시술 후 사진</label>
                                             <div class="mb-3">
-                                                <img id="afterImagePreview" th:src="@{|http://hhjnn92.synology.me/AutumnBrow/BeforeAndAfter/*{afterImageUrl}|}" style="max-width: 200px; max-height: 200px; cursor: pointer;" onclick="openImageInNewWindow(this.src)" />
+                                                <img id="afterImagePreview" th:src="@{|http://hhjnn92.synology.me/AutumnBrow/BeforeAndAfter/${post.afterImageUrl}|}" style="max-width: 200px; max-height: 200px; cursor: pointer;" onclick="openImageInNewWindow(this.src)" />
                                             </div>
                                             <input class="form-control" id="afterImageFile" name="afterImageFile" type="file" accept="image/*" onchange="previewImage(event, 'afterImagePreview')" />
                                         </div>
@@ -100,15 +112,15 @@
 
                                     <div class="mb-4">
                                         <label for="retouch" class="form-label">리터치 여부</label>
-                                        <input id="retouch" name="retouch" type="checkbox" th:checked="*{retouch == true}" style="transform: scale(1.5);" />
+                                        <input id="retouch" name="retouch" type="checkbox" th:checked="${post.retouch == true}" style="transform: scale(1.5);" />
                                     </div>
                                     <div class="mb-3">
                                         <label for="retouchDate" class="form-label">리터치 날짜</label>
-                                        <input class="form-control" id="retouchDate" name="retouchDate" type="date" th:field="*{retouchDate}" />
+                                        <input class="form-control" id="retouchDate" name="retouchDate" type="date" th:value="${post.retouchDate}" />
                                     </div>
                                     <div class="mb-3">
                                         <label for="info" class="form-label">비고</label>
-                                        <input class="form-control" id="info" name="info" type="text" placeholder="비고사항" th:field="*{info}" />
+                                        <input class="form-control" id="info" name="info" type="text" placeholder="비고사항" th:value="${post.info}" />
                                     </div>
                                         <div class="d-flex justify-content-between">
                                             <div>

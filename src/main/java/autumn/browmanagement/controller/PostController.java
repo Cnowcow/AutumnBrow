@@ -62,21 +62,7 @@ public class PostController {
                 createdTreatment = treatmentService.createTreatment(treatmentDTO);
             }
 
-            Visit createVisitPath = null;
-            // visitView 값 처리 (직접 입력된 방문 경로 추가)
-            if (postDTO.getVisitId() == null) {
-
-                System.out.println("id = " + postDTO.getVisitId());
-                System.out.println("view = " + postDTO.getVisitView());
-                System.out.println("path = " + postDTO.getVisitPath());
-                VisitDTO visitDTO = new VisitDTO();
-                visitDTO.setVisitPath(postDTO.getVisitView());
-
-                createVisitPath = visitService.createVisit(visitDTO);
-            }
-
-
-            postService.createPost(postDTO, createdTreatment, createVisitPath); // Post 생성
+            postService.createPost(postDTO, createdTreatment); // Post 생성
 
         } catch (IOException e) {
             e.printStackTrace();
