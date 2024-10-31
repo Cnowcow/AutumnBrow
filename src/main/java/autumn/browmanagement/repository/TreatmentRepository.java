@@ -16,4 +16,5 @@ public interface TreatmentRepository extends JpaRepository<Treatment, Long> {
 
     List<Treatment> findByParent_TreatmentId(Long parentId); // id로 시술 내용을 찾는 메서드
 
+    Treatment findByName(String treatmentName);
 }

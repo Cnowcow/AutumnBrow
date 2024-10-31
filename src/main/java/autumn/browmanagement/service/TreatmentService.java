@@ -23,6 +23,9 @@ public class TreatmentService {
         return treatmentRepository.findByParentIsNullOrderByTreatmentIdDesc();
     }
 
+    public Treatment findByName(String name) {
+        return treatmentRepository.findByName(name);
+    }
 
     // 상위 시술 조회
     public String findParentTreatments(Long parentId){

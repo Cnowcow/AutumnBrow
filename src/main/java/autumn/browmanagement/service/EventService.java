@@ -51,7 +51,7 @@ public class EventService {
     }
 
 
-    // 공지사항 등록
+    // 이벤트 등록
     @Transactional
     public void eventCreate(EventDTO eventDTO, MultipartFile[] eventImages){
         Event event = new Event();
@@ -73,7 +73,7 @@ public class EventService {
 
                     Image image = new Image();
                     image.setImageUrl(imageUrl);
-                    image.setEvent(event); // 공지사항에 이미지 연결
+                    image.setEvent(event); // 이벤트에 이미지 연결
                     imageRepository.save(image); // 이미지 저장
                 } catch (IOException e) {
                     System.err.println("업로드 중 에러발생" + e.getMessage());
@@ -83,8 +83,9 @@ public class EventService {
         eventDTO.setEventId(event.getEventId());
     }
 
+
     // 이벤트 조회 날짜순 (index용)
-    public List<EventDTO> eventList(){
+    public List<EventDTO> eventListIndex(){
         List<Event> events = eventRepository.findAllByOrderByEventDateDesc();
 
         /*
@@ -95,9 +96,8 @@ public class EventService {
 
         List<EventDTO> eventDTOS = new ArrayList<>();
 
-        for (Event event : events){
+        for(Event event : events){
 //        for(Event event : limitedEvents){ 최대갯수 지정시 for문
-
             List<Image> images = imageRepository.findByEvent_EventId(event.getEventId());
 
             EventDTO eventDTO = new EventDTO();
@@ -122,7 +122,7 @@ public class EventService {
 
     // 이벤트 중요도 순 (이벤트 페이지용)
     public List<EventDTO> eventListImportant() {
-        List<Event> events = eventRepository.findAllByOrderByEventDateDesc(); // 모든 공지사항 불러오기
+        List<Event> events = eventRepository.findAllByOrderByEventDateDesc(); // 모든 이벤트 불러오기
         List<EventDTO> eventDTOS = new ArrayList<>();
         for(Event event : events){
             EventDTO eventDTO = new EventDTO();
@@ -140,10 +140,10 @@ public class EventService {
     }
 
 
-    // 이벤트 디테일
+    // 이벤트 디테일, 수정폼
     public EventDTO eventDetail(Long eventId) {
         Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new IllegalArgumentException("공지사항을 찾을 수 없습니다. :" + eventId));
+                .orElseThrow(() -> new IllegalArgumentException("이벤트를 찾을 수 없습니다. :" + eventId));
 
         EventDTO eventDTO = new EventDTO();
         eventDTO.setEventId(event.getEventId());
@@ -177,7 +177,7 @@ public class EventService {
     // 이벤트 수정 폼
     public EventDTO eventUpdateForm(Long eventId) {
         Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new IllegalArgumentException("공지사항을 찾을 수 없습니다. :" + eventId));
+                .orElseThrow(() -> new IllegalArgumentException("이벤트를 찾을 수 없습니다. :" + eventId));
 
         EventDTO eventDTO = new EventDTO();
         eventDTO.setEventId(event.getEventId());
@@ -206,11 +206,12 @@ public class EventService {
         return eventDTO;
     }
 
+
     // 이벤트 수정 요청
     @Transactional
     public void eventUpdate(EventDTO eventDTO, MultipartFile[] eventImages) {
         Event event = eventRepository.findById(eventDTO.getEventId())
-                .orElseThrow(() -> new IllegalArgumentException("공지사항을 찾을 수 없습니다. :" + eventDTO.getEventId()));
+                .orElseThrow(() -> new IllegalArgumentException("이벤트를 찾을 수 없습니다. :" + eventDTO.getEventId()));
 
         // 게시물 정보 업데이트
         event.setEventId(eventDTO.getEventId());
@@ -230,7 +231,7 @@ public class EventService {
 
                     Image image = new Image();
                     image.setImageUrl(imageUrl);
-                    image.setEvent(event); // 공지사항에 이미지 연결
+                    image.setEvent(event); // 이벤트에 이미지 연결
                     imageRepository.save(image); // 이미지 저장
                 } catch (IOException e) {
                     System.err.println("업로드 중 에러 발생: " + e.getMessage());
@@ -304,6 +305,5 @@ public class EventService {
         }
     }
     /* 조회수 메소드 종료 */
-
 
 }

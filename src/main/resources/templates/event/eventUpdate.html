@@ -39,7 +39,7 @@
                 <ul class="list-group">
                     <li class="col-md-12 p-3" style="display: table; border-bottom: 1px solid #ddd;" th:each="event, stat : ${events}" th:classappend="${event.important == 'Y'} ? 'bg-light fw-bold' : ''">
                         <div class="text-center" style="display: table-cell; width: 50px; border-right: 1px solid #ddd;" th:text="${stat.index + 1}"></div>
-                        <div style="padding-left: 20px; border-right: 1px solid #ddd; ; display: table-cell;"><a class="text-decoration-none text-dark" th:href="@{/event/{id}/detail (id=${event.eventId})}" th:text="${event.title}"></a></div>
+                        <div style="padding-left: 20px; border-right: 1px solid #ddd; ; display: table-cell;"><a class="text-decoration-none text-dark" th:href="@{/notice/{id}/detail (id=${event.eventId})}" th:text="${event.title}"></a></div>
                         <div class="text-center" style="display: table-cell; width: 110px; border-right: 1px solid #ddd;" th:text="${#temporals.format(event.eventDate, 'YY.MM.dd')}"></div>
                         <div class="text-center" style="display: table-cell; width: 70px;">
                             <a class="btn btn-primary" th:href="@{/event/{eventId}/update (eventId=${event.eventId})}">수정</a>

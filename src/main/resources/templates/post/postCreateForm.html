@@ -64,23 +64,6 @@
                                     </div>
 
 
-                                    <!--<div class="row mb-3">
-                                        <div class="col-md-6">
-                                            <label for="visitPath" class="form-label">방문 경로</label>
-                                            <select class="form-select" id="visitPath" onchange="updateVisitPath()">
-                                                <option value="" selected>방문 경로 선택</option>
-                                                <th:block th:each="visit : ${visits}">
-                                                    <option th:value="${visit.visitId}" th:text="${visit.visitPath}"></option>
-                                                </th:block>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <input type="text" id="visitPathDirectInput" name="visitId" />
-                                            <label class="form-label">　</label>
-                                            <input class="form-control" type="text" id="visitView" name="visitView" readonly/>
-                                        </div>
-                                    </div>-->
-
                                     <div class="row mb-3">
                                         <div class="col-md-4">
                                             <label for="parentTreatment" class="form-label">시술 내용</label>
@@ -160,7 +143,7 @@
             const select = document.getElementById("visitId");
             const visitPathInput = document.getElementById("visitPath");
 
-            if (select.value === "directInput") {
+            if (select.value === "직접입력") {
                 visitPathInput.removeAttribute("readonly");
                 visitPathInput.value = ""; // 사용자가 직접 입력할 수 있도록 초기화
             } else {

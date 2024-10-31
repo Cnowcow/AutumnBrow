@@ -15,10 +15,7 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
@@ -126,7 +123,35 @@ public class PostController {
     @PostMapping("/post/{postId}/update")
     public String updatePost(@PathVariable Long postId, @ModelAttribute("post") PostDTO postDTO, Model model ) throws Exception {
 
+        System.out.println("postId = " + postId);
+        System.out.println("ChildView = " + postDTO.getChildView());
+        System.out.println("ChildTreatment = " + postDTO.getChildTreatment());
+        System.out.println("ParentTreatment = " + postDTO.getParentTreatment());
+
         try {
+            Treatment createdTreatment = null;
+            if (postDTO.getParentTreatment().equals(1L) && postDTO.getChildTreatment() == null) {
+                Treatment existingTreatment = treatmentService.findByName(postDTO.getChildView());
+
+                // 중복되지 않는 경우에만 추가
+                if (existingTreatment == null) {
+                    TreatmentDTO treatmentDTO = new TreatmentDTO();
+                    treatmentDTO.setName(postDTO.getChildView()); // 직접 입력한 값
+                    treatmentDTO.setParentId(postDTO.getParentTreatment()); // 부모 ID 설정
+
+                    // 새로운 Treatment 엔티티 추가
+                    createdTreatment = treatmentService.createTreatment(treatmentDTO);
+                }
+
+            }
+            postService.updatePost(postId, postDTO, createdTreatment);
+
+        }catch (Exception e) {
+            // 예외 처리 로직
+        }
+
+
+/*        try {
             // 서비스에 파일 처리 및 업로드 요청
             postService.handleFileUpload(postDTO);
 
@@ -149,8 +174,27 @@ public class PostController {
             throw new RuntimeException(e);
         }
 
-        return "redirect:/post/list";
+        return "redirect:/post/list";*/
+        return "null";
     }
+
+
+/*
+    @PostMapping("/post/{postId}/update")
+    public void updatePost(@RequestParam Long postId,
+                           @RequestParam Long visitId,
+                           @RequestParam String visitPath,
+                           @RequestParam Long parentTreatment,
+                           @RequestParam(required = false) Long childTreatment,  // 수정된 부분
+                           @RequestParam String childView) {
+        System.out.println("111111111111 = " + postId);
+        System.out.println("222222222222 = " + visitId);
+        System.out.println("333333333333 = " + visitPath);
+        System.out.println("444444444444 = " + parentTreatment);
+        System.out.println("555555555555 = " + childTreatment);
+        System.out.println("666666666666 = " + childView);
+    }
+*/
 
 
     /*
