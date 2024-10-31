@@ -32,8 +32,8 @@
                             <div class="card-header"><h3 class="text-center font-weight-light my-4">공지사항 수정</h3>
                             </div>
                             <div class="card-body">
-                                <form th:object="${notices}" method="post" enctype="multipart/form-data">
-                                    <input type="hidden" th:field="*{noticeId}"/>
+                                <form th:object="${events}" method="post" enctype="multipart/form-data">
+                                    <input type="hidden" th:field="*{eventId}"/>
                                     <div class="mb-3">
                                         <label for="title" class="form-label">제목</label>
                                         <input class="form-control" id="title" name="title" type="text" th:field="*{title}" placeholder="제목을 입력하세요."/>
@@ -47,11 +47,11 @@
 
                                     <div class="row mb-5">
                                         <div class="col-md-6">
-                                            <label for="noticeImage" class="form-label">사진 변경</label>
+                                            <label for="eventImage" class="form-label">사진 변경</label>
                                             <div class="mb-3">
-                                                <img id="beforeImagePreview" th:src="@{|http://hhjnn92.synology.me/AutumnBrow/notice/*{noticeUrl}|}" style="max-width: 400px; max-height: 300px; cursor: pointer;" onclick="openImageInNewWindow(this.src)" />
+                                                <img id="beforeImagePreview" th:src="@{|http://hhjnn92.synology.me/AutumnBrow/event/*{eventUrl}|}" style="max-width: 400px; max-height: 300px; cursor: pointer;" onclick="openImageInNewWindow(this.src)" />
                                             </div>
-                                            <input class="form-control" id="noticeImage" name="noticeImage" type="file" accept="image/*" onchange="previewImage(event, 'beforeImagePreview')" />
+                                            <input class="form-control" id="eventImage" name="eventImage" type="file" accept="image/*" onchange="previewImage(event, 'beforeImagePreview')" />
                                         </div>
                                     </div>
 
@@ -63,9 +63,9 @@
                                     <div class="d-flex justify-content-between">
                                         <div>
                                             <button type="submit" class="btn btn-primary">저장</button>
-                                            <button type="button" class="btn btn-secondary" onclick="window.location.href='/notice/update'">취소</button>
+                                            <button type="button" class="btn btn-secondary" onclick="window.location.href='/event/update'">취소</button>
                                         </div>
-                                        <button type="button" class="btn btn-danger" th:value="${noticeId}" onclick="postDelete(this.value)">삭제</button>
+                                        <button type="button" class="btn btn-danger" th:value="${eventId}" onclick="postDelete(this.value)">삭제</button>
                                     </div>
 
                                 </form>
@@ -96,10 +96,10 @@
                             </div>
                         </div>
 
-                        <div class="text-center mb-4" id="beforeImagePreview"></div>
+                        <div class="text-center mb-4" id="ImagePreview"></div>
                         <label for="eventImages" class="form-label">사진 등록</label>
                         <div id="fileInput">
-                            <input class="form-control" id="eventImages" name="eventImages" type="file" accept="image/*" multiple onchange="previewMultipleImages(event, 'beforeImagePreview')" />
+                            <input class="form-control" id="eventImages" name="eventImages" type="file" accept="image/*" multiple onchange="previewMultipleImages(event, 'ImagePreview')" />
                         </div>
 
                         <div id="eventBody" class="col-md-12 mt-5 mb-5">

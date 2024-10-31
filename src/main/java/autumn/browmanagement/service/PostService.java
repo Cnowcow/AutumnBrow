@@ -230,11 +230,33 @@ public class PostService {
 
         // 게시물 정보 업데이트
         post.setParentTreatment(postDTO.getParentTreatment());
-        post.setChildTreatment(postDTO.getChildTreatment());
-        post.setTreatmentDate(postDTO.getTreatmentDate());
+        //post.setTreatmentDate(postDTO.getTreatmentDate());
         post.setVisitId(postDTO.getVisitId());
 
-        if (postDTO.getBeforeImageUrl() != null) {
+
+        // visitId 설정
+        Long visitId = postDTO.getVisitId();
+        if (visitId != null) {
+            post.setVisitId(visitId); // 선택한 visitId 할당
+        } else {
+            if (postDTO.getVisitPath() != null && !postDTO.getVisitPath().isEmpty()) {
+                Visit existingVisit = visitRepository.findByVisitPath(postDTO.getVisitPath());
+
+                if (existingVisit != null) {
+                    // 이미 존재하는 경우, 기존 visitId를 사용
+                    post.setVisitId(existingVisit.getVisitId());
+                } else {
+
+                    Visit newVisit = new Visit();
+                    newVisit.setVisitPath(postDTO.getVisitPath()); // 새로운 visitPath 설정
+                    visitRepository.save(newVisit); // 새로운 Visit 저장
+
+                    post.setVisitId(newVisit.getVisitId()); // 새로 생성된 visitId를 Post에 할당
+                }
+            }
+        }
+
+/*        if (postDTO.getBeforeImageUrl() != null) {
             post.setBeforeImageUrl(postDTO.getBeforeImageUrl());
         }
         if (postDTO.getAfterImageUrl() != null) {
@@ -247,12 +269,12 @@ public class PostService {
         post.setRetouch(postDTO.getRetouch());
 
         post.setRetouchDate(postDTO.getRetouchDate());
-        post.setInfo(postDTO.getInfo());
+        post.setInfo(postDTO.getInfo());*/
 
-/*        // Treatment ID 설정
+        // Treatment ID 설정
         if (treatment != null) {
             post.setChildTreatment(treatment.getTreatmentId()); // 생성된 Treatment의 ID를 설정
-        }*/
+        }
 
         postRepository.save(post);
     }

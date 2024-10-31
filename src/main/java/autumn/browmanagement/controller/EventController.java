@@ -96,7 +96,7 @@ public class EventController {
 
 
     // 이벤트 사진 삭제요청
-    @PostMapping("/event/{imageUrl}/deleteImage/")
+    @PostMapping("/event/deleteImage/{imageUrl}")
     @ResponseBody
     public void eventImageDelete(@PathVariable String imageUrl){
         imageService.eventImageDelete(imageUrl);
@@ -113,7 +113,4 @@ public class EventController {
         response.put("redirectUrl", "/event/update");
         return ResponseEntity.ok(response);
     }
-    
-    
-    
 }
