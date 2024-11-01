@@ -228,16 +228,13 @@ public class PostService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("게시물을 찾을 수 없습니다. :" + postId));
 
-        // 게시물 정보 업데이트
-        post.setParentTreatment(postDTO.getParentTreatment());
-        //post.setTreatmentDate(postDTO.getTreatmentDate());
+        // visitId
         post.setVisitId(postDTO.getVisitId());
-
 
         // visitId 설정
         Long visitId = postDTO.getVisitId();
         if (visitId != null) {
-            post.setVisitId(visitId); // 선택한 visitId 할당
+            post.setVisitId(visitId);
         } else {
             if (postDTO.getVisitPath() != null && !postDTO.getVisitPath().isEmpty()) {
                 Visit existingVisit = visitRepository.findByVisitPath(postDTO.getVisitPath());
@@ -256,6 +253,15 @@ public class PostService {
             }
         }
 
+        // 게시물 정보 업데이트
+        post.setParentTreatment(postDTO.getParentTreatment());
+
+        // Treatment ID 설정
+        if (treatment != null) {
+            post.setChildTreatment(treatment.getTreatmentId()); // 생성된 Treatment의 ID를 설정
+        }
+
+
 /*        if (postDTO.getBeforeImageUrl() != null) {
             post.setBeforeImageUrl(postDTO.getBeforeImageUrl());
         }
@@ -271,10 +277,6 @@ public class PostService {
         post.setRetouchDate(postDTO.getRetouchDate());
         post.setInfo(postDTO.getInfo());*/
 
-        // Treatment ID 설정
-        if (treatment != null) {
-            post.setChildTreatment(treatment.getTreatmentId()); // 생성된 Treatment의 ID를 설정
-        }
 
         postRepository.save(post);
     }

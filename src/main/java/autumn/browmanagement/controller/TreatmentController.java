@@ -1,6 +1,7 @@
 package autumn.browmanagement.controller;
 
 import autumn.browmanagement.DTO.TreatmentDTO;
+import autumn.browmanagement.Entity.TestCategory;
 import autumn.browmanagement.Entity.Treatment;
 import autumn.browmanagement.service.TreatmentService;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,14 @@ import java.util.List;
 public class TreatmentController {
 
     private final TreatmentService treatmentService;
+
+    @GetMapping("/testPost/{mainCategoryId}/subcategories2")
+    @ResponseBody
+    public List<Treatment> getSubcategories(@PathVariable Long mainCategoryId) {
+        return treatmentService.findSubCategories(mainCategoryId); // 소분류 목록 반환
+    }
+
+
 
 
     // 시술내용 불러오기

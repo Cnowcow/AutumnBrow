@@ -16,21 +16,16 @@ public class Treatment {
 
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_id")
+    @ManyToOne
+    @JoinColumn(name = "parent_treatmentId")
     private Treatment parent; // 부모 시술
 
 
+/*
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
     private List<Treatment> child = new ArrayList<>(); // 자식 시술
+*/
 
 
-    // 기본 생성자
-    public Treatment() {}
-
-    // 시술 종류 생성자를 위한 생성자
-    public Treatment(String name) {
-        this.name = name;
-    }
 
 }

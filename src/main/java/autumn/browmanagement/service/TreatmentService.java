@@ -1,6 +1,7 @@
 package autumn.browmanagement.service;
 
 import autumn.browmanagement.DTO.TreatmentDTO;
+import autumn.browmanagement.Entity.TestCategory;
 import autumn.browmanagement.Entity.Treatment;
 import autumn.browmanagement.repository.TreatmentRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,17 @@ import java.util.stream.Collectors;
 public class TreatmentService {
 
     private final TreatmentRepository treatmentRepository;
+
+
+    public List<Treatment> findMainCategories() {
+        return treatmentRepository.findAllByParentIsNull(); // 대분류는 부모가 없는 경우로 가정
+    }
+    public List<Treatment> findSubCategories(Long mainCategoryId) {
+        return treatmentRepository.findAllByParent_TreatmentId(mainCategoryId);
+    }
+
+
+
 
 
     // 상위 시술 조회
@@ -123,13 +135,13 @@ public class TreatmentService {
             dto.setParentName(treatment.getParent().getName());
         }
 
-        // 자식 시술 정보 (재귀적으로 처리)
+/*        // 자식 시술 정보 (재귀적으로 처리)
         if (treatment.getChild() != null && !treatment.getChild().isEmpty()) {
             List<TreatmentDTO> childDTOs = treatment.getChild().stream()
                     .map(this::convertToDTO)
                     .toList();
             dto.setChild(childDTOs);
-        }
+        }*/
 
         return dto;
     }
@@ -150,13 +162,12 @@ public class TreatmentService {
         Treatment treatment = treatmentRepository.findByTreatmentId(treatmentId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 시술내용이 없습니다."));
 
-        if (treatment.getChild() != null && !treatment.getChild().isEmpty()) {
+/*        if (treatment.getChild() != null && !treatment.getChild().isEmpty()) {
             throw new IllegalStateException("세부 시술내용이 있으면 삭제할 수 없습니다.");
-        }
+        }*/
 
         treatmentRepository.deleteById(treatmentId);
     }
-
 
 
 

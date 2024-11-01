@@ -28,11 +28,11 @@
                 <div class="row justify-content-center">
                     <div class="col-lg-7">
                         <div class="card shadow-lg border-0 rounded-lg mt-5">
-                            <div class="card-header"><h3 class="text-center font-weight-light my-4">시술내역 수정</h3>
+                            <div class="card-header"><h3 class="text-center font-weight-light my-4">시술내역 수정 수정중!!!</h3>
                             </div>
                             <div class="card-body">
                                 <form th:action="'/post/'+${post.postId}+'/update'" method="post" enctype="multipart/form-data">
-                                    <input type="hidden" name="postId" th:value="${post.postId}"/>
+                                    <input type="text" name="postId" th:value="${post.postId}"/>
                                     <div class="mb-3">
                                         <label for="name" class="form-label">이름</label>
                                         <input class="form-control" id="name" type="text" th:value="${post.user.name}" readonly />
@@ -170,6 +170,7 @@
         if (select.value === "직접입력") {
             visitPathInput.removeAttribute("readonly");
             visitPathInput.value = ""; // 사용자가 직접 입력할 수 있도록 초기화
+            select.value = "";
         } else {
             visitPathInput.setAttribute("readonly", true);
             visitPathInput.value = select.options[select.selectedIndex].text; // 선택한 값으로 표시
