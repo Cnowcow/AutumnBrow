@@ -262,7 +262,7 @@ public class PostService {
         }
 
 
-/*        if (postDTO.getBeforeImageUrl() != null) {
+        if (postDTO.getBeforeImageUrl() != null) {
             post.setBeforeImageUrl(postDTO.getBeforeImageUrl());
         }
         if (postDTO.getAfterImageUrl() != null) {
@@ -275,7 +275,7 @@ public class PostService {
         post.setRetouch(postDTO.getRetouch());
 
         post.setRetouchDate(postDTO.getRetouchDate());
-        post.setInfo(postDTO.getInfo());*/
+        post.setInfo(postDTO.getInfo());
 
 
         postRepository.save(post);

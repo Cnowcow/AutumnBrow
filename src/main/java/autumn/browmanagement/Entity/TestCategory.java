@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter @Setter
 public class TestCategory {
@@ -17,5 +20,6 @@ public class TestCategory {
     @ManyToOne
     @JoinColumn(name = "parent_id")
     private TestCategory parent; // 대분류 ID (대분류일 경우 null)
+
 
 }

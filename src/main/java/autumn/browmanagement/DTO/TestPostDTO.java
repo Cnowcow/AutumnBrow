@@ -10,7 +10,8 @@ public class TestPostDTO {
     private Long mainCategoryId;
     private Long subCategoryId;
 
-    private String directInput;
+    private String directMainInput;
+    private String directSubInput;
 
     private Long id;
     private String title;

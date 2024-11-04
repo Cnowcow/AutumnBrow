@@ -3,8 +3,14 @@
 <head>
     <title>시술 등록</title>
     <script>
+        window.onload = function () {
+
+            loadSubcategories();
+        };
+
         function loadSubcategories() {
             const mainCategoryId = document.getElementById("mainCategory").value;
+            const subCategoryId = document.getElementById("subCategory").getAttribute('data-name');
 
             fetch(`/testPost/${mainCategoryId}/subcategories`)
                 .then(response => response.json())
@@ -17,18 +23,18 @@
                     defaultOption.text = "소분류 선택";
                     subCategorySelect.appendChild(defaultOption)
 
-                    console.log(data.forEach(subcategory => {
-                        const id = subcategory.id;
-                        const name = subcategory.name;
-                        console.log("id"+id + "name"+name);
-                    }))
-
                     // 소분류 항목 추가
                     data.forEach(subcategory => {
                         const option = document.createElement("option");
                         option.value = subcategory.id;
                         option.text = subcategory.name;
+                        option.setAttribute('data-name', subcategory.name);
+                        if(option.value === subCategoryId){
+                            option.selected = true;
+                        }
+
                         subCategorySelect.appendChild(option);
+
                     });
 
                     // '직접입력' 옵션 추가
@@ -54,12 +60,12 @@
                 subCategorySelect.value = "";
                 //directMainInputField.style.display = "block"; // 텍스트 박스 표시
             } else {
-                mainInputField.readOnly = true;
                 mainInputField.value = mainCategorySelect.options[mainCategorySelect.selectedIndex].getAttribute('data-name');
                 //directMainInputField.style.display = "none"; // 텍스트 박스 숨기기
             }
             toggleSubInputField();
         }
+
 
 
         function toggleSubInputField() {
@@ -73,42 +79,43 @@
                 //directInputField.style.display = "block"; // 텍스트 박스 표시
             } else {
                 subInputField.value = "";
-                subInputField.readOnly = true;
-                const selectedOption = subCategorySelect.options[subCategorySelect.selectedIndex].innerText;
-                subInputField.value = selectedOption;
+                const selectedOption = subCategorySelect.options[subCategorySelect.selectedIndex];
+                subInputField.value = selectedOption.getAttribute('data-name');
+                subInputField.readOnly = true; // 텍스트 박스를 읽기 전용으로 설정
                 //directInputField.style.display = "none"; // 텍스트 박스 숨기기
             }
         }
 
+
     </script>
 </head>
 <body>
-<form th:action="@{/testPost/save}" method="post" th:object="${testPost}">
+<form th:action="'/testPost/' + ${posts.id} + '/update'" method="post">
     <label>대분류</label>
-    <select id="mainCategory" name="mainCategoryId" onchange="loadSubcategories(); toggleMainInputField()">
+    <select id="mainCategory" name="mainCategoryId" onchange="loadSubcategories(); toggleMainInputField()" th:selected="${posts.id}">
         <option value="">대분류 선택</option>
         <option th:each="category : ${categories}" th:value="${category.id}" th:data-name="${category.name}"
-                th:text="${category.name}">대분류</option>
+                th:text="${category.name}" th:selected="${posts.mainCategory != null ? category.id == posts.mainCategory.id : ''}">대분류</option>
         <option value="">직접입력</option> <!-- '직접입력' 옵션 추가 -->
     </select>
 
     <div id="directMainInputField" style="display:block;">
         <label>대분류 직접입력</label>
-        <input type="text" id="mainInputField" name="directMainInput" placeholder="새로운 대분류를 입력하세요" readonly>
+        <input type="text" id="mainInputField" name="directMainInput" placeholder="새로운 대분류를 입력하세요" th:value="${posts.mainCategory != null ? posts.mainCategory.name : ''}" readonly>
     </div>
 
     <label>소분류</label>
-    <select id="subCategory" name="subCategoryId" onchange="toggleSubInputField()">
+    <select id="subCategory" name="subCategoryId" th:data-name="${posts.subCategory != null ? posts.subCategory.id : ''}" onchange="toggleSubInputField()">
         <option value="">소분류 선택</option>
     </select>
 
     <!-- 직접입력 텍스트 박스 -->
     <div style="display:block;">
         <label>직접입력</label>
-        <input type="text" id="subInputField" name="directSubInput" placeholder="새로운 소분류를 입력하세요">
+        <input type="text" id="subInputField" name="directSubInput" placeholder="새로운 소분류를 입력하세요" th:value="${posts.subCategory != null ? posts.subCategory.name : ''}" readonly>
     </div>
 
-    <input type="text" name="title" placeholder="시술 제목">
+    <input type="text" name="title" placeholder="시술 제목" th:value="${posts.title}">
     <button type="submit">등록</button>
 </form>
 </body>

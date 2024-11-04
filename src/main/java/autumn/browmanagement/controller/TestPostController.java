@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class TestPostController {
@@ -52,11 +53,52 @@ public class TestPostController {
     @PostMapping("/testPost/save")
     public String savePost(@ModelAttribute TestPostDTO testPostDTO) {
 
+        System.out.println("11111111111 = " + testPostDTO.getMainCategoryId());
+        System.out.println("22222222222 = " + testPostDTO.getDirectMainInput());
+        System.out.println("33333333333 = " + testPostDTO.getSubCategoryId());
+        System.out.println("44444444444 = " + testPostDTO.getDirectSubInput());
+        System.out.println("55555555555 = " + testPostDTO.getTitle());
+
         testPostService.savePost(testPostDTO);
 
 
-        return "null"; // 저장 후 목록 페이지로 리다이렉트
+        return "redirect:/testPost/list";
     }
 
+
+    @GetMapping("/testPost/list")
+    public String listPost(Model model) {
+
+        List<TestPostDTO> testPostDTOS = testPostService.findAll();
+        model.addAttribute("posts", testPostDTOS);
+
+        return "test/postList";
+    }
+
+
+    @GetMapping("/testPost/{postId}/update")
+    public String updatePostForm(@PathVariable Long postId, Model model) {
+
+        List<TestCategory> categories = testCategoryService.findMainCategories();
+        model.addAttribute("categories", categories);
+
+        TestPost testPost = testPostService.findById(postId);
+        model.addAttribute("posts", testPost);
+
+        return "test/postUpdate";
+    }
+
+    @PostMapping("/testPost/{postId}/update")
+    public String updatePost(@PathVariable Long postId, @ModelAttribute TestPostDTO testPostDTO) {
+        System.out.println("aaaaaaaaaaaaaaaa = " + testPostDTO.getTitle());
+        System.out.println("bbbbbbbbbbbbbbbb = " + testPostDTO.getMainCategoryId());
+        System.out.println("cccccccccccccccc = " + testPostDTO.getDirectMainInput());
+        System.out.println("dddddddddddddddd = " + testPostDTO.getSubCategoryId());
+        System.out.println("eeeeeeeeeeeeeeee = " + testPostDTO.getDirectSubInput());
+
+        testPostService.updatePost(postId, testPostDTO);
+
+        return "redirect:/testPost/list";
+    }
 
 }
