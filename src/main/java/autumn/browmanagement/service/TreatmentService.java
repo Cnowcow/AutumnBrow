@@ -3,7 +3,9 @@ package autumn.browmanagement.service;
 import autumn.browmanagement.DTO.TreatmentDTO;
 import autumn.browmanagement.Entity.TestCategory;
 import autumn.browmanagement.Entity.Treatment;
+import autumn.browmanagement.Entity.Treatment2;
 import autumn.browmanagement.repository.TreatmentRepository;
+import autumn.browmanagement.repository.TreatmentRepository2;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +19,21 @@ import java.util.stream.Collectors;
 public class TreatmentService {
 
     private final TreatmentRepository treatmentRepository;
+    private final TreatmentRepository2 treatmentRepository2;
+
+
+    // 시술내용 불러오기
+    public List<Treatment2> findParentTreatments(){
+        return treatmentRepository2.findAllByParentIsNull();
+    }
+
+
+    // 시술내용에 대한 세부내용 불러오기
+    public List<Treatment2> findChildTreatment(Long parentId) {
+        return treatmentRepository2.findAllByParent_TreatmentId(parentId);
+    }
+
+
 
 
     public List<Treatment> findMainCategories() {

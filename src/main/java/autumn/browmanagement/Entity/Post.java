@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Getter @Setter
 public class Post {
 
@@ -48,26 +47,22 @@ public class Post {
     @JoinColumn(name = "user_id")
     private User user;
 
+    // 시술내용
+    @ManyToOne
+    @JoinColumn(name = "parent_id")
+    private Treatment2 parent;
+
+    // 세부내용
+    @ManyToOne
+    @JoinColumn(name = "child_id")
+    private Treatment2 child;
+    
+    
+    
+
+    // 지울거
     // 시술 정보
     private Long parentTreatment; // 부모 시술 ID
     private Long childTreatment;  // 자식 시술 ID
-
-    // 기본 생성자
-    public Post() {}
-
-    // 필요한 정보를 포함하는 생성자
-    public Post(LocalDateTime treatmentDate, String beforeImageUrl, String afterImageUrl, Boolean retouch, Date retouchDate, String info, User user, String isDeleted, Long visitId, Long parentTreatment, Long childTreatment ) {
-        this.treatmentDate = treatmentDate;
-        this.beforeImageUrl = beforeImageUrl;
-        this.afterImageUrl = afterImageUrl;
-        this.retouch = retouch;
-        this.retouchDate = retouchDate;
-        this.info = info;
-        this.user = user;
-        this.isDeleted = isDeleted;
-        this.visitId = visitId;
-        this.parentTreatment = parentTreatment;
-        this.childTreatment = childTreatment;
-    }
 
 }

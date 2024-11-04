@@ -6,6 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class TestPostDTO {
+    private Long id;
 
     private Long mainCategoryId;
     private Long subCategoryId;
@@ -13,7 +14,6 @@ public class TestPostDTO {
     private String directMainInput;
     private String directSubInput;
 
-    private Long id;
     private String title;
 
 }

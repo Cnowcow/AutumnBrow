@@ -35,11 +35,18 @@ public class PostDTO {
 
     // 시술 내용
     private Long parentTreatment;
-    private String parentName;
     private Long childTreatment;
+
+    private String directParentTreatment;
+    private String directChildTreatment;
+
+    
+    // 지울거
+    private String parentName;
     private String childName;
     private String childView;
 
+    
     /* user Entity */
     // 사용자 id
     private Long userId;

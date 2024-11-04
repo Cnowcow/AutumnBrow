@@ -3,6 +3,7 @@ package autumn.browmanagement.controller;
 import autumn.browmanagement.DTO.TreatmentDTO;
 import autumn.browmanagement.Entity.TestCategory;
 import autumn.browmanagement.Entity.Treatment;
+import autumn.browmanagement.Entity.Treatment2;
 import autumn.browmanagement.service.TreatmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,20 @@ import java.util.List;
 public class TreatmentController {
 
     private final TreatmentService treatmentService;
+
+
+
+    @GetMapping("/treatment/{parentId}/childTreatment")
+    @ResponseBody
+    public List<Treatment2> getChildTreatment(@PathVariable Long parentId) {
+        return treatmentService.findChildTreatment(parentId); // 소분류 목록 반환
+    }
+
+
+
+
+
+
 
     @GetMapping("/testPost/{mainCategoryId}/subcategories2")
     @ResponseBody
