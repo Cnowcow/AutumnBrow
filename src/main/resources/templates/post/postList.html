@@ -69,8 +69,8 @@
                                         <a class="d-block text-decoration-none" th:href="@{/post/{userId}/userList (userId=${post.userId})}" th:text="${post.name}+${post.isDeletedUser != null ? ' ('+post.isDeletedUser+')' : ''}"></a>
                                     </td>
                                     <td th:text="${post.phone}"></td>
-                                    <td th:text="${post.parentName}"></td>
-                                    <td th:text="${post.childName}"></td>
+                                    <td th:text="${post.directParentTreatment}"></td>
+                                    <td th:text="${post.directChildTreatment}"></td>
                                     <td th:text="${post.visitPath}"></td>
                                     <td style="text-align: center;">
                                         <input type="checkbox" th:checked="${post.retouch == true}" style="transform: scale(1.5);" disabled>

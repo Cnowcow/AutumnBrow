@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-
 @Entity
 @Getter
 @Setter
@@ -31,6 +30,7 @@ public class Event {
     // 이벤트 작성 날짜
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime eventDate;
+
 
     // 사용자 정보 - 이름, 전화번호 등은 User 엔티티에서 참조
     @ManyToOne

@@ -61,14 +61,14 @@
                                     <td th:text="${#temporals.format(post.treatmentDate, 'yyyy.MM.dd. HH:mm')}"></td>
                                     <td th:text="${post.name}"></td>
                                     <td th:text="${post.phone}"></td>
-                                    <td th:text="${post.parentName}"></td>
-                                    <td th:text="${post.childName}"></td>
-                                    <td style="text-align: center;">
+                                    <td th:text="${post.directParentTreatment}"></td>
+                                    <td th:text="${post.directChildTreatment}"></td>
+                                    <td class="text-center">
                                         <input type="checkbox" th:checked="${post.retouch == true}" style="transform: scale(1.5);" disabled>
                                     </td>
                                     <td th:text="${post.retouchDate}"></td>
                                     <td>
-                                        <a href="#" th:href="@{/post/{postId}/view (postId=${post.postId})}" class="btn btn-primary" role="button">자세히</a>
+                                        <a href="#" th:href="@{/post/{postId}/detail (postId=${post.postId})}" class="btn btn-primary" role="button">자세히</a>
                                     </td>
                                 </tr>
                                 </tbody>

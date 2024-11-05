@@ -51,7 +51,7 @@ public class EventService {
     }
 
 
-    // 이벤트 등록
+    // 이벤트 등록 요청
     @Transactional
     public void eventCreate(EventDTO eventDTO, MultipartFile[] eventImages){
         Event event = new Event();

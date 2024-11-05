@@ -50,17 +50,6 @@ public class NoticeController {
     }
 
 
-    // 공지사항 관리페이지
-    @GetMapping("/notice/update")
-    public String noticeUpdate(Model model){
-
-        List<NoticeDTO> noticeDTO = noticeService.noticeListImportant();
-        model.addAttribute("notices", noticeDTO);
-
-        return "notice/noticeUpdate";
-    }
-
-
     // 공지사항 자세히 보기
     @GetMapping("/notice/{noticeId}/detail")
     public String noticeDetail(@PathVariable Long noticeId, Model model){
@@ -71,6 +60,17 @@ public class NoticeController {
         model.addAttribute("notices", noticeDTO);
 
         return "notice/noticeDetail";
+    }
+
+
+    // 공지사항 관리페이지
+    @GetMapping("/notice/update")
+    public String noticeUpdate(Model model){
+
+        List<NoticeDTO> noticeDTO = noticeService.noticeListImportant();
+        model.addAttribute("notices", noticeDTO);
+
+        return "notice/noticeUpdate";
     }
 
 
@@ -103,7 +103,7 @@ public class NoticeController {
     }
 
 
-    // 이벤트 삭제 요청
+    // 공지사항 삭제 요청
     @DeleteMapping("/notice/{noticeId}/delete")
     public ResponseEntity<Map<String, String>> noticeDelete(@PathVariable Long noticeId) {
 

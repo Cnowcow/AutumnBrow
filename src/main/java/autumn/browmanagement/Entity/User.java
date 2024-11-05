@@ -41,7 +41,7 @@ public class User {
     private String isDeleted;
 
 
-    @ManyToOne // 각 사용자는 하나의 역할만 가질 수 있다.
+    @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role; // 역할 추가
 
@@ -59,4 +59,7 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Likey> likeys = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Review> reviews = new ArrayList<>();
 }

@@ -10,6 +10,7 @@ public class VisitDTO {
 
     private Long visitId;
 
+    // 방문경로
     private String visitPath;
 
 }

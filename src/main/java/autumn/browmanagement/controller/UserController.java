@@ -25,7 +25,7 @@ public class UserController {
 
     // 가입 페이지
     @GetMapping("/user/register")
-    public String registerForm(Model model){
+    public String userRegisterForm(Model model){
 
         return "user/userRegister";
     }
@@ -33,13 +33,13 @@ public class UserController {
 
     // 가입 요청
     @PostMapping("/user/register")
-    public String register(@RequestParam("name") String name,
+    public String userRegister(@RequestParam("name") String name,
                            @RequestParam("phone") String phone,
                            @RequestParam("birthDay") @DateTimeFormat(pattern = "yyyy-MM-dd") Date birthDay,
                            Model model){
 
         try {
-            userService.register(name, phone, birthDay);
+            userService.userRegister(name, phone, birthDay);
         } catch (IllegalStateException e) {
             model.addAttribute("errorMessage", e.getMessage());
             return "user/userRegister";
@@ -51,7 +51,7 @@ public class UserController {
 
     // 로그인 페이지
     @GetMapping("/user/login")
-    public String LoginForm(Model model) {
+    public String userLoginForm(Model model) {
         System.out.println("로그인 페이지");
 
         return "user/userLogin";
@@ -60,12 +60,12 @@ public class UserController {
 
     // 로그인 요청
     @PostMapping("/user/login")
-    public String Login(@RequestParam String name,
+    public String userLogin(@RequestParam String name,
                         @RequestParam String password,
                         HttpSession session,
                         Model model) throws Exception {
 
-        User user = userService.login(name, password);
+        User user = userService.userLogin(name, password);
         if (user != null) {
             session.setAttribute("user", user);
             model.addAttribute("userInfo", user);
@@ -80,7 +80,7 @@ public class UserController {
 
     // 로그아웃
     @GetMapping("/user/logout")
-    public String Logout(Model model, HttpSession session){
+    public String userLogout(Model model, HttpSession session){
         session.invalidate();
         System.out.println("로그아웃");
 
@@ -90,8 +90,8 @@ public class UserController {
 
     // 회원목록
     @GetMapping("/user/list")
-    public String List(Model model){
-        List<UserDTO> userDTOS = userService.findAll(2L, "N");
+    public String userList(Model model){
+        List<UserDTO> userDTOS = userService.userList(2L, "N");
         model.addAttribute("users", userDTOS);
 
         return "user/userList";
@@ -100,8 +100,8 @@ public class UserController {
 
     // 사용자 수정 페이지
     @GetMapping("/user/{userId}/update")
-    public String updateUserForm(@PathVariable Long userId, Model model){
-        User user = userService.findById(userId);
+    public String userUpdateForm(@PathVariable Long userId, Model model){
+        User user = userService.userFindById(userId);
         model.addAttribute("user", user);
 
         return "user/userUpdateForm";
@@ -110,7 +110,7 @@ public class UserController {
 
     // 사용자 수정 요청
     @PostMapping("/user/{userId}/update")
-    public String updateUser(@PathVariable Long userId, @ModelAttribute("user") UserDTO form) throws Exception {
+    public String userUpdate(@PathVariable Long userId, @ModelAttribute("user") UserDTO form) throws Exception {
         userService.updateUser(userId, form.getName(), form.getPhone(), form.getBirthDay(), form.getFirstVisitDate());
         return "redirect:/user/list";
     }
@@ -118,9 +118,9 @@ public class UserController {
 
     // 사용자 삭제 요청
     @PostMapping("/user/{userId}/delete")
-    public String deletePost(@PathVariable Long userId, Model model){
+    public String userDelete(@PathVariable Long userId, Model model){
 
-        return userService.deletePost(userId);
+        return userService.userDelete(userId);
     }
 
 
@@ -131,41 +131,6 @@ public class UserController {
             return "redirect:/user/login";
         }
 
-    // 로그인 페이지
-    @GetMapping("/user/login")
-    public String LoginForm() {
-        System.out.println("로그인 페이지");
-        return "user/userLogin";
-    }
-
-    // 로그인 요청
-    @PostMapping("/user/login")
-    public String Login(@RequestParam String name,
-                        @RequestParam String phone,
-                        HttpSession session,
-                        Model model) throws Exception {
-
-        User user = userService.login(name, phone);
-
-        if (user != null) {
-            session.setAttribute("user", user);
-            model.addAttribute("userInfo", user);
-
-            return "index";
-        } else {
-            System.out.println("로그인 실패"+name+" "+phone);
-            return "redirect:/user/login?loginFailed=true";
-        }
-
-    }
-
-    // 로그아웃
-    @GetMapping("/user/logout")
-    public String Logout(HttpSession session){
-        session.invalidate();
-        System.out.println("로그아웃");
-        return "index";
-    }
-*/
+    */
 
 }

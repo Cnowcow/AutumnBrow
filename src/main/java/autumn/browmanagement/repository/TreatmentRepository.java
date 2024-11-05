@@ -10,11 +10,12 @@ import java.util.Optional;
 @Repository
 public interface TreatmentRepository extends JpaRepository<Treatment, Long> {
 
-    List<Treatment> findByParentIsNullOrderByTreatmentIdDesc(); // parentId가 null인 시술을 조회하는 메서드
 
-    Optional<Treatment> findByTreatmentId(Long treatmentId); // id로 시술 내용을 찾는 메서드
+    List<Treatment> findAllByParentIsNull();
 
-    List<Treatment> findByParent_TreatmentId(Long parentId); // id로 시술 내용을 찾는 메서드
+    List<Treatment> findAllByParent_TreatmentId(Long parentId);
 
-    Treatment findByName(String treatmentName);
+    List<Treatment> findByParentIsNullOrderByTreatmentIdDesc();
+
+
 }

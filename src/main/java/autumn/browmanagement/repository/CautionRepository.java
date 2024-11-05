@@ -13,5 +13,4 @@ public interface CautionRepository extends JpaRepository<Caution, Long> {
 
     List<Caution> findAllOrderByBeforeTitleIsNull();
 
-
 }

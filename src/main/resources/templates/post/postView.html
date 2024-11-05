@@ -41,11 +41,11 @@
                                 <div class="row mb-3">
                                     <div class="col-md-6">
                                         <label for="parentTreatment" class="form-label">시술 내용</label>
-                                        <input class="form-control" id="parentTreatment" th:value="${post.parentName}" readonly />
+                                        <input class="form-control" id="parentTreatment" th:value="${post.directParentTreatment}" readonly />
                                     </div>
                                     <div class="col-md-6">
                                         <label for="childTreatment" class="form-label">세부 내용</label>
-                                        <input class="form-control" id="childTreatment" th:value="${post.childName}" readonly />
+                                        <input class="form-control" id="childTreatment" th:value="${post.directChildTreatment}" readonly />
                                     </div>
                                 </div>
                                 <div class="mb-3">

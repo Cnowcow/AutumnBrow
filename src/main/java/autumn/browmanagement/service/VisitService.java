@@ -18,11 +18,11 @@ public class VisitService {
     private final VisitRepository visitRepository;
 
     public List<Visit> visitList(){
-        return visitRepository.findAllByOrderByVisitIdDesc();
+        return visitRepository.findAll();
     }
 
     // 방문경로 이름
-    public String findVisitPath(Long visitId){
+    public String visitList(Long visitId){
         Optional<Visit> visit = visitRepository.findByVisitId(visitId);
 
         if(visit.isPresent()){
@@ -35,7 +35,7 @@ public class VisitService {
 
 
     @Transactional
-    public Visit createVisit(VisitDTO visitDTO) {
+    public Visit visitCreate(VisitDTO visitDTO) {
         Visit visit = new Visit();
         visit.setVisitPath(visitDTO.getVisitPath());
 
