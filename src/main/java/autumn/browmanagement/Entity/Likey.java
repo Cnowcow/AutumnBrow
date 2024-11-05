@@ -22,4 +22,8 @@ public class Likey {
     @ManyToOne
     @JoinColumn(name = "event_id")
     private Event event;
+
+    @ManyToOne
+    @JoinColumn(name = "review_id")
+    private Review review;
 }

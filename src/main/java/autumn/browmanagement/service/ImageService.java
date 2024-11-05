@@ -12,15 +12,17 @@ public class ImageService {
 
     private final ImageRepository imageRepository;
 
+
+    // 공지사항 사진등록
     @Transactional
     public void noticeImageDelete(String imageUrl){
-        System.out.println("zzzzzzzzzzzz = " + imageUrl);
         imageRepository.deleteByImageUrl(imageUrl);
     }
 
+
+    // 이벤트 사진등록
     @Transactional
     public void eventImageDelete(String imageUrl){
-        System.out.println("zzzzzzzzzzzz = " + imageUrl);
         imageRepository.deleteByImageUrl(imageUrl);
     }
 }

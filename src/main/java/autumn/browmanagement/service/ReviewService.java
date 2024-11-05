@@ -19,7 +19,6 @@ public class ReviewService {
 
 
     // 리뷰 조회
-
     public List<ReviewDTO> reviewList(){
         List<Review> reviews = reviewRepository.findAllByOrderByReviewIdDesc();
         List<ReviewDTO> reviewDTOS = new ArrayList<>();

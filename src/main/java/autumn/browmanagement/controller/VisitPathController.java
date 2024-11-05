@@ -16,8 +16,8 @@ public class VisitPathController {
     // 세부내용 불러오기
     @GetMapping("/find/visitPath/{selectedOptionId}")
     @ResponseBody
-    public String getVisitPathName(@PathVariable Long selectedOptionId) {
-        return visitService.findVisitPath(selectedOptionId);
+    public String visitList(@PathVariable Long selectedOptionId) {
+        return visitService.visitList(selectedOptionId);
     }
 
 }

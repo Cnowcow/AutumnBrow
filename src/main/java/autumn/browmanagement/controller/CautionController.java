@@ -20,7 +20,7 @@ public class CautionController {
 
     // 시술 전 주의사항
     @GetMapping("/caution/before")
-    public String beforeNotice(Model model){
+    public String noticeBefore(Model model){
 
         List<CautionDTO> caution = cautionService.cautionFindBefore();
         model.addAttribute("cautions", caution);
@@ -31,7 +31,7 @@ public class CautionController {
 
     // 시술 후 주의사항
     @GetMapping("/caution/after")
-    public String afterNotice(Model model){
+    public String noticeAfter(Model model){
 
         List<CautionDTO> caution = cautionService.cautionFindAfter();
         model.addAttribute("cautions", caution);
@@ -40,9 +40,9 @@ public class CautionController {
     }
 
 
-    // 주의사항 등록페이지
+    // 주의사항 등록 폼
     @GetMapping("/caution/create")
-    public String createForm(){
+    public String cautionCreateForm(){
 
         return "caution/cautionCreate";
     }
@@ -50,10 +50,10 @@ public class CautionController {
 
     // 주의사항 등록 요청
     @PostMapping("/caution/create")
-    public String createCaution(@ModelAttribute CautionDTO cautionDTO, Model model) throws IOException {
-        cautionService.handleFileUpload(cautionDTO);
+    public String cautionCreate(@ModelAttribute CautionDTO cautionDTO, Model model) throws IOException {
+        cautionService.handleImageUpload(cautionDTO);
 
-        cautionService.createCatuion(cautionDTO);
+        cautionService.cautionCreate(cautionDTO);
 
         return "redirect:/";
     }

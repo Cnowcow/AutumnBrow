@@ -11,13 +11,9 @@ import java.util.List;
 public class TreatmentDTO {
 
     private Long treatmentId;
+
+    // 시술 이름
     private String name;
 
-    private Long parentId;
-
-    private String parentName;
-    private String childName;
-
-    private List<TreatmentDTO> child;
 
 }

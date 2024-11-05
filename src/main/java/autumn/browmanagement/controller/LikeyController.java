@@ -16,6 +16,7 @@ public class LikeyController {
     private final LikeyService likeyService;
 
 
+    // 공지사항 좋아요
     @PostMapping("/notice/like/{noticeId}")
     public ResponseEntity<?> likeNotice(@PathVariable Long noticeId, HttpSession session) {
 
@@ -32,6 +33,8 @@ public class LikeyController {
         return ResponseEntity.ok("좋아요");
     }
 
+    
+    // 이벤트 좋아요
     @PostMapping("/event/like/{eventId}")
     public ResponseEntity<?> likeEvent(@PathVariable Long eventId, HttpSession session) {
 

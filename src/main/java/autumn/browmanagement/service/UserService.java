@@ -24,7 +24,7 @@ public class UserService {
 
     // 회원가입 요청
     @Transactional
-    public Long register(String name, String phone, Date birthDay){
+    public Long userRegister(String name, String phone, Date birthDay){
         User user = new User();
         user.setName(name);
         user.setPhone(phone);
@@ -40,7 +40,7 @@ public class UserService {
         user.setIsDeleted("N");
 
         // 중복 회원 검증
-        validateDuplicateMember(user);
+        userDuplicate(user);
 
         userRepository.save(user);
 
@@ -48,7 +48,7 @@ public class UserService {
     }
 
     // 중복 회원 검증
-    public void validateDuplicateMember(User user) {
+    public void userDuplicate(User user) {
         Optional<User> findUser = userRepository.findByNameAndPhone(user.getName(), user.getPhone());
         if (findUser.isPresent()) {
             throw new IllegalStateException("이미 가입된 회원입니다.");
@@ -58,7 +58,7 @@ public class UserService {
 
     // 로그인 요청
     @Transactional
-    public User login(String name, String password) throws Exception {
+    public User userLogin(String name, String password) throws Exception {
         // 전화번호를 해시 처리하여 사용자 조회
         Optional<User> users = userRepository.findByNameAndPassword(name, EncryptionUtil.encrypt(password));
         // 사용자가 존재하면 true 반환
@@ -67,7 +67,7 @@ public class UserService {
 
 
     // 회원 목록
-    public List<UserDTO> findAll(Long RoleId, String isDeleted) {
+    public List<UserDTO> userList(Long RoleId, String isDeleted) {
         List<User> users = userRepository.findByRole_RoleIdAndIsDeletedOrderByUserIdDesc(RoleId, isDeleted);
         List<UserDTO> userDTOS = new ArrayList<>();
 
@@ -87,7 +87,7 @@ public class UserService {
 
 
     // 사용자 id로 조회
-    public User findById(Long userId) {
+    public User userFindById(Long userId) {
         User user = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다. ID: " + userId));
 
@@ -115,7 +115,7 @@ public class UserService {
 
     // 회원 삭제
     @Transactional
-    public String deletePost(Long postId){
+    public String userDelete(Long postId){
         User user = userRepository.findByUserId(postId).orElse(null);
 
         if (user != null) {

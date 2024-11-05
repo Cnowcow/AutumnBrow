@@ -24,7 +24,8 @@ public class CautionService {
     private final FtpUtil ftpUtil;
 
 
-    public void handleFileUpload(CautionDTO cautionDTO) throws IOException {
+    // 이미지 처리 메소드
+    public void handleImageUpload(CautionDTO cautionDTO) throws IOException {
         ftpUtil.connect(); // FTP 연결
 
         try {
@@ -53,8 +54,10 @@ public class CautionService {
         }
     }
 
+
+    // 주의사항 등록 요청
     @Transactional
-    public Caution createCatuion(CautionDTO cautionDTO){
+    public void cautionCreate(CautionDTO cautionDTO){
         Caution caution = new Caution();
         caution.setBeforeTitle(cautionDTO.getBeforeTitle());
         caution.setBeforeUrl(cautionDTO.getBeforeUrl());
@@ -63,8 +66,6 @@ public class CautionService {
         caution.setAfterUrl(cautionDTO.getAfterUrl());
 
         cautionRepository.save(caution);
-
-        return caution;
     }
 
 

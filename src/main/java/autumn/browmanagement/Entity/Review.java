@@ -5,7 +5,9 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Getter
@@ -20,7 +22,7 @@ public class Review {
 
     private String content;
 
-    private String reviewUrl;
+    private Long reviewHits = 0L;
 
     // 리뷰 작성 날짜
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -31,4 +33,13 @@ public class Review {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Likey> likeys = new ArrayList<>();
+
+    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Image> images = new ArrayList<>();
+
+    private String reviewUrl;
+
 }

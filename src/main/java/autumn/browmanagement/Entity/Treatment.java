@@ -18,14 +18,6 @@ public class Treatment {
 
     @ManyToOne
     @JoinColumn(name = "parent_treatmentId")
-    private Treatment parent; // 부모 시술
-
-
-/*
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
-    private List<Treatment> child = new ArrayList<>(); // 자식 시술
-*/
-
-
+    private Treatment parent;
 
 }

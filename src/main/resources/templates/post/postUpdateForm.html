@@ -32,7 +32,6 @@
                             </div>
                             <div class="card-body">
                                 <form th:action="'/post/'+${post.postId}+'/update'" method="post" enctype="multipart/form-data">
-                                    <input type="text" name="postId" th:value="${post.postId}"/>
                                     <div class="mb-3">
                                         <label for="name" class="form-label">이름</label>
                                         <input class="form-control" id="name" type="text" th:value="${post.user.name}" readonly />
@@ -45,61 +44,56 @@
                                         <label for="birthDay" class="form-label">생년월일</label>
                                         <input class="form-control" id="birthDay" type="date" th:value="${post.user.birthDay}" readonly />
                                     </div>
-
                                     <div class="row mb-3">
                                         <div class="col-md-6">
-                                            <label for="visitId" class="form-label">방문 경로</label>
+                                            <label for="visitId" class="form-label">방문경로</label>
                                             <select class="form-select" id="visitId" name="visitId" onchange="updateVisitPath()">
                                                 <option value="" selected>방문 경로 선택</option>
                                                 <th:block th:each="visit : ${visits}">
-                                                    <option th:value="${visit.visitId}" th:text="${visit.visitPath}" th:selected="${visit.visitId == post.visitId}"></option>
+                                                    <option th:value="${visit.visitId}" th:text="${visit.visitPath}" th:selected="${visit.visitId == post.visit.visitId}"></option>
                                                 </th:block>
                                                 <option>직접입력</option>
                                             </select>
                                         </div>
                                         <div class="col-md-6">
                                             <label for="visitPath" class="form-label">　</label>
-                                            <input class="form-control" type="text" id="visitPath" name="visitPath" readonly/>
+                                            <input class="form-control" type="text" id="visitPath" name="visitPath" th:value="${post.visit.visitPath}" readonly/>
                                         </div>
                                     </div>
 
 
-
-
-
                                     <div class="row mb-3">
-                                        <div class="col-md-4">
-                                            <label for="parentTreatment" class="form-label">시술 내용</label>
-                                            <select class="form-select" id="parentTreatment" name="parentTreatment" onchange="updateChildTreatments(this.value)">
-                                                <option value="" selected>시술내용 선택</option>
-                                                <th:block th:each="treatment : ${treatments}">
-                                                    <option th:value="${treatment.treatmentId}" th:text="${treatment.name}" th:selected="${treatment.treatmentId == post.parentTreatment}"></option>
-                                                </th:block>
+                                        <div class="col-md-6">
+                                            <label for="parentTreatment" class="form-label">시술내용</label>
+                                            <select class="form-select" id="parentTreatment" name="parentTreatment" onchange="updateChildTreatments(); parentInputField()">
+                                                <option value="">시술내용 선택</option>
+                                                <option th:each="treatment : ${treatments}" th:value="${treatment.treatmentId}" th:data-name="${treatment.name}"
+                                                        th:text="${treatment.name}" th:selected="${treatment.treatmentId == post.getParent().treatmentId}">시술내용 선택</option>
+                                                <option value="">직접입력</option>
                                             </select>
                                         </div>
-                                        <div class="col-md-4">
-                                            <label for="childTreatment" class="form-label">세부 내용</label>
-                                            <select class="form-select" id="childTreatment" onchange="updateInputField()">
+                                        <div class="col-md-6" id="parentInputField">
+                                            <label for="directParentTreatment" class="form-label">　</label>
+                                            <input class="form-control" type="text" id="directParentTreatment" name="directParentTreatment" placeholder="시술내용을 입력하세요." th:value="${post.getParent().name}" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="parentTreatment" class="form-label">세부내용</label>
+                                            <select class="form-select" id="childTreatment" name="childTreatment" th:data-name="${post.child != null ? post.child.treatmentId : ''}" onchange="childInputField();">
                                                 <option value="">세부내용 선택</option>
                                             </select>
                                         </div>
-                                        <div class="col-md-4">
-                                            <input type="text" id="treatmentDirectInput" name="childTreatment" th:value="${post.childTreatment}" />
-                                            <label class="form-label">　</label>
-                                            <input class="form-control" type="text" id="childView" name="childView" readonly />
+                                        <div class="col-md-6">
+                                            <label for="directChildTreatment" class="form-label">　</label>
+                                            <input class="form-control" type="text" id="directChildTreatment" name="directChildTreatment" placeholder="세부내용을 입력하세요." th:value="${post.child != null ? post.child.name : ''}" readonly>
                                         </div>
                                     </div>
-
-
-
-
-
-                                    <!--<div class="mb-3">
+                                    <div class="mb-3">
                                         <label for="treatmentDate" class="form-label">시술 날짜</label>
                                         <input class="form-control" id="treatmentDate" name="treatmentDate" type="datetime-local" th:value="${#temporals.format(post.treatmentDate, 'yyyy-MM-dd HH:mm')}" />
                                     </div>
-
-                                    <div class="row mb-3">
+                                    <div class="row mb-5">
                                         <div class="col-md-6">
                                             <label for="beforeImageFile" class="form-label">시술 전 사진</label>
                                             <div class="mb-3">
@@ -115,7 +109,6 @@
                                             <input class="form-control" id="afterImageFile" name="afterImageFile" type="file" accept="image/*" onchange="previewImage(event, 'afterImagePreview')" />
                                         </div>
                                     </div>
-
                                     <div class="mb-4">
                                         <label for="retouch" class="form-label">리터치 여부</label>
                                         <input id="retouch" name="retouch" type="checkbox" th:checked="${post.retouch == true}" style="transform: scale(1.5);" />
@@ -124,17 +117,17 @@
                                         <label for="retouchDate" class="form-label">리터치 날짜</label>
                                         <input class="form-control" id="retouchDate" name="retouchDate" type="date" th:value="${post.retouchDate}" />
                                     </div>
-                                    <div class="mb-3">
+                                    <div class="mb-5">
                                         <label for="info" class="form-label">비고</label>
                                         <input class="form-control" id="info" name="info" type="text" placeholder="비고사항" th:value="${post.info}" />
-                                    </div>-->
-                                        <div class="d-flex justify-content-between">
-                                            <div>
-                                                <button type="submit" class="btn btn-primary">저장</button>
-                                                <button type="button" class="btn btn-secondary" onclick="window.location.href='/post/list'">취소</button>
-                                            </div>
-                                            <button type="button" class="btn btn-danger" th:value="${post.postId}" onclick="postDelete(this.value)">휴지통</button>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <button type="button" class="btn btn-danger" th:value="${post.postId}" onclick="postDelete(this.value)">휴지통</button>
+                                        <div>
+                                            <button type="submit" class="btn btn-primary">저장</button>
+                                            <button type="button" class="btn btn-secondary" onclick="window.location.href='/post/list'">취소</button>
                                         </div>
+                                    </div>
                                 </form>
                             </div>
                         </div>
@@ -158,7 +151,6 @@
         if (selectedParentId) {
             updateChildTreatments(selectedParentId);
         }
-        updateVisitPath();
     };
 
 
@@ -168,9 +160,9 @@
         const visitPathInput = document.getElementById("visitPath");
 
         if (select.value === "직접입력") {
-            visitPathInput.removeAttribute("readonly");
-            visitPathInput.value = ""; // 사용자가 직접 입력할 수 있도록 초기화
             select.value = "";
+            visitPathInput.value = "";
+            visitPathInput.removeAttribute("readonly");
         } else {
             visitPathInput.setAttribute("readonly", true);
             visitPathInput.value = select.options[select.selectedIndex].text; // 선택한 값으로 표시
@@ -182,12 +174,30 @@
     function previewImage(event, previewId) {
         const fileInput = event.target;
         const previewImg = document.getElementById(previewId);
+        if(previewImg.parentElement.querySelector('.btn.btn-danger')){
+            previewImg.parentElement.removeChild(previewImg.parentElement.querySelector('.btn.btn-danger'));
+        }
 
         if (fileInput.files && fileInput.files[0]) {
             const reader = new FileReader();
 
             reader.onload = function(e) {
                 previewImg.src = e.target.result;
+
+                const a = document.createElement('a');
+                a.className = 'btn btn-danger';
+                a.innerText = '삭제';
+                a.style.marginLeft = '10px';
+
+                a.onclick = function() {
+                    previewImg.src = '';
+                    const fileInput = previewImg.closest('.col-md-6').querySelector('input[type="file"]');
+                    if (fileInput) {
+                        fileInput.value = ''; // 파일 입력 값 초기화
+                    }
+                    previewImg.parentElement.removeChild(a); // 삭제 버튼 제거
+                };
+                previewImg.parentElement.appendChild(a);
             }
 
             reader.readAsDataURL(fileInput.files[0]);
@@ -201,70 +211,94 @@
     }
 
 
-    // 시술내용 처리  함수
-    function updateChildTreatments(value) {
-        const parentSelect = document.getElementById('parentTreatment');
-        const childSelect = document.getElementById('childTreatment');
-        childSelect.innerHTML = '<option value="">세부 내용 선택</option>';
+    // 시술내역 처리 함수
+    function updateChildTreatments() {
+        const parentId = document.getElementById("parentTreatment").value;
+        const childId = document.getElementById("childTreatment").getAttribute('data-name');
+        console.log(childId)
 
-        const directInput = document.getElementById('treatmentDirectInput');
-        const childView = document.getElementById('childView');
+        fetch(`/treatment/${parentId}/childTreatment`)
+            .then(response => response.json())
+            .then(data => {
+                const subCategorySelect = document.getElementById("childTreatment");
+                subCategorySelect.innerHTML = "";
 
-        const selectedOption = parentSelect.options[parentSelect.selectedIndex];
-        const selectedParentId = selectedOption.value;
-        console.log("value" + selectedParentId);
+                const defaultOption = document.createElement("option");
+                defaultOption.value = "";
+                defaultOption.text = "세부내용 선택";
+                subCategorySelect.appendChild(defaultOption)
 
-        if(value === "1"){
-            childSelect.innerHTML = '<option value="">직접입력</option>';
-            document.getElementById("childView").readOnly = false;  // 입력 필드 활성화
-            document.getElementById("childView").value = '';
-            document.getElementById("treatmentDirectInput").value = '';
-            return;
+                // 소분류 항목 추가
+                data.forEach(subcategory => {
+                    const option = document.createElement("option");
+                    option.value = subcategory.treatmentId;
+                    option.text = subcategory.name;
+                    option.setAttribute('data-name', subcategory.name);
+                    if(option.value === childId){
+                        option.selected = true;
+                    }
+                    subCategorySelect.appendChild(option);
+                });
+
+                // '직접입력' 옵션 추가
+                const directInputOption = document.createElement("option");
+                directInputOption.value = ""; // 입력값은 null
+                directInputOption.text = "직접입력";
+                subCategorySelect.appendChild(directInputOption);
+            });
+    }
+
+
+    // 시술내용 직접입력 함수
+    function parentInputField() {
+        const parentTreatment = document.getElementById("parentTreatment");
+        const directParentTreatment = document.getElementById("directParentTreatment");
+        const childTreatment = document.getElementById("childTreatment");
+        const directChildTreatment = document.getElementById("directChildTreatment");
+
+        if (parentTreatment.value === "") {
+            directParentTreatment.value = "";
+            directParentTreatment.readOnly = false;
+            childTreatment.value = "";
+            directChildTreatment.readOnly = false;
+        } else {
+            directParentTreatment.readOnly = true;
+            directParentTreatment.value = parentTreatment.options[parentTreatment.selectedIndex].getAttribute('data-name');
         }
+        childInputField();
+    }
 
-            if (value) {
-            fetch(`/find/child/${value}`)
-                .then(response => response.json())
-                .then(data => {
-                    data.forEach(child => {
-                        const option = document.createElement('option');
-                        option.value = child.treatmentId;
-                        option.textContent = child.name; // child.name 설정
-                        if (option.value === directInput.value) {
-                            option.selected = true;
 
-                            // 여기서만 childView를 업데이트
-                            childView.value = child.name;
-                        }
-                        childSelect.appendChild(option);
-                    });
-                })
-                .catch(error => console.error('Error', error));
+    // 세부내용 직접입력 함수
+    function childInputField() {
+        const childTreatment = document.getElementById("childTreatment");
+        const directChildTreatment = document.getElementById("directChildTreatment");
+
+        if (childTreatment.value === "") {
+            directChildTreatment.value = "";
+            directChildTreatment.readOnly = false;
+        } else {
+            directChildTreatment.value = "";
+            directChildTreatment.readOnly = true;
+            directChildTreatment.value = childTreatment.options[childTreatment.selectedIndex].innerText;
         }
     }
 
 
-    function updateInputField() {
-        const childSelect = document.getElementById('childTreatment');
-        const directInput = document.getElementById('treatmentDirectInput');
-        const childView = document.getElementById('childView');
-
-        directInput.value = childSelect.value;
-        childView.value = childSelect.options[childSelect.selectedIndex].textContent;
-        childView.readOnly = true;
-
-    }
-
-
+    // 휴지통
     function postDelete(postId){
+        const confirmed = confirm("휴지통에 넣을까요?");
         const url = `/post/${postId}/delete`;
 
-        fetch(url,{
-            method: 'POST'
-        })
-            .then(response => {
-                window.location.href = '/post/list';
+        if(confirmed){
+            fetch(url,{
+                method: 'POST'
             })
+                .then(response => {
+                    window.location.href = '/post/list';
+                })
+        }
+
     }
 </script>
 

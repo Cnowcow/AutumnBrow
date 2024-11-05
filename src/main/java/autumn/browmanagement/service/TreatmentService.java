@@ -1,17 +1,12 @@
 package autumn.browmanagement.service;
 
-import autumn.browmanagement.DTO.TreatmentDTO;
-import autumn.browmanagement.Entity.TestCategory;
 import autumn.browmanagement.Entity.Treatment;
-import autumn.browmanagement.Entity.Treatment2;
 import autumn.browmanagement.repository.TreatmentRepository;
-import autumn.browmanagement.repository.TreatmentRepository2;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -19,32 +14,18 @@ import java.util.stream.Collectors;
 public class TreatmentService {
 
     private final TreatmentRepository treatmentRepository;
-    private final TreatmentRepository2 treatmentRepository2;
 
 
     // 시술내용 불러오기
-    public List<Treatment2> findParentTreatments(){
-        return treatmentRepository2.findAllByParentIsNull();
+    public List<Treatment> treatmentFindParent(){
+        return treatmentRepository.findAllByParentIsNull();
     }
 
 
     // 시술내용에 대한 세부내용 불러오기
-    public List<Treatment2> findChildTreatment(Long parentId) {
-        return treatmentRepository2.findAllByParent_TreatmentId(parentId);
+    public List<Treatment> findChildTreatment(Long parentId) {
+        return treatmentRepository.findAllByParent_TreatmentId(parentId);
     }
-
-
-
-
-    public List<Treatment> findMainCategories() {
-        return treatmentRepository.findAllByParentIsNull(); // 대분류는 부모가 없는 경우로 가정
-    }
-    public List<Treatment> findSubCategories(Long mainCategoryId) {
-        return treatmentRepository.findAllByParent_TreatmentId(mainCategoryId);
-    }
-
-
-
 
 
     // 상위 시술 조회
@@ -52,21 +33,7 @@ public class TreatmentService {
         return treatmentRepository.findByParentIsNullOrderByTreatmentIdDesc();
     }
 
-    public Treatment findByName(String name) {
-        return treatmentRepository.findByName(name);
-    }
-
-    // 상위 시술 조회
-    public String findParentTreatments(Long parentId){
-        Optional<Treatment> treatment = treatmentRepository.findByTreatmentId(parentId);
-
-        if(treatment.isPresent()){
-            String name = treatment.get().getName();
-            System.out.println("name" + name);
-        }
-
-        return treatment.get().getName();
-    }
+/*
 
 
     // 하위 시술 조회
@@ -152,13 +119,15 @@ public class TreatmentService {
             dto.setParentName(treatment.getParent().getName());
         }
 
+*/
 /*        // 자식 시술 정보 (재귀적으로 처리)
         if (treatment.getChild() != null && !treatment.getChild().isEmpty()) {
             List<TreatmentDTO> childDTOs = treatment.getChild().stream()
                     .map(this::convertToDTO)
                     .toList();
             dto.setChild(childDTOs);
-        }*/
+        }*//*
+
 
         return dto;
     }
@@ -179,13 +148,16 @@ public class TreatmentService {
         Treatment treatment = treatmentRepository.findByTreatmentId(treatmentId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 시술내용이 없습니다."));
 
+*/
 /*        if (treatment.getChild() != null && !treatment.getChild().isEmpty()) {
             throw new IllegalStateException("세부 시술내용이 있으면 삭제할 수 없습니다.");
-        }*/
+        }*//*
+
 
         treatmentRepository.deleteById(treatmentId);
     }
 
 
+*/
 
 }

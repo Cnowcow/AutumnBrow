@@ -39,30 +39,24 @@ public class Post {
     // 삭제여부
     private String isDeleted;
 
-    // 방문경로
-    private Long visitId;
-
     // 사용자 정보 - 이름, 전화번호 등은 User 엔티티에서 참조
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
+    // 방문경로
+    @ManyToOne
+    @JoinColumn(name = "visit_id")
+    private Visit visit;
+
     // 시술내용
     @ManyToOne
-    @JoinColumn(name = "parent_id")
-    private Treatment2 parent;
+    @JoinColumn(name = "parent_treatment")
+    private Treatment parent;
 
     // 세부내용
     @ManyToOne
-    @JoinColumn(name = "child_id")
-    private Treatment2 child;
-    
-    
-    
-
-    // 지울거
-    // 시술 정보
-    private Long parentTreatment; // 부모 시술 ID
-    private Long childTreatment;  // 자식 시술 ID
+    @JoinColumn(name = "child_treatment")
+    private Treatment child;
 
 }

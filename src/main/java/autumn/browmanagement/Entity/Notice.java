@@ -30,7 +30,6 @@ public class Notice {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime noticeDate;
 
-
     // 사용자 정보 - 이름, 전화번호 등은 User 엔티티에서 참조
     @ManyToOne
     @JoinColumn(name = "user_id")

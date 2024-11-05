@@ -19,7 +19,7 @@ public class PostDTO {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime treatmentDate;
 
-    // 비포 애프터
+    // 비포 애프터 사진
     private String beforeImageUrl;
     private String afterImageUrl;
 
@@ -33,53 +33,39 @@ public class PostDTO {
     // 비고
     private String info;
 
-    // 시술 내용
-    private Long parentTreatment;
-    private Long childTreatment;
-
-    private String directParentTreatment;
-    private String directChildTreatment;
-
-    
-    // 지울거
-    private String parentName;
-    private String childName;
-    private String childView;
-
-    
-    /* user Entity */
-    // 사용자 id
-    private Long userId;
-
-    // 이름
-    private String name;
-
-    // 전화번호
-    private String phone;
-
-    // 첫방문 날짜
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date firstVisitDate;
-
-    // 시술횟수
-    private Long treatmentCount;
-
-    // 생년월일
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date birthDay;
-
+    // 사용자 탈퇴여부
     private String isDeletedUser;
 
+
+    /* user Entity */
+    private Long userId; // 사용자 id
+    private String name; // 이름
+    private String phone;// 전화번호
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date firstVisitDate; // 첫방문 날짜
+
+    private Long treatmentCount; // 시술횟수
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date birthDay; // 생년월일
+
+
     /* visit Entity*/
-    // 방문 경로
     private Long visitId; // 방문경로 id
     private String visitPath; // 방문경로
 
 
+    /* treatment Entity*/
+    private Long parentTreatment; // 시술내용
+    private Long childTreatment; // 세부내용
+    private String directParentTreatment; // 시술내용 이름
+    private String directChildTreatment; // 세부내용 이름
+
+    
     /* 파일명 변환용 필드 */
     private MultipartFile beforeImageFile;
     private MultipartFile afterImageFile;
-
 
     // 파일 업로드 및 URL 생성 메서드
     public void setImageUrls(String beforeFileName, String afterFileName) {
