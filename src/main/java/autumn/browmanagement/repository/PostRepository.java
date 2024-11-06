@@ -14,4 +14,5 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     List<Post> findByUser_UserIdAndIsDeletedOrderByTreatmentDateDesc(Long postId, String isDeleted); // ID로 사용자 조회
 
+
 }

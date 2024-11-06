@@ -311,20 +311,45 @@ public class PostService {
 
 
     // 수정할 게시물 가져오기
-    public Post postListByPostId(Long postId) {
+    public PostDTO postListByPostId(Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("게시물을 찾을 수 없습니다. :" + postId));
 
-        return post;
+        PostDTO postDTO = new PostDTO();
+
+        postDTO.setPostId(post.getPostId());
+        postDTO.setUserId(post.getUser().getUserId()); //유저아이디
+        postDTO.setName(post.getUser().getName()); // 이름
+        postDTO.setPhone(post.getUser().getPhone()); // 전화번호
+        postDTO.setBirthDay(post.getUser().getBirthDay()); // 생년월일
+        postDTO.setFirstVisitDate(post.getUser().getFirstVisitDate()); // 첫방문 날짜
+        postDTO.setTreatmentCount(post.getUser().getTreatmentCount()); // 방문횟수
+        postDTO.setPostId(post.getPostId()); // 시술내용 id
+        postDTO.setParentTreatment(post.getParent() != null ? post.getParent().getTreatmentId() : null); // 시술내용 id
+        postDTO.setDirectParentTreatment(post.getParent() != null ? post.getParent().getName() : null); // 시술내용
+        postDTO.setChildTreatment(post.getChild() != null ? post.getChild().getTreatmentId() : null); // 세부내용 id
+        postDTO.setDirectChildTreatment(post.getChild() != null ? post.getChild().getName() : null); // 세부내용
+        postDTO.setVisitId(post.getVisit() != null ? post.getVisit().getVisitId() : null); // 방문경로 id
+        postDTO.setVisitPath(post.getVisit() != null ? post.getVisit().getVisitPath() : null); // 방문경로
+        postDTO.setTreatmentDate(post.getTreatmentDate()); // 시술날짜
+        postDTO.setRetouch(Boolean.valueOf(post.getRetouch())); // 리터치 여부
+        postDTO.setRetouchDate(post.getRetouchDate()); // 리터치 날짜
+        postDTO.setBeforeImageUrl(post.getBeforeImageUrl()); // 비포
+        postDTO.setAfterImageUrl(post.getAfterImageUrl()); // 애프터
+        postDTO.setInfo(post.getInfo()); // 비고
+
+        return postDTO;
     }
 
 
     // 시술내역 수정 메소드
     @Transactional
     public void postUpdate(Long postId, PostDTO postDTO) {
-
+        System.out.println("aaaaaaaaaaaaaaaaaa = " + postDTO.getAfterImageUrl());
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("게시물을 찾을 수 없습니다. :" + postId));
+
+        System.out.println("bbbbbbbbbbbbbbbbbb = " + postDTO.getAfterImageUrl());
 
         // Visit 정보 설정
         Visit visitPath = null;
@@ -337,10 +362,21 @@ public class PostService {
         }
         // visitId가 기존값일 때
         if (postDTO.getVisitId() != null) {
-            Visit visit = visitRepository.findById(postDTO.getVisitId())
-                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 방문 경로입니다."));
-            visitPath = visit;
+            if (postDTO.getVisitId() == 0){
+                post.setVisit(null);
+            }else {
+                Visit visit = visitRepository.findById(postDTO.getVisitId())
+                        .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 방문 경로입니다."));
+                visitPath = visit;
+            }
         }
+        System.out.println("ccccccccccccccccc = " + postDTO.getAfterImageUrl());
+
+        if (postDTO.getAfterImageUrl() != null) {
+            post.setAfterImageUrl(postDTO.getAfterImageUrl()); // 시술 후 사진
+        }
+
+        System.out.println("dddddddddddddddddddddd = " + postDTO.getAfterImageUrl());
 
         // Treatment 정보 설정
         Treatment parentTreatment = null;
@@ -366,27 +402,35 @@ public class PostService {
         }
         // 시술내용은 기존 값, 세부내용은 null 일 때
         else {
-            parentTreatment = treatmentRepository.findById(postDTO.getParentTreatment())
-                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 시술내용입니다."));
+            if(postDTO.getParentTreatment() == 0L){
+                post.setParent(null);
+            }
+            else {
+                parentTreatment = treatmentRepository.findById(postDTO.getParentTreatment())
+                        .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 시술내용입니다."));
 
-            if (postDTO.getChildTreatment() == null) {
-                String directChildTreatment = postDTO.getDirectChildTreatment();
-                if (directChildTreatment != null && !directChildTreatment.isEmpty()) {
-                    // 새 소분류 생성
-                    childTreatment = new Treatment();
-                    childTreatment.setName(directChildTreatment);
-                    childTreatment.setParent(parentTreatment); // 소분류의 부모를 대분류로 설정
-                    treatmentRepository.save(childTreatment); // 소분류 저장
+                if (postDTO.getChildTreatment() == null) {
+                    String directChildTreatment = postDTO.getDirectChildTreatment();
+                    if (directChildTreatment != null && !directChildTreatment.isEmpty()) {
+                        // 새 소분류 생성
+                        childTreatment = new Treatment();
+                        childTreatment.setName(directChildTreatment);
+                        childTreatment.setParent(parentTreatment); // 소분류의 부모를 대분류로 설정
+                        treatmentRepository.save(childTreatment); // 소분류 저장
+                    }
                 }
             }
         }
         // 둘 다 기존값일 때
         if (postDTO.getParentTreatment() != null && postDTO.getChildTreatment() != null) {
-            Treatment existTreatment = treatmentRepository.findById(postDTO.getChildTreatment())
-                    .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 소분류 ID"));
-            childTreatment = existTreatment; // 기존 소분류 사용
+            if(postDTO.getChildTreatment() == 0L){
+                post.setChild(null);
+            }else {
+                Treatment existTreatment = treatmentRepository.findById(postDTO.getChildTreatment())
+                        .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 세부시술내용입니다."));
+                childTreatment = existTreatment; // 기존 소분류 사용
+            }
         }
-
 
         if (visitPath != null) {
             post.setVisit(visitPath); // 방문경로
@@ -401,6 +445,7 @@ public class PostService {
         }
 
         post.setTreatmentDate(postDTO.getTreatmentDate()); // 시술 날짜
+        System.out.println("eeeeeeeeeeeeeeeeeeeeee = " + postDTO.getAfterImageUrl());
 
         if (postDTO.getBeforeImageUrl() != null) {
             post.setBeforeImageUrl(postDTO.getBeforeImageUrl()); // 시술 전 사진
@@ -409,15 +454,19 @@ public class PostService {
         if (postDTO.getAfterImageUrl() != null) {
             post.setAfterImageUrl(postDTO.getAfterImageUrl()); // 시술 후 사진
         }
+        System.out.println("ffffffffffffffffffffff = " + postDTO.getAfterImageUrl());
 
         if (postDTO.getRetouch() == null) {
             postDTO.setRetouch(false); //체크박스가 체크되지 않으면 false로 설정
         }
+        System.out.println("ggggggggggggggggggggg = " + postDTO.getAfterImageUrl());
+
         post.setRetouch(postDTO.getRetouch()); //리터치 여부
 
         post.setRetouchDate(postDTO.getRetouchDate()); // 리터치 날짜
 
         post.setInfo(postDTO.getInfo()); // 비고
+        System.out.println("hhhhhhhhhhhhhhhhhhhhhhhhhh = " + postDTO.getAfterImageUrl());
 
         postRepository.save(post);
     }
@@ -454,5 +503,34 @@ public class PostService {
         return null;
     }
 
+
+    // 시술내역 사진 삭제
+    @Transactional
+    public void updateBeforeImageUrl(Long postId){
+
+        // 1. 해당 postId에 맞는 Post 엔티티를 찾는다.
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("Post not found"));
+
+        // 2. beforeImageUrl 값을 null로 설정
+        post.setBeforeImageUrl(null);
+
+        // 3. 엔티티를 다시 저장
+        postRepository.save(post);
+    }
+
+    @Transactional
+    public void updateAfterImageUrl(Long postId){
+
+        // 1. 해당 postId에 맞는 Post 엔티티를 찾는다.
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("Post not found"));
+
+        // 2. beforeImageUrl 값을 null로 설정
+        post.setAfterImageUrl(null);
+
+        // 3. 엔티티를 다시 저장
+        postRepository.save(post);
+    }
 
 }
