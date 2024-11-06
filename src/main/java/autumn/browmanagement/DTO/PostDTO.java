@@ -1,5 +1,8 @@
 package autumn.browmanagement.DTO;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
@@ -39,16 +42,20 @@ public class PostDTO {
 
     /* user Entity */
     private Long userId; // 사용자 id
+
+    @NotEmpty(message = "사용자 이름은 필수입니다.")
     private String name; // 이름
+
+    @NotEmpty(message = "사용자 전화번호는 필수입니다.")
     private String phone;// 전화번호
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date birthDay; // 생년월일
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date firstVisitDate; // 첫방문 날짜
 
     private Long treatmentCount; // 시술횟수
-
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date birthDay; // 생년월일
 
 
     /* visit Entity*/

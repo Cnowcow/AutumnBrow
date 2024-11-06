@@ -7,13 +7,12 @@ import autumn.browmanagement.service.PostService;
 import autumn.browmanagement.service.TreatmentService;
 import autumn.browmanagement.service.VisitService;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
@@ -43,8 +42,11 @@ public class PostController {
 
     // 시술내역 등록 요청
     @PostMapping("/post/create")
-    public String postCreate(@ModelAttribute PostDTO postDTO, Model model) {
-
+    public String postCreate(@Valid @ModelAttribute PostDTO postDTO, Model model, BindingResult result) {
+        if (result.hasErrors()) {
+            model.addAttribute("errorMessage", "입력된 값에 오류가 있습니다.");
+            return "post/postCreateForm"; // 오류가 있을 경우, 수정 폼을 다시 띄워줌
+        }
         try {
             // 서비스에 파일 처리 및 업로드 요청
             postService.handleFileUpload(postDTO);
@@ -118,8 +120,8 @@ public class PostController {
     @GetMapping("/post/{postId}/update")
     public String postUpdateForm(@PathVariable Long postId, Model model) throws Exception {
 
-        Post post = postService.postListByPostId(postId);
-        model.addAttribute("post", post);
+        PostDTO postDTO = postService.postListByPostId(postId);
+        model.addAttribute("post", postDTO);
 
         List<Visit> visits = visitService.visitList();
         model.addAttribute("visits", visits);
@@ -134,11 +136,13 @@ public class PostController {
     // 시술내역 수정 요청
     @PostMapping("/post/{postId}/update")
     public String postUpdate(@PathVariable Long postId, @ModelAttribute("post") PostDTO postDTO, Model model ) throws Exception {
-
+        System.out.println("dddddddd = " + postDTO.getAfterImageFile());
         try {
             // 서비스에 파일 처리 및 업로드 요청
             postService.handleFileUpload(postDTO);
+            System.out.println("111111111111111 = " + postDTO.getAfterImageUrl());
             postService.postUpdate(postId, postDTO);
+            System.out.println("2222222222222222222 = " + postDTO.getAfterImageUrl());
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -179,5 +183,21 @@ public class PostController {
 
     }
 
+
+    // 사진 삭제 요청
+    @PostMapping("/post/deleteBeforeImage/{postId}")
+    @ResponseBody
+    public void postBeforeImageDelete(@PathVariable Long postId){
+        System.out.println("postId = " + postId);
+
+        postService.updateBeforeImageUrl(postId);
+    }
+    @PostMapping("/post/deleteAfterImage/{postId}")
+    @ResponseBody
+    public void postAfterImageDelete(@PathVariable Long postId){
+        System.out.println("postId = " + postId);
+
+        postService.updateAfterImageUrl(postId);
+    }
 
 }
