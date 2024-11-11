@@ -5,8 +5,10 @@ import autumn.browmanagement.DTO.ReservationDTO;
 import autumn.browmanagement.Entity.Reservation;
 import autumn.browmanagement.Entity.Treatment;
 import autumn.browmanagement.Entity.User;
+import autumn.browmanagement.config.MailService;
 import autumn.browmanagement.service.ReservationService;
 import autumn.browmanagement.service.TreatmentService;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.SimpleTimeZone;
 
 @Controller
 @RequiredArgsConstructor
@@ -25,6 +28,7 @@ public class ReservationController {
 
     private final ReservationService reservationService;
     private final TreatmentService treatmentService;
+    private final MailService mailService;
 
 
     // 예약하기
@@ -50,7 +54,19 @@ public class ReservationController {
 
         reservationService.reservationConfirm(reservationDTO);
 
-        return "redirect:/reservation/ownList";
+        try {
+            String to = "hhjnn92@icloud.com";
+            String subject = "예약확인 메일입니다";
+            String name = reservationDTO.getName();
+            String treatment = reservationDTO.getParentName();
+            String date = String.valueOf(reservationDTO.getReservationDate());
+            String text = name + " " + treatment + " " + date + " ";
+
+            mailService.sendMail(to, subject, text);
+            return "redirect:/reservation/ownList";
+        } catch (MessagingException e){
+            return "실패" + e.getMessage();
+        }
     }
 
 
