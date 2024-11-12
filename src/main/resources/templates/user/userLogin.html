@@ -13,6 +13,9 @@
 <script th:if="${param.loginFailed}">
     alert("로그인에 실패했습니다. 아이디와 비밀번호를 확인해주세요.");
 </script>
+<script th:if="${param.loginPlz}">
+    alert("로그인후 이용 가능합니다.");
+</script>
 <body class="sb-nav-fixed">
 
 <!-- header -->

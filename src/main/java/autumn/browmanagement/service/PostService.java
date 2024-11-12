@@ -345,11 +345,8 @@ public class PostService {
     // 시술내역 수정 메소드
     @Transactional
     public void postUpdate(Long postId, PostDTO postDTO) {
-        System.out.println("aaaaaaaaaaaaaaaaaa = " + postDTO.getAfterImageUrl());
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("게시물을 찾을 수 없습니다. :" + postId));
-
-        System.out.println("bbbbbbbbbbbbbbbbbb = " + postDTO.getAfterImageUrl());
 
         // Visit 정보 설정
         Visit visitPath = null;
@@ -370,13 +367,11 @@ public class PostService {
                 visitPath = visit;
             }
         }
-        System.out.println("ccccccccccccccccc = " + postDTO.getAfterImageUrl());
 
         if (postDTO.getAfterImageUrl() != null) {
             post.setAfterImageUrl(postDTO.getAfterImageUrl()); // 시술 후 사진
         }
 
-        System.out.println("dddddddddddddddddddddd = " + postDTO.getAfterImageUrl());
 
         // Treatment 정보 설정
         Treatment parentTreatment = null;
@@ -445,7 +440,6 @@ public class PostService {
         }
 
         post.setTreatmentDate(postDTO.getTreatmentDate()); // 시술 날짜
-        System.out.println("eeeeeeeeeeeeeeeeeeeeee = " + postDTO.getAfterImageUrl());
 
         if (postDTO.getBeforeImageUrl() != null) {
             post.setBeforeImageUrl(postDTO.getBeforeImageUrl()); // 시술 전 사진
@@ -454,19 +448,16 @@ public class PostService {
         if (postDTO.getAfterImageUrl() != null) {
             post.setAfterImageUrl(postDTO.getAfterImageUrl()); // 시술 후 사진
         }
-        System.out.println("ffffffffffffffffffffff = " + postDTO.getAfterImageUrl());
 
         if (postDTO.getRetouch() == null) {
             postDTO.setRetouch(false); //체크박스가 체크되지 않으면 false로 설정
         }
-        System.out.println("ggggggggggggggggggggg = " + postDTO.getAfterImageUrl());
 
         post.setRetouch(postDTO.getRetouch()); //리터치 여부
 
         post.setRetouchDate(postDTO.getRetouchDate()); // 리터치 날짜
 
         post.setInfo(postDTO.getInfo()); // 비고
-        System.out.println("hhhhhhhhhhhhhhhhhhhhhhhhhh = " + postDTO.getAfterImageUrl());
 
         postRepository.save(post);
     }

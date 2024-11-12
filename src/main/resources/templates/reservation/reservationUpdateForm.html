@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <title>예약하기</title>
+    <link href="/css/styles.css" rel="stylesheet"/>
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+</head>
+<body class="sb-nav-fixed">
+
+<!-- header -->
+<div th:insert="~{/header.html}"></div>
+
+<div id="layoutSidenav">
+
+    <!-- sidebar -->
+    <div th:insert="~{/sidebar.html}"></div>
+
+    <div id="layoutSidenav_content">
+
+        <!-- 메인화면 -->
+        <main>
+            <div class="container mb-5">
+                <div class="row justify-content-center">
+                    <div class="col-lg-7">
+                        <div class="card shadow-lg border-0 rounded-lg mt-5">
+                            <div class="card-header"><h3 class="text-center font-weight-light my-4">예약하기</h3>
+                            </div>
+                            <div class="card-body">
+                                <form id="reservationCreateForm" action="/reservation/update" method="post" >
+                                    <div class="mb-3">
+                                        <label for="name" class="form-label">이름</label>
+                                        <input class="form-control" id="name" th:value="${reservations.name}" type="text" readonly/>
+                                        <div id="nameErrorMessages" style="color: red;"></div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="phone" class="form-label">전화번호</label>
+                                        <input class="form-control" id="phone" th:value="${reservations.phone}" type="text" readonly/>
+                                        <div id="phoneErrorMessages" style="color: red;"></div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="directParentTreatment" class="form-label">시술내용</label>
+                                        <input class="form-control" type="text" id="directParentTreatment" th:value="${reservations.parentName}" readonly>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="directChildTreatment" class="form-label">세부내용</label>
+                                        <input class="form-control" type="text" id="directChildTreatment" th:value="${reservations.childName}" readonly>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="reservationDate" class="form-label">예약 날짜</label>
+                                        <input class="form-control" id="reservationDate" name="reservationDate" type="text" />
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="reservationStartTime" class="form-label">예약 시작시간</label>
+                                            <input class="form-control" id="reservationStartTime" type="text" />
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="reservationEndTime" class="form-label">예약 종료시간</label>
+                                            <input class="form-control" id="reservationEndTime" type="text" />
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="reservationState" class="form-label">예약 상태</label>
+                                        <select class="form-control" id="reservationState" name="reservationState" th:value="${reservations.state}">
+                                            <option value="예약대기" th:selected="${reservations.state == '예약대기'}">예약대기</option>
+                                            <option value="예약확정" th:selected="${reservations.state == '예약확정'}">예약확정</option>
+                                            <option value="시술완료" th:selected="${reservations.state == '시술완료'}">시술완료</option>
+                                        </select>
+                                    </div>
+                                    <div class="mt-4 mb-0">
+                                        <div class="d-grid">
+                                            <button type="submit" class="btn btn-primary btn-block">예약상태 변경하기</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <!-- 메인화면 끝 -->
+
+        <!-- footer -->
+        <div th:insert="~{/footer.html}"></div>
+
+    </div>
+</div>
+
+<script>
+    document.getElementById('postCreateForm').addEventListener('submit', function(event) {
+        const name = document.getElementById('name').value;
+        const phone = document.getElementById('phone').value;
+        let nameErrorMessages = [];
+        let phoneErrorMessages = [];
+
+        // 유효성 검사: 빈 값이 있으면 에러 메시지 추가
+        if (!name) {
+            event.preventDefault();  // 폼 제출을 막음
+            nameErrorMessages.push("사용자 이름은 필수입니다.");
+            document.getElementById('nameErrorMessages').innerHTML = nameErrorMessages.join('<br />');
+        }
+        if (!phone) {
+            event.preventDefault();  // 폼 제출을 막음
+            phoneErrorMessages.push("사용자 전화번호는 필수입니다.");
+            document.getElementById('phoneErrorMessages').innerHTML = phoneErrorMessages.join('<br />');
+        }
+    });
+</script>
+
+<script>
+    // 시술내역 처리 함수
+    function updateChildTreatments() {
+        const parentId = document.getElementById("parentTreatment").value;
+
+        fetch(`/treatment/${parentId}/childTreatment`)
+            .then(response => response.json())
+            .then(data => {
+                const subCategorySelect = document.getElementById("childTreatment");
+                subCategorySelect.innerHTML = "";
+
+                const defaultOption = document.createElement("option");
+                defaultOption.value = "";
+                defaultOption.text = "세부내용 선택";
+                subCategorySelect.appendChild(defaultOption)
+
+                console.log(data.forEach(subcategory => {
+                    const id = subcategory.treatmentId;
+                    const name = subcategory.name;
+                    console.log("id "+id + " name "+name);
+                }))
+
+                // 소분류 항목 추가
+                data.forEach(subcategory => {
+                    const option = document.createElement("option");
+                    option.value = subcategory.treatmentId;
+                    option.text = subcategory.name;
+                    subCategorySelect.appendChild(option);
+                });
+            });
+    }
+
+
+    // 시술내용 직접입력 함수
+    function parentInputField() {
+        const parentTreatment = document.getElementById("parentTreatment");
+        const directParentTreatment = document.getElementById("directParentTreatment");
+        const childTreatment = document.getElementById("childTreatment");
+        const directChildTreatment = document.getElementById("directChildTreatment");
+
+        if (parentTreatment.value === "") {
+            directParentTreatment.value = "";
+            directParentTreatment.readOnly = false;
+            childTreatment.value = "";
+            directChildTreatment.readOnly = false;
+        } else {
+            directParentTreatment.readOnly = true;
+            directParentTreatment.value = parentTreatment.options[parentTreatment.selectedIndex].getAttribute('data-name');
+        }
+        childInputField();
+    }
+
+
+    // 세부내용 직접입력 함수
+    function childInputField() {
+        const childTreatment = document.getElementById("childTreatment");
+        const directChildTreatment = document.getElementById("directChildTreatment");
+
+        if (childTreatment.value === "") {
+            directChildTreatment.value = "";
+            directChildTreatment.readOnly = false;
+        } else {
+            directChildTreatment.value = "";
+            directChildTreatment.readOnly = true;
+            directChildTreatment.value = childTreatment.options[childTreatment.selectedIndex].innerText;
+        }
+    }
+
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+        crossorigin="anonymous"></script>
+<script src="/js/scripts.js"></script>
+</body>
+</html>

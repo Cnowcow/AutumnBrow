@@ -66,7 +66,7 @@ public class UserController {
                         Model model) throws Exception {
 
         User user = userService.userLogin(name, password);
-        if (user != null) {
+        if (user != null && user.getIsDeleted().equals("N")) {
             session.setAttribute("user", user);
             model.addAttribute("userInfo", user);
             System.out.println("로그인 성공" +name+" "+password);

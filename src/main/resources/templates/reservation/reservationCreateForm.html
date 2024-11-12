@@ -33,18 +33,15 @@
                             <div class="card-body">
                                 <form id="reservationCreateForm" action="/reservation/create" method="post" >
 
-                                    <input type="text"  th:if="${session.user != null}" th:value="${session.user.userId}" required>
-                                    <input type="text"  th:if="${session.user != null}" th:value="${session.user.name}" required>
-                                    <input type="text"  th:if="${session.user != null}" th:value="${session.user.phone}" required>
-
+                                    <input type="hidden"  th:if="${session.user != null}" th:value="${session.user.userId}" required>
                                     <div class="mb-3">
                                         <label for="name" class="form-label">이름</label>
-                                        <input class="form-control" id="name" name="name" type="text" placeholder="이름을 입력하세요." required/>
+                                        <input class="form-control" id="name" th:value="${session.user.name}" name="name" type="text" placeholder="이름을 입력하세요." required/>
                                         <div id="nameErrorMessages" style="color: red;"></div>
                                     </div>
                                     <div class="mb-3">
                                         <label for="phone" class="form-label">전화번호</label>
-                                        <input class="form-control" id="phone" name="phone" type="text" placeholder="전화번호를 입력하세요." required/>
+                                        <input class="form-control" id="phone" th:value="${session.user.phone}" name="phone" type="text" placeholder="전화번호를 입력하세요." required/>
                                         <div id="phoneErrorMessages" style="color: red;"></div>
                                     </div>
                                     <div class="row mb-3">

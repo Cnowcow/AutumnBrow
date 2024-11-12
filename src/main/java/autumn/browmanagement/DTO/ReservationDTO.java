@@ -28,8 +28,10 @@ public class ReservationDTO {
     private LocalTime reservationEndTime;
 
     // 예약 상태
-    private String status;
+    private String state;
 
+    // 예약 상태 변경
+    private String modalReservationState;
 
     /* user Entity */
     private Long userId; // 사용자 id
