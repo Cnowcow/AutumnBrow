@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>나의 예약내역</title>
+        <title>예약내역</title>
         <link href="/css/simple-datatables@7.1.2-style.min.css" rel="stylesheet" />
         <link href="/css/styles.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
@@ -26,11 +26,10 @@
             <!-- 메인화면 -->
             <main>
                 <div class="container mb-5">
-                    <h1 class="mt-4">모든 예약내역</h1>
+                    <h1 class="mt-4"><span th:text="${name}"></span>님의 예약내역</h1>
 
                     <div class="card mb-4">
                         <div class="card-body">
-                            모든 사용자의 예약내역입니다. (관리자용)
                         </div>
                     </div>
 
@@ -48,11 +47,8 @@
                             <table id="datatablesSimple">
                                 <thead>
                                 <tr>
-                                    <th>#</th>
                                     <th>예약 날짜</th>
                                     <th>예약 시간</th>
-                                    <th>이름</th>
-                                    <th>전화번호</th>
                                     <th>시술내용</th>
                                     <th>세부내용</th>
                                     <th>상태</th>
@@ -61,34 +57,12 @@
                                 </thead>
                                 <tbody>
                                 <tr th:each="reservation : ${reservations}">
-                                    <td th:text="${reservation.reservationId}"></td>
                                     <td th:text="${reservation.reservationDate}"></td>
-<!--
                                     <td th:text="${reservation.reservationStartTime}"></td>
-                                    <td th:text="${reservation.name}"></td>
-                                    <td th:text="${reservation.phone}"></td>
                                     <td th:text="${reservation.parentName}"></td>
                                     <td th:text="${reservation.childName}"></td>
-                                    <td th:text="${reservation.status}"></td>
-                                    <td>
-                                        <a href="#" th:href="@{/reservation/{reservationId}/update (reservationId=${reservation.reservationId})}" class="btn btn-primary" role="button">예약상태 변경</a>
-                                    </td>-->
-<!--                                    <td th:text="${#temporals.format(reservation.treatmentDate, 'yyyy.MM.dd. HH:mm')}"></td>
-                                    <td>
-                                        <a class="d-block text-decoration-none" th:href="@{/post/{userId}/userList (userId=${post.userId})}" th:text="${post.name}+${post.isDeletedUser != null ? ' ('+post.isDeletedUser+')' : ''}"></a>
-                                    </td>
-                                    <td th:text="${post.phone}"></td>
-                                    <td th:text="${post.directParentTreatment}"></td>
-                                    <td th:text="${post.directChildTreatment}"></td>
-                                    <td th:text="${post.visitPath}"></td>
-                                    <td style="text-align: center;">
-                                        <input type="checkbox" th:checked="${post.retouch == true}" style="transform: scale(1.5);" disabled>
-                                    </td>
-                                    <td th:text="${post.retouchDate}"></td>
-                                    <td th:text="${post.info}"></td>
-                                    <td>
-                                        <a href="#" th:href="@{/post/{postId}/update (postId=${post.postId})}" class="btn btn-primary" role="button">수정</a>
-                                    </td>-->
+                                    <td th:text="${reservation.state}"></td>
+                                    <td>문의하기</td>
                                 </tr>
                                 </tbody>
                             </table>

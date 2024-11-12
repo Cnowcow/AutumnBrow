@@ -65,11 +65,11 @@
                                         </div>
                                     </div>
                                     <div class="mb-3">
-                                        <label for="reservationStatus" class="form-label">예약 상태</label>
-                                        <select class="form-control" id="reservationStatus" name="reservationStatus" th:value="${reservations.status}">
-                                            <option value="예약대기" th:selected="${reservations.status == '예약대기'}">예약대기</option>
-                                            <option value="예약확정" th:selected="${reservations.status == '예약확정'}">예약확정</option>
-                                            <option value="시술완료" th:selected="${reservations.status == '시술완료'}">시술완료</option>
+                                        <label for="reservationState" class="form-label">예약 상태</label>
+                                        <select class="form-control" id="reservationState" name="reservationState" th:value="${reservations.state}">
+                                            <option value="예약대기" th:selected="${reservations.state == '예약대기'}">예약대기</option>
+                                            <option value="예약확정" th:selected="${reservations.state == '예약확정'}">예약확정</option>
+                                            <option value="시술완료" th:selected="${reservations.state == '시술완료'}">시술완료</option>
                                         </select>
                                     </div>
                                     <div class="mt-4 mb-0">

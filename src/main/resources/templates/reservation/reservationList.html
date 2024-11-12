@@ -56,7 +56,6 @@
                                     <th>시술내용</th>
                                     <th>세부내용</th>
                                     <th>상태</th>
-                                    <th></th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -68,29 +67,48 @@
                                     <td th:text="${reservation.phone}"></td>
                                     <td th:text="${reservation.parentName}"></td>
                                     <td th:text="${reservation.childName}"></td>
-                                    <td th:text="${reservation.status}"></td>
                                     <td>
-                                        <a href="#" th:href="@{/reservation/{reservationId}/update (reservationId=${reservation.reservationId})}" class="btn btn-primary" role="button">예약상태 변경</a>
+                                        <!--
+                                        <a href="#" th:href="@{/reservation/{reservationId}/update (reservationId=${reservation.reservationId})}" class="btn btn-outline-primary" role="button" th:text="${reservation.state}"></a>
+                                        -->
+                                        <a role="button"
+                                           class="reservationState"
+                                           th:text="${reservation.state}"
+                                           th:data-state="${reservation.state}"
+                                           th:data-id="${reservation.reservationId}"
+                                        onclick="showReservationModal(this)">
+                                        </a>
                                     </td>
-<!--                                    <td th:text="${#temporals.format(reservation.treatmentDate, 'yyyy.MM.dd. HH:mm')}"></td>
-                                    <td>
-                                        <a class="d-block text-decoration-none" th:href="@{/post/{userId}/userList (userId=${post.userId})}" th:text="${post.name}+${post.isDeletedUser != null ? ' ('+post.isDeletedUser+')' : ''}"></a>
-                                    </td>
-                                    <td th:text="${post.phone}"></td>
-                                    <td th:text="${post.directParentTreatment}"></td>
-                                    <td th:text="${post.directChildTreatment}"></td>
-                                    <td th:text="${post.visitPath}"></td>
-                                    <td style="text-align: center;">
-                                        <input type="checkbox" th:checked="${post.retouch == true}" style="transform: scale(1.5);" disabled>
-                                    </td>
-                                    <td th:text="${post.retouchDate}"></td>
-                                    <td th:text="${post.info}"></td>
-                                    <td>
-                                        <a href="#" th:href="@{/post/{postId}/update (postId=${post.postId})}" class="btn btn-primary" role="button">수정</a>
-                                    </td>-->
                                 </tr>
                                 </tbody>
                             </table>
+
+                            <div class="modal fade" id="reservationModal" tabindex="-1" aria-labelledby="reservationModalLabel" aria-hidden="true">
+                                <form id="modalAction" method="post">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="reservationModalLabel">예약상태 변경</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <input type="hidden" id="modalReservationId">
+                                                <select class="form-select" name="modalReservationState" id="modalReservationState" aria-label="Default select example">
+                                                    <option value="예약대기">예약대기</option>
+                                                    <option value="예약확정">예약확정</option>
+                                                    <option value="시술완료">시술완료</option>
+                                                </select>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                                                <button type="submit" class="btn btn-primary">변경하기</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+
                         </div>
                     </div>
                 </div>
@@ -110,5 +128,42 @@
     <script src="/js/chart-bar-demo.js"></script>
     <script src="/js/simple-datatables.min.js" crossorigin="anonymous"></script>
     <script src="/js/datatables-simple-demo.js"></script>
+
+    <script>
+        document.querySelectorAll('.reservationState').forEach(function(reservationState) {
+            if (reservationState.innerText === '예약대기') {
+                reservationState.classList.add('btn', 'btn-outline-danger');
+            } else if (reservationState.innerText === '예약확정') {
+                reservationState.classList.add('btn', 'btn-outline-primary');
+            } else if (reservationState.innerText === '시술완료') {
+                reservationState.classList.add('btn', 'btn-outline-secondary');
+            }
+        });
+
+
+        // 모달
+        function showReservationModal(modal) {
+            const reservationId = modal.dataset.id;
+            const reservationState = modal.dataset.state;
+            const stateSelect = document.getElementById("modalReservationState");
+
+            document.getElementById("modalReservationId").value = reservationId;
+
+            if (reservationState === '예약대기') {
+                stateSelect.value = '예약대기';
+            } else if (reservationState === '예약확정') {
+                stateSelect.value = '예약확정';
+            } else if (reservationState === '시술완료') {
+                stateSelect.value = '시술완료';
+            }
+
+            const form = document.getElementById("modalAction");
+            form.action = '/reservation/'+reservationId+'/stateUpdate';
+
+            var reservationModal = new bootstrap.Modal(document.getElementById("reservationModal"));
+            reservationModal.show();
+        }
+    </script>
+
     </body>
 </html>

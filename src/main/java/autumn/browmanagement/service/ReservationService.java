@@ -23,6 +23,8 @@ public class ReservationService {
     private final UserRepository userRepository;
     private final TreatmentRepository treatmentRepository;
 
+
+    // 예약하기 요청
     @Transactional
     public void reservationCreate(ReservationDTO reservationDTO){
         Reservation reservation = new Reservation();
@@ -63,9 +65,10 @@ public class ReservationService {
         reservationRepository.save(reservation);
     }
 
-
+    
+    // 모든 예약 목록 가져오기
     public List<ReservationDTO> reservationList() {
-        List<Reservation> reservations = reservationRepository.findAll(); // 모든 게시물 조회
+        List<Reservation> reservations = reservationRepository.findAllByOrderByReservationIdDesc(); // 모든 게시물 조회
         List<ReservationDTO> reservationDTOS = new ArrayList<>();
 
         for (Reservation reservation : reservations) {
@@ -78,14 +81,15 @@ public class ReservationService {
             reservationDTO.setParentName(reservation.getParent() != null ? reservation.getParent().getName() : null);
             reservationDTO.setChildName(reservation.getChild() != null ?  reservation.getChild().getName() : null);
             reservationDTO.setReservationStartTime(reservation.getReservationStartTime());
-            reservationDTO.setStatus(reservation.getStatus());
+            reservationDTO.setState(reservation.getState());
 
             reservationDTOS.add(reservationDTO);
         }
         return reservationDTOS;
     }
 
-
+    
+    // 내 예약 목록 가져오기
     public List<ReservationDTO> reservationOwnList(Long userId){
             List<Reservation> reservations = reservationRepository.findByUserUserId(userId);
             List<ReservationDTO> reservationDTOS = new ArrayList<>();
@@ -94,6 +98,12 @@ public class ReservationService {
                 ReservationDTO reservationDTO = new ReservationDTO();
                 reservationDTO.setReservationId(reservation.getReservationId());
                 reservationDTO.setReservationDate(reservation.getReservationDate());
+                reservationDTO.setReservationStartTime(reservation.getReservationStartTime());
+                reservationDTO.setName(reservation.getUser().getName());
+                reservationDTO.setPhone(reservation.getUser().getPhone());
+                reservationDTO.setParentName(reservation.getParent().getName());
+                reservationDTO.setChildName(reservation.getChild().getName());
+                reservationDTO.setState(reservation.getState());
 
 
                 reservationDTOS.add(reservationDTO);
@@ -103,24 +113,21 @@ public class ReservationService {
     }
 
 
-    
-    public void reservationConfirm(ReservationDTO reservationDTO){
+    // 예약상태 변경
+    @Transactional
+    public void reservationStateUpdate(Long reservationId, ReservationDTO reservationDTO) {
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new IllegalArgumentException("예약내역을 찾을 수 없습니다. :" + reservationId));
+        
+        reservation.setState(reservationDTO.getModalReservationState());
 
-        System.out.println("예약문자 보내기 로직");
-        System.out.println("1111111111111111111 = " + reservationDTO.getName());
-        System.out.println("2222222222222222222 = " + reservationDTO.getPhone());
-        System.out.println("3333333333333333333 = " + reservationDTO.getParentTreatment());
-        System.out.println("4444444444444444444 = " + reservationDTO.getParentName());
-        System.out.println("5555555555555555555 = " + reservationDTO.getChildTreatment());
-        System.out.println("6666666666666666666 = " + reservationDTO.getChildName());
-        System.out.println("7777777777777777777 = " + reservationDTO.getReservationDate());
-        System.out.println("8888888888888888888 = " + reservationDTO.getReservationStartTime());
-        System.out.println("9999999999999999999 = " + reservationDTO.getReservationEndTime());
-
+        reservationRepository.save(reservation);
     }
 
 
-    // 수정할 게시물 가져오기
+
+    /* 지금은 사용 안함
+    // 예약상태 변경폼
     public ReservationDTO reservationUpdateForm(Long reservationId) {
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new IllegalArgumentException("예약내역을 찾을 수 없습니다. :" + reservationId));
@@ -134,8 +141,9 @@ public class ReservationService {
         reservationDTO.setChildName(reservation.getChild().getName());
         reservationDTO.setChildName(reservation.getChild().getName());
 
-        reservationDTO.setStatus(reservation.getStatus());
+        reservationDTO.setState(reservation.getState());
 
         return reservationDTO;
     }
+    */
 }

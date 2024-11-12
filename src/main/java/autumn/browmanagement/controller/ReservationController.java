@@ -31,7 +31,7 @@ public class ReservationController {
     private final MailService mailService;
 
 
-    // 예약하기
+    // 예약하기 폼
     @GetMapping("/reservation/create")  // 로그인 후 이용 가능하게 로직 추가하기
     public String reservationCreateForm(Model model, HttpSession session){
         User sessionUser = (User) session.getAttribute("user");
@@ -46,31 +46,36 @@ public class ReservationController {
     }
 
 
-    // 예약하기 요청
+    // 예약하기 요청        날짜, 시간 예외처리 추가
     @PostMapping("/reservation/create")  // 리턴 페이지 만들기
-    public String reservationCreate(@ModelAttribute ReservationDTO reservationDTO){
+    public String reservationCreate(@ModelAttribute ReservationDTO reservationDTO, HttpSession session){
+        User sessionUser = (User) session.getAttribute("user");
+        Long userId = sessionUser.getUserId();
 
         reservationService.reservationCreate(reservationDTO);
 
-        reservationService.reservationConfirm(reservationDTO);
-
         try {
             String to = "hhjnn92@icloud.com";
-            String subject = "예약확인 메일입니다";
+            String subject = "예약요청 메일입니다.";
+
             String name = reservationDTO.getName();
-            String treatment = reservationDTO.getParentName();
+            String parentName = reservationDTO.getParentName();
+            String childName = reservationDTO.getChildName();
             String date = String.valueOf(reservationDTO.getReservationDate());
-            String text = name + " " + treatment + " " + date + " ";
+            String startTime = String.valueOf(reservationDTO.getReservationStartTime());
+            String endTime = String.valueOf(reservationDTO.getReservationEndTime());
+
+            String text = name + "님  " + date + "  " + startTime + "~" + endTime + "  " + parentName + " " + childName + " ";
 
             mailService.sendMail(to, subject, text);
-            return "redirect:/reservation/ownList";
+            return "redirect:/reservation/"+ userId + "/ownList";
         } catch (MessagingException e){
             return "실패" + e.getMessage();
         }
     }
 
 
-    // 예약 목록
+    // 모든 예약 목록
     @GetMapping("/reservation/list")
     public String reservationList(Model model){
 
@@ -82,26 +87,39 @@ public class ReservationController {
 
 
     // 내 예약 목록
-    @GetMapping("/reservation/ownList")
-    public String reservationOwnList(Model model, HttpSession session){
+    @GetMapping("/reservation/{userId}/ownList")
+    public String reservationOwnList(@PathVariable Long userId, Model model, HttpSession session){
+
         User sessionUser = (User) session.getAttribute("user");
 
-        List<ReservationDTO> reservations = reservationService.reservationOwnList(sessionUser.getUserId());
+        List<ReservationDTO> reservations = reservationService.reservationOwnList(userId);
+        model.addAttribute("name",sessionUser.getName());
         model.addAttribute("reservations", reservations);
 
         return "reservation/reservationOwnList";
     }
 
 
+    // 예약상태 변경 요청
+    @PostMapping("/reservation/{reservationId}/stateUpdate")
+    public String reservationStateUpdate(@PathVariable Long reservationId, ReservationDTO reservationDTO){
 
-    @GetMapping("reservation/{reservationId}/update")
+        reservationService.reservationStateUpdate(reservationId, reservationDTO);
+
+        return "redirect:/reservation/list";
+    }
+
+
+/* 지금은 사용 안함
+    // 예약상태 변경
+    @GetMapping("/reservation/{reservationId}/update")
     public String reservationUpdateForm(@PathVariable Long reservationId, Model model) {
 
         ReservationDTO reservations = reservationService.reservationUpdateForm(reservationId);
         model.addAttribute("reservations", reservations);
 
-
         return "reservation/reservationUpdateForm";
     }
+    */
 
 }

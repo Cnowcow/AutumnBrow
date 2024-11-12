@@ -1,5 +1,6 @@
 package autumn.browmanagement.repository;
 
+import autumn.browmanagement.Entity.Event;
 import autumn.browmanagement.Entity.Post;
 import autumn.browmanagement.Entity.Reservation;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,6 +13,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     List<Reservation> findByUserUserId(Long userId);
 
+    List<Reservation> findAllByOrderByReservationIdDesc();
 
 
 }

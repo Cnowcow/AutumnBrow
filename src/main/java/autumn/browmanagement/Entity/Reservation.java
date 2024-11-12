@@ -24,7 +24,7 @@ public class Reservation {
     private LocalTime reservationEndTime;
 
     // 예약 상태
-    private String status = "예약대기";
+    private String state = "예약대기";
 
     @ManyToOne
     @JoinColumn(name = "user_id")
