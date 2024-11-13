@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -27,6 +29,15 @@ public class ReservationService {
     // 예약하기 요청
     @Transactional
     public void reservationCreate(ReservationDTO reservationDTO){
+
+        LocalDate date = reservationDTO.getReservationDate();
+        LocalTime startTime = reservationDTO.getReservationStartTime();
+        LocalTime endTime = reservationDTO.getReservationEndTime();
+
+        if (isReservationOverlapping(date, startTime, endTime)) {
+            throw new IllegalArgumentException("해당 시간에 이미 다른 예약이 있습니다.");
+        }
+
         Reservation reservation = new Reservation();
 
         Optional<User> findUser = userRepository.findByNameAndPhone(reservationDTO.getName(), reservationDTO.getPhone());
@@ -65,7 +76,13 @@ public class ReservationService {
         reservationRepository.save(reservation);
     }
 
-    
+
+    // 예약 시간 겹침 확인 메서드
+    public boolean isReservationOverlapping(LocalDate date, LocalTime startTime, LocalTime endTime) {
+        return reservationRepository.existsOverlappingReservation(date, startTime, endTime);
+    }
+
+
     // 모든 예약 목록 가져오기
     public List<ReservationDTO> reservationList() {
         List<Reservation> reservations = reservationRepository.findAllByOrderByReservationIdDesc(); // 모든 게시물 조회
@@ -91,7 +108,7 @@ public class ReservationService {
     
     // 내 예약 목록 가져오기
     public List<ReservationDTO> reservationOwnList(Long userId){
-            List<Reservation> reservations = reservationRepository.findByUserUserId(userId);
+            List<Reservation> reservations = reservationRepository.findByUserUserIdOrderByReservationIdDesc(userId);
             List<ReservationDTO> reservationDTOS = new ArrayList<>();
 
             for (Reservation reservation : reservations) {

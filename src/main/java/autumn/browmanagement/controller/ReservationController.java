@@ -48,30 +48,35 @@ public class ReservationController {
 
     // 예약하기 요청        날짜, 시간 예외처리 추가
     @PostMapping("/reservation/create")  // 리턴 페이지 만들기
-    public String reservationCreate(@ModelAttribute ReservationDTO reservationDTO, HttpSession session){
+    public String reservationCreate(@ModelAttribute ReservationDTO reservationDTO, HttpSession session, Model model) {
         User sessionUser = (User) session.getAttribute("user");
         Long userId = sessionUser.getUserId();
 
-        reservationService.reservationCreate(reservationDTO);
-
         try {
-            String to = "hhjnn92@icloud.com";
-            String subject = "예약요청 메일입니다.";
+            reservationService.reservationCreate(reservationDTO);
 
-            String name = reservationDTO.getName();
-            String parentName = reservationDTO.getParentName();
-            String childName = reservationDTO.getChildName();
-            String date = String.valueOf(reservationDTO.getReservationDate());
-            String startTime = String.valueOf(reservationDTO.getReservationStartTime());
-            String endTime = String.valueOf(reservationDTO.getReservationEndTime());
+            try {
+                String to = "hhjnn92@icloud.com";
+                String subject = "예약요청 메일입니다.";
 
-            String text = name + "님  " + date + "  " + startTime + "~" + endTime + "  " + parentName + " " + childName + " ";
+                String name = reservationDTO.getName();
+                String parentName = reservationDTO.getParentName();
+                String childName = reservationDTO.getChildName();
+                String date = String.valueOf(reservationDTO.getReservationDate());
+                String startTime = String.valueOf(reservationDTO.getReservationStartTime());
 
-            mailService.sendMail(to, subject, text);
-            return "redirect:/reservation/"+ userId + "/ownList";
-        } catch (MessagingException e){
-            return "실패" + e.getMessage();
+                String text = name + "님  / " + date + " / " + startTime + " / " + parentName + "/" + childName + " ";
+
+                mailService.sendMail(to, subject, text);
+                return "redirect:/reservation/" + userId + "/ownList";
+            } catch (MessagingException e){
+                return "실패" + e.getMessage();
+            }
+
+        } catch (IllegalArgumentException e) {
+            return "redirect:/reservation/create?exist=true";
         }
+
     }
 
 
