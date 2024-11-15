@@ -15,5 +15,6 @@ public class TreatmentDTO {
     // 시술 이름
     private String name;
 
+    private Long duration;
 
 }

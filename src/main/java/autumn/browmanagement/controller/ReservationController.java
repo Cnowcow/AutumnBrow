@@ -11,14 +11,14 @@ import autumn.browmanagement.service.TreatmentService;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.SimpleTimeZone;
 
@@ -114,6 +114,18 @@ public class ReservationController {
         return "redirect:/reservation/list";
     }
 
+
+    // 예약시간 체크
+    @PostMapping("/reservation/timeCheck")
+    public ResponseEntity<List<String>> reservationTimeCheck(@RequestBody Map<String, String> request){
+
+        String selectedDate = request.get("reservationDate");
+        System.out.println("날짜 = " + selectedDate);
+
+        List<String> existTime = reservationService.reservationTimeCheck(LocalDate.parse(selectedDate));
+
+        return ResponseEntity.ok(existTime);
+    }
 
 /* 지금은 사용 안함
     // 예약상태 변경

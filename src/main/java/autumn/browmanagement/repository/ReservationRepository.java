@@ -18,6 +18,8 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     List<Reservation> findAllByOrderByReservationIdDesc();
 
+    List<Reservation> findByReservationDate(LocalDate selectedDate);
+
 
     @Query("SELECT COUNT(r) > 0 FROM Reservation r " +
             "WHERE r.reservationDate = :date " +

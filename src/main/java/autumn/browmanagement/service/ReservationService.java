@@ -28,21 +28,16 @@ public class ReservationService {
 
     // 예약하기 요청
     @Transactional
-    public void reservationCreate(ReservationDTO reservationDTO){
+    public void reservationCreate(ReservationDTO reservationDTO) {
 
         LocalDate date = reservationDTO.getReservationDate();
         LocalTime startTime = reservationDTO.getReservationStartTime();
-        LocalTime endTime = reservationDTO.getReservationEndTime();
-
-        if (isReservationOverlapping(date, startTime, endTime)) {
-            throw new IllegalArgumentException("해당 시간에 이미 다른 예약이 있습니다.");
-        }
 
         Reservation reservation = new Reservation();
 
         Optional<User> findUser = userRepository.findByNameAndPhone(reservationDTO.getName(), reservationDTO.getPhone());
         User user;
-        if(findUser.isPresent()){
+        if (findUser.isPresent()) {
             user = findUser.get();
             reservation.setUser(user);
         }
@@ -50,7 +45,7 @@ public class ReservationService {
         Treatment parentTreatment = null;
         Treatment childTreatment = null;
 
-        if (reservationDTO.getParentTreatment() != null && reservationDTO.getChildTreatment() != null){
+        if (reservationDTO.getParentTreatment() != null && reservationDTO.getChildTreatment() != null) {
             Treatment parentTreatments = treatmentRepository.findById(reservationDTO.getParentTreatment())
                     .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 값입니다."));
             Treatment childTreatments = treatmentRepository.findById(reservationDTO.getChildTreatment())
@@ -64,14 +59,20 @@ public class ReservationService {
             reservation.setParent(parentTreatment); // 대분류 설정
         }
 
+        LocalTime endTime = null;
         if (childTreatment != null) {
             reservation.setChild(childTreatment); // 소분류 설정
+            Long duration = childTreatment.getDuration();
+            endTime = startTime.plusMinutes(duration);
         }
 
+        if (isReservationOverlapping(date, startTime, endTime)) {
+            throw new IllegalArgumentException("해당 시간에 이미 다른 예약이 있습니다.");
+        }
 
         reservation.setReservationDate(reservationDTO.getReservationDate());
         reservation.setReservationStartTime(reservationDTO.getReservationStartTime());
-        reservation.setReservationEndTime(reservationDTO.getReservationEndTime());
+        reservation.setReservationEndTime(endTime);
 
         reservationRepository.save(reservation);
     }
@@ -139,6 +140,23 @@ public class ReservationService {
         reservation.setState(reservationDTO.getModalReservationState());
 
         reservationRepository.save(reservation);
+    }
+
+
+    // 예약시간 체크
+    public List<String> reservationTimeCheck(LocalDate  selectedDate){
+
+        List<Reservation> reservations = reservationRepository.findByReservationDate(selectedDate);
+
+        List<String> existTime = new ArrayList<>();
+        for (Reservation reservation : reservations) {
+            existTime.add(String.valueOf(reservation.getReservationStartTime()));
+            existTime.add(String.valueOf(reservation.getReservationEndTime()));
+            System.out.println("시작시간 = " + reservation.getReservationStartTime());
+            System.out.println("종료시간 = " + reservation.getReservationEndTime());
+        }
+
+        return existTime;
     }
 
 
