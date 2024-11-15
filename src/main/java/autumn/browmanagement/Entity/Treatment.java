@@ -20,4 +20,7 @@ public class Treatment {
     @JoinColumn(name = "parent_treatmentId")
     private Treatment parent;
 
+    private Long duration;
+
+
 }

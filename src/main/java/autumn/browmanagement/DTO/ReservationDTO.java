@@ -57,4 +57,6 @@ public class ReservationDTO {
 
     private String childName; // 세부내용 이름
 
+    private Long duration; // 소요시간
+
 }

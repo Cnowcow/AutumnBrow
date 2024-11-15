@@ -10,6 +10,12 @@
     <link href="/css/styles.css" rel="stylesheet"/>
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
 </head>
+<style>
+    .disabled {
+        pointer-events: none;
+        color: #6c757d;
+    }
+</style>
 <body class="sb-nav-fixed">
 <script th:if="${param.exist}">
     alert("해당 시간에 이미 다른 예약이 있습니다.");
@@ -74,64 +80,73 @@
                                     </div>
                                     <div class="mb-3">
                                         <label for="reservationDate" class="form-label">예약 날짜</label>
-                                        <input class="form-control" id="reservationDate" name="reservationDate" type="date" />
+                                        <input class="form-control" id="reservationDate" name="reservationDate" type="date" onchange="reservationTime(this)"/>
                                     </div>
-                                    <div class="row mb-3">
-                                        <div class="col-md-6">
-                                            <label for="reservationStartTime" class="form-label">예약 시작시간</label>
-                                            <select class="form-control" id="reservationStartTime" name="reservationStartTime">
-                                                <option value="10:00">10:00</option>
-                                                <option value="10:30">10:30</option>
-                                                <option value="11:00">11:00</option>
-                                                <option value="11:30">11:30</option>
-                                                <option value="12:00">12:00</option>
-                                                <option value="12:30">12:30</option>
-                                                <option value="13:00">13:00</option>
-                                                <option value="13:30">13:30</option>
-                                                <option value="14:00">14:00</option>
-                                                <option value="14:30">14:30</option>
-                                                <option value="15:00">15:00</option>
-                                                <option value="15:30">15:30</option>
-                                                <option value="16:00">16:00</option>
-                                                <option value="16:30">16:30</option>
-                                                <option value="17:00">17:00</option>
-                                                <option value="17:30">17:30</option>
-                                                <option value="18:00">18:00</option>
-                                                <option value="18:30">18:30</option>
-                                                <option value="19:00">19:00</option>
-                                                <option value="19:30">19:30</option>
-                                                <option value="20:00">20:00</option>
-                                                <option value="20:30">20:30</option>
-                                                <option value="21:00">21:00</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label for="reservationEndTime" class="form-label">예약 종료시간</label>
-                                            <select class="form-control" id="reservationEndTime" name="reservationEndTime">
-                                                <option value="11:00">11:00</option>
-                                                <option value="11:30">11:30</option>
-                                                <option value="12:00">12:00</option>
-                                                <option value="12:30">12:30</option>
-                                                <option value="13:00">13:00</option>
-                                                <option value="13:30">13:30</option>
-                                                <option value="14:00">14:00</option>
-                                                <option value="14:30">14:30</option>
-                                                <option value="15:00">15:00</option>
-                                                <option value="15:30">15:30</option>
-                                                <option value="16:00">16:00</option>
-                                                <option value="16:30">16:30</option>
-                                                <option value="17:00">17:00</option>
-                                                <option value="17:30">17:30</option>
-                                                <option value="18:00">18:00</option>
-                                                <option value="18:30">18:30</option>
-                                                <option value="19:00">19:00</option>
-                                                <option value="19:30">19:30</option>
-                                                <option value="20:00">20:00</option>
-                                                <option value="20:30">20:30</option>
-                                                <option value="21:00">21:00</option>
-                                                <option value="21:30">21:30</option>
-                                                <option value="22:00">22:00</option>
-                                            </select>
+                                    <div class="mb-3">
+                                        <label for="reservationStartTime" class="form-label">예약시간</label>
+                                        <div class="d-flex flex-wrap list-unstyled gap-3" id="reservationStartTime">
+                                            <input type="radio" class="btn-check" id="btn-check-1" name="reservationStartTime" value="10:00">
+                                            <label class="btn btn-outline-success" for="btn-check-1">10:00</label>
+
+                                            <input type="radio" class="btn-check" id="btn-check-2" name="reservationStartTime" value="10:30">
+                                            <label class="btn btn-outline-success" for="btn-check-2">10:30</label>
+
+                                            <input type="radio" class="btn-check" id="btn-check-3" name="reservationStartTime" value="11:00">
+                                            <label class="btn btn-outline-success" for="btn-check-3">11:00</label>
+
+                                            <input type="radio" class="btn-check" id="btn-check-4" name="reservationStartTime" value="11:30">
+                                            <label class="btn btn-outline-success" for="btn-check-4">11:30</label>
+
+                                            <input type="radio" class="btn-check" id="btn-check-5" name="reservationStartTime" value="12:00">
+                                            <label class="btn btn-outline-success" for="btn-check-5">12:00</label>
+
+                                            <input type="radio" class="btn-check" id="btn-check-6" name="reservationStartTime" value="12:30">
+                                            <label class="btn btn-outline-success" for="btn-check-6">12:30</label>
+
+                                            <input type="radio" class="btn-check" id="btn-check-7" name="reservationStartTime" value="13:00">
+                                            <label class="btn btn-outline-success" for="btn-check-7">13:00</label>
+
+                                            <input type="radio" class="btn-check" id="btn-check-8" name="reservationStartTime" value="13:30">
+                                            <label class="btn btn-outline-success" for="btn-check-8">13:30</label>
+
+                                            <input type="radio" class="btn-check" id="btn-check-9" name="reservationStartTime" value="14:00">
+                                            <label class="btn btn-outline-success" for="btn-check-9">14:00</label>
+
+                                            <input type="radio" class="btn-check" id="btn-check-10" name="reservationStartTime" value="14:30">
+                                            <label class="btn btn-outline-success" for="btn-check-10">14:30</label>
+
+                                            <input type="radio" class="btn-check" id="btn-check-11" name="reservationStartTime" value="15:00">
+                                            <label class="btn btn-outline-success" for="btn-check-11">15:00</label>
+
+                                            <input type="radio" class="btn-check" id="btn-check-12" name="reservationStartTime" value="15:30">
+                                            <label class="btn btn-outline-success" for="btn-check-12">15:30</label>
+
+                                            <input type="radio" class="btn-check" id="btn-check-13" name="reservationStartTime" value="16:00">
+                                            <label class="btn btn-outline-success" for="btn-check-13">16:00</label>
+
+                                            <input type="radio" class="btn-check" id="btn-check-14" name="reservationStartTime" value="16:30">
+                                            <label class="btn btn-outline-success" for="btn-check-14">16:30</label>
+
+                                            <input type="radio" class="btn-check" id="btn-check-15" name="reservationStartTime" value="17:00">
+                                            <label class="btn btn-outline-success" for="btn-check-15">17:00</label>
+
+                                            <input type="radio" class="btn-check" id="btn-check-16" name="reservationStartTime" value="17:30">
+                                            <label class="btn btn-outline-success" for="btn-check-16">17:30</label>
+
+                                            <input type="radio" class="btn-check" id="btn-check-17" name="reservationStartTime" value="18:00">
+                                            <label class="btn btn-outline-success" for="btn-check-17">18:00</label>
+
+                                            <input type="radio" class="btn-check" id="btn-check-18" name="reservationStartTime" value="18:30">
+                                            <label class="btn btn-outline-success" for="btn-check-18">18:30</label>
+
+                                            <input type="radio" class="btn-check" id="btn-check-19" name="reservationStartTime" value="19:00">
+                                            <label class="btn btn-outline-success" for="btn-check-19">19:00</label>
+
+                                            <input type="radio" class="btn-check" id="btn-check-20" name="reservationStartTime" value="19:30">
+                                            <label class="btn btn-outline-success" for="btn-check-20">19:30</label>
+
+                                            <input type="radio" class="btn-check" id="btn-check-21" name="reservationStartTime" value="20:00">
+                                            <label class="btn btn-outline-success" for="btn-check-21">20:00</label>
                                         </div>
                                     </div>
                                     <div class="mt-4 mb-0">
@@ -173,6 +188,86 @@
             document.getElementById('phoneErrorMessages').innerHTML = phoneErrorMessages.join('<br />');
         }
     });
+
+    function reservationTime(inputElement) {
+        const selectedDate = inputElement.value;
+        console.log(selectedDate);
+
+        fetch('/reservation/timeCheck', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ reservationDate: selectedDate })
+        })
+            .then(response => response.json())
+            .then(existTime => {
+                console.log(existTime);
+
+                // 예약된 시간들을 [start, end]로 처리
+                const reservedTimes = [];
+                for (let i = 0; i < existTime.length; i += 2) {
+                    reservedTimes.push({
+                        start: existTime[i],
+                        end: existTime[i + 1]
+                    });
+                }
+
+                // 라디오 버튼의 시간대 비활성화 처리
+                const timeSlots = [
+                    "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30",
+                    "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30",
+                    "18:00", "18:30", "19:00", "19:30", "20:00"
+                ];
+
+                // 예약된 시간대와 비교하여 라디오 버튼 비활성화
+                timeSlots.forEach(time => {
+                    const radioButton = document.querySelector(`input[name="reservationStartTime"][value="${time}"]`);
+                    if (radioButton) {
+                        const isUnavailable = reservedTimes.some(reservation => {
+                            // 시작시간이 종료시간보다 작은 경우 예약 시간이 겹치는지 확인
+                            return (time >= reservation.start && time < reservation.end);
+                        });
+                        if (isUnavailable) {
+                            radioButton.disabled = true; // 비활성화 처리
+                            const label = radioButton.nextElementSibling;
+                            if (label) {
+                                label.classList.add("disabled"); // 라벨 스타일을 비활성화 처리
+                            }
+                        } else {
+                            radioButton.disabled = false; // 예약되지 않은 시간대는 활성화
+                            const label = radioButton.nextElementSibling;
+                            if (label) {
+                                label.classList.remove("disabled"); // 라벨 스타일을 활성화
+                            }
+                        }
+                    }
+                });
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    /*
+    function reservationTime(inputElement){
+        const selectedDate = inputElement.value;
+        console.log(selectedDate);
+
+        fetch('/reservation/timeCheck', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ reservationDate: selectedDate })
+        })
+            .then(response => response.json())
+            .then(existTime => {
+                console.log(existTime);
+            })
+            .catch(error => console.error('Error:', error));
+    }
+*/
+
+
 </script>
 
 <script>
