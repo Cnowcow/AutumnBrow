@@ -1,3 +1,5 @@
+![예약상태변경2](https://github.com/user-attachments/assets/ca6f6a81-8867-426f-a540-98f9d8fd2ce6)Readme 작성중입니다....
+
 # AutumnBrow <sup>(2024.10.10 - 진행중)</sup>
 
 <p align="center">
@@ -248,7 +250,49 @@
   
     - Spring Security 적용 예정
 
-- ### 관리자용 시술내역, 공지사항, 주의사항, 이벤트 등 커뮤니티 CRUD
+- ### 관리자용 시술내역, 공지사항, 주의사항, 이벤트 등 커뮤니티 CRUD (Readme 수정중)
+  <details>
+    <summary> 시술내용 등록 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(코드▼)</summary>
+    <br>
+
+    ****
+    
+    ![등록](https://github.com/user-attachments/assets/bb05b259-bb90-48b8-a5fa-2c4f6984dddd)
+
+    ****
+  
+
+    
+    <br>
+  
+    ****
+    
+    ```java
+
+    ```
+
+  </details>
+
+  <details>
+    <summary> 휴지통 기능 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(코드▼)</summary>
+    <br>
+
+    ![수정, 휴지통](https://github.com/user-attachments/assets/030ac5cd-08f6-4e7e-8fb1-f569347a1d5a)
+
+
+    ****
+  
+
+    <br>
+  
+    ****
+    
+    ```java
+
+    ```
+
+  </details>
+  
   <details>
     <summary> 관계형 데이터베이스 전략으로 상위 시술내용에 따라 하위 시술내용 불러오기 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(코드▼)</summary>
     <br>
@@ -342,10 +386,112 @@
 
   </details>
 
-  - 예약기능 (구현중)
-  - 리뷰기능 (추가 예정)
+- ### 예약기능 (Readme 수정중)
+  <details>
+    <summary> 사용자가 예약을 요청하면 관리자에게 확인메일 발송 (추후 문자로 변경) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(코드▼)</summary>
+    <br>
+    
+    Controller
+    ```java
+    @PostMapping("/reservation/create")
+    public String reservationCreate(@ModelAttribute ReservationDTO reservationDTO, HttpSession session) {
+        User sessionUser = (User) session.getAttribute("user");
+        Long userId = sessionUser.getUserId();
+
+        try {
+            reservationService.reservationCreate(reservationDTO);
+
+            try {
+                String to = "**@**.com";
+                String subject = "예약요청 메일입니다.";
+
+                String name = reservationDTO.getName();
+                String parentName = reservationDTO.getParentName();
+                String childName = reservationDTO.getChildName();
+                String date = String.valueOf(reservationDTO.getReservationDate());
+                String startTime = String.valueOf(reservationDTO.getReservationStartTime());
+
+                String text = name + "님  / " + date + " / " + startTime + " / " + parentName + "/" + childName + " ";
+
+                mailService.sendMail(to, subject, text);
+                return "redirect:/reservation/" + userId + "/ownList";
+            } catch (MessagingException e){
+                return "실패" + e.getMessage();
+            }
+
+        } catch (IllegalArgumentException e) {
+            return "redirect:/reservation/create?exist=true";
+        }
+
+    }
+    ```
+    
+    Service
+    ```java
+    public void sendMail(String to, String subject, String text) throws MessagingException{
+
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, "utf-8");
+
+        // 이메일 설정
+        helper.setTo(to); // 수신자
+        helper.setSubject(subject); // 메일 제목
+        helper.setText(text, true); // 내용, HTML 여부
+
+        // 메일 발송
+        mailSender.send(message);
+    }
+    ```
+    
+    ![메일](https://github.com/user-attachments/assets/90220dbb-6b46-479e-a1e5-6933e06f8d9e)
+
+  </details> 
+
+  <details>
+    <summary> 예약상태 변경 기능 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(코드▼)</summary>
+    <br>
+    
+    Controller
+    ```java
+    
+    ```
+    
+    Service
+    ```java
+    
+    ```
+    
+    ![예약상태변경1](https://github.com/user-attachments/assets/3335c1e8-cad0-4917-950e-9381e9c79746)
+    ![예약상태변경2](https://github.com/user-attachments/assets/328b3893-1b38-4c41-8c05-cbc011d4cb40)
+
+  </details> 
+
+  <details>
+    <summary> 날짜별 예약가능 시간 표시 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(코드▼)</summary>
+    <br>
+    
+    Controller
+    ```java
+    
+    ```
+    
+    Service
+    ```java
+    
+    ```
+
+    ![날짜별 예약가능시간1](https://github.com/user-attachments/assets/6fc3ad3c-0fa5-4b59-946f-fe708700a808)
+    ![날짜별 예약가능시간2](https://github.com/user-attachments/assets/cd13b30f-6eff-4008-8fa8-38eacbd1b8af)
+
+
+  </details> 
+
+  
+- ### 리뷰기능 (추가 예정)
+
 <br><br>
 
-# 🔥 개선사항
+# 🔥 문제점 및 해결방안
+
 <br><br>
 
