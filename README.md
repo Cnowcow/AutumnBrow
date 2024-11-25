@@ -147,9 +147,15 @@ Readme 작성중입니다....
   </details>
 
 - ### 데이터베이스 설계 / 구현
-  - ERD 작성    
-  - 속성 / 관계 정의
-  - 정규화
+  <details>
+    <summary> ERD 작성</summary>
+  </details>
+    <details>
+    <summary> 속성 / 관계 정의</summary>
+  </details>
+    <details>
+    <summary> 정규화</summary>
+  </details>
 
 - ### RESTful API
 - ### 회원 CRUD
@@ -247,26 +253,72 @@ Readme 작성중입니다....
     ```
     
   </details>
-  
-    - Spring Security 적용 예정
+  <details>
+    <summary> Spring Security 적용 예정</summary>
+  </details>
 
 - ### 관리자용 시술내역, 공지사항, 주의사항, 이벤트 등 커뮤니티 CRUD (Readme 수정중)
   <details>
     <summary> 시술내용 등록 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(코드▼)</summary>
     <br>
 
-    ****
-    
+    <h2>데이터베이스에 있는 시술내용 외에 다른 시술내용을 입력하고 싶을 경우, 직접입력 필드를 제공하여 조건에 따라 로직 처리</h2>
+  
     ![등록](https://github.com/user-attachments/assets/bb05b259-bb90-48b8-a5fa-2c4f6984dddd)
-
-    ****
   
-
-    
     <br>
-  
-    ****
+
+    시술내용(대분류), 세부내용(소뷴류) 둘 다 직접입력일 때
+    ```java
+    if (postDTO.getParentTreatment() == null){
+      String directParentTreatment = postDTO.getDirectParentTreatment();
+      String directChildTreatment = postDTO.getDirectChildTreatment();
+
+      if (directParentTreatment != null && !directParentTreatment.isEmpty() && directChildTreatment != null && !directChildTreatment.isEmpty()) {
+        // 새 대분류 생성
+        parentTreatment = new Treatment();
+        parentTreatment.setName(directParentTreatment);
+        treatmentRepository.save(parentTreatment); // 대분류 저장
+
+        // 새 소분류 생성
+        childTreatment = new Treatment();
+        childTreatment.setName(directChildTreatment);
+        childTreatment.setParent(parentTreatment); // 소분류의 부모를 대분류로 설정
+        treatmentRepository.save(childTreatment); // 소분류 저장
+      }
+    }
+    ```
+
+    시술내용(대분류)는 기존값, 세부내용(소뷴류)는 직접입력일 때
+    ```java
+    else {
+      parentTreatment = treatmentRepository.findById(postDTO.getParentTreatment())
+              .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 시술내용입니다."));
     
+      if (postDTO.getChildTreatment() == null) {
+          String directChildTreatment = postDTO.getDirectChildTreatment();
+          if (directChildTreatment != null && !directChildTreatment.isEmpty()) {
+              // 새 소분류 생성
+              childTreatment = new Treatment();
+              childTreatment.setName(directChildTreatment);
+              childTreatment.setParent(parentTreatment); // 소분류의 부모를 대분류로 설정
+              treatmentRepository.save(childTreatment); // 소분류 저장
+            }
+        }
+    }
+    ```
+
+    시술내용(대분류), 세부내용(소뷴류) 둘 다 기존 값이 있을 때
+    ```java
+    if (postDTO.getParentTreatment() != null && postDTO.getChildTreatment() != null) {
+        Treatment existTreatment = treatmentRepository.findById(postDTO.getChildTreatment())
+                  .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 소분류 ID"));
+        childTreatment = existTreatment; // 기존 소분류 사용
+    }
+    ```
+
+   <h2>방문경로 입력 항목도 직접입력 필드 제공하여 로직 처리</h2>
+   
     ```java
 
     ```
@@ -274,19 +326,46 @@ Readme 작성중입니다....
   </details>
 
   <details>
-    <summary> 휴지통 기능 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(코드▼)</summary>
+    <summary> 게시물 수정 및 삭제 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(코드▼)</summary>
     <br>
 
     ![수정, 휴지통](https://github.com/user-attachments/assets/030ac5cd-08f6-4e7e-8fb1-f569347a1d5a)
 
+    <h2>게시물 수정할 때, 필수값이 아닌 항목들을 null값 처리</h2>
 
-    ****
-  
+    Service
+    ```java
+    public PostDTO postListByPostId(Long postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("게시물을 찾을 수 없습니다. :" + postId));
 
-    <br>
-  
-    ****
-    
+        PostDTO postDTO = new PostDTO();
+
+        postDTO.setPostId(post.getPostId());
+        postDTO.setUserId(post.getUser().getUserId()); //유저아이디
+        postDTO.setName(post.getUser().getName()); // 이름
+        postDTO.setPhone(post.getUser().getPhone()); // 전화번호
+        postDTO.setBirthDay(post.getUser().getBirthDay()); // 생년월일
+        postDTO.setFirstVisitDate(post.getUser().getFirstVisitDate()); // 첫방문 날짜
+        postDTO.setTreatmentCount(post.getUser().getTreatmentCount()); // 방문횟수
+        postDTO.setPostId(post.getPostId()); // 시술내용 id
+        postDTO.setParentTreatment(post.getParent() != null ? post.getParent().getTreatmentId() : null); // 시술내용 id
+        postDTO.setDirectParentTreatment(post.getParent() != null ? post.getParent().getName() : null); // 시술내용
+        postDTO.setChildTreatment(post.getChild() != null ? post.getChild().getTreatmentId() : null); // 세부내용 id
+        postDTO.setDirectChildTreatment(post.getChild() != null ? post.getChild().getName() : null); // 세부내용
+        postDTO.setVisitId(post.getVisit() != null ? post.getVisit().getVisitId() : null); // 방문경로 id
+        postDTO.setVisitPath(post.getVisit() != null ? post.getVisit().getVisitPath() : null); // 방문경로
+        postDTO.setTreatmentDate(post.getTreatmentDate()); // 시술날짜
+        postDTO.setRetouch(Boolean.valueOf(post.getRetouch())); // 리터치 여부
+        postDTO.setRetouchDate(post.getRetouchDate()); // 리터치 날짜
+        postDTO.setBeforeImageUrl(post.getBeforeImageUrl()); // 비포
+        postDTO.setAfterImageUrl(post.getAfterImageUrl()); // 애프터
+        postDTO.setInfo(post.getInfo()); // 비고
+
+        return postDTO;
+    }
+    ```
+          
     ```java
 
     ```
