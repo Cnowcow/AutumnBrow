@@ -34,7 +34,8 @@ Readme 작성중입니다....
 - ### 프로젝트 환경 / 구조 설정
 - ### 이미지 / 데이터베이스 서버 구축
   <details>
-    <summary> Synology FTP서버에 이미지 업로드 처리 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(코드▼)</summary>
+    <summary> Synology FTP서버에 이미지 업로드 처리
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(코드▼)</summary>
     <br>
     
     <h2>FTP 연결, 업로드, 연결해제 컴포넌트 클래스 작성 후, 필요한 service에서 사용.</h2>
@@ -125,7 +126,8 @@ Readme 작성중입니다....
   </details>
   
   <details>
-    <summary> Synology에 데이터베이스 서버 구축 (MariaDB 10) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(코드▼)</summary>
+    <summary> Synology에 데이터베이스 서버 구축 (MariaDB 10)
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(코드▼)</summary>
     <br>
     
     **MariaDB서버를 구축했지만 Mysql과 호환 가능.**
@@ -161,7 +163,8 @@ Readme 작성중입니다....
 - ### 회원 CRUD
   <details>
     <summary> 사용자가 직접 회원가입할 때 이름, 전화번호, 생년월일 정보만 받아서 <br>
-    &nbsp;&nbsp;&nbsp;회원가입을 진행하지만전화번호를 암호화처리 해서 비밀번호로도 사용 가능 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(코드▼)</summary>
+    &nbsp;&nbsp;&nbsp;회원가입을 진행하지만전화번호를 암호화처리 해서 비밀번호로도 사용 가능
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(코드▼)</summary>
     <br>
     
     <h2>전화번호 암호화 후 비밀번호로 사용 (AES방식에서 Hash방식으로 전환 예정)</h2>
@@ -211,7 +214,8 @@ Readme 작성중입니다....
 
   </details>
   <details>
-    <summary> 회원가입이 되어있지 않을 때, 관리자가 시술 내역을 등록하면 회원가입까지 같이 진행됨. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(코드▼)</summary>
+    <summary> 회원가입이 되어있지 않을 때, 관리자가 시술 내역을 등록하면 회원가입까지 같이 진행
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(코드▼)</summary>
     <br>
     
     <h2>입력한 정보를 사용해서 회원가입 진행, 이미 회원이라면 회원가입은 진행하지 않음</h2>
@@ -259,7 +263,8 @@ Readme 작성중입니다....
 
 - ### 관리자용 시술내역, 공지사항, 주의사항, 이벤트 등 커뮤니티 CRUD (Readme 수정중)
   <details>
-    <summary> 시술내용 등록 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(코드▼)</summary>
+    <summary> 시술내용 등록
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(코드▼)</summary>
     <br>
 
     <h2>데이터베이스에 있는 시술내용 외에 다른 시술내용을 입력하고 싶을 경우, 직접입력 필드를 제공하여 조건에 따라 로직 처리</h2>
@@ -354,7 +359,8 @@ Readme 작성중입니다....
   </details>
 
   <details>
-    <summary> 게시물 수정 및 삭제 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(코드▼)</summary>
+    <summary> 게시물 수정 및 삭제
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(코드▼)</summary>
     <br>
 
     ![수정, 휴지통](https://github.com/user-attachments/assets/030ac5cd-08f6-4e7e-8fb1-f569347a1d5a)
@@ -435,7 +441,8 @@ Readme 작성중입니다....
   </details>
   
   <details>
-    <summary> 관계형 데이터베이스 전략으로 상위 시술내용에 따라 하위 시술내용 불러오기 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(코드▼)</summary>
+    <summary> 관계형 데이터베이스 전략으로 상위 시술내용에 따라 하위 시술내용 불러오기
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(코드▼)</summary>
     <br>
     
     ![시술내역 등록](https://github.com/user-attachments/assets/1f3cc6cf-35c2-40b2-9e7a-edc44d91f81e)
@@ -527,9 +534,10 @@ Readme 작성중입니다....
 
   </details>
 
-- ### 예약기능 (Readme 수정중)
+- ### 예약기능
   <details>
-    <summary> 사용자가 예약을 요청하면 관리자에게 확인메일 발송 (추후 문자로 변경) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(코드▼)</summary>
+    <summary> 사용자가 예약을 요청하면 관리자에게 확인메일 발송 (추후 문자로 변경)
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(코드▼)</summary>
     <br>
     
     Controller
@@ -589,7 +597,8 @@ Readme 작성중입니다....
   </details> 
 
   <details>
-    <summary> 예약상태 변경 기능 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(코드▼)</summary>
+    <summary> 예약상태 변경 기능
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(코드▼)</summary>
     <br>
 
     <h2>예약상태를 누르면 모달 창을 띄우고, reservation_id, reservation_state 정보를 담아 컨트롤러로 전송</h2>
@@ -675,7 +684,8 @@ Readme 작성중입니다....
   </details> 
 
   <details>
-    <summary>원하는 예약 시간을 선택하여 예약을 요청하면 선택한 시술에따라 자동으로 예약 종료시간 설정</summary>
+    <summary>원하는 예약 시간을 선택하여 예약을 요청하면 선택한 시술에따라 자동으로 예약 종료시간 설정
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(코드▼)</summary>
     <br>
     
     <h2>각 시술마다 소요시간 필드를 추가하여 LocalTime 타입으로 변환 후 servation_startTime과 연산하여 endTime 설정</h2>
@@ -714,7 +724,8 @@ Readme 작성중입니다....
   </details>
   
   <details>
-    <summary> 날짜별 예약가능 시간 표시 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(코드▼)</summary>
+    <summary> 날짜별 예약가능 시간 표시
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(코드▼)</summary>
     <br>
     
     <h2>날짜를 선택하면 해달 날짜에 있는 모든 예약시간을 조회 후, 시작시간 / 종료시간 사이에 있는 시간들은 비활성화 처리 </h2>
