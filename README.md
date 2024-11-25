@@ -132,14 +132,14 @@ Readme 작성중입니다....
     
     **MariaDB서버를 구축했지만 Mysql과 호환 가능.**
   
-  ![image](https://github.com/user-attachments/assets/06b01770-4445-44fd-8cb8-38133e6e5bf7)
+    ![image](https://github.com/user-attachments/assets/06b01770-4445-44fd-8cb8-38133e6e5bf7)
 
     
     <br>
   
     <h2>localhost 대신 구축한 데이터베이스 서버 사용.</h2>
     
-  ```java
+    ```java
       spring.datasource.url=jdbc:mysql://ip주소:3306/DataBase명?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
       spring.datasource.username=ID
       spring.datasource.password=PW
