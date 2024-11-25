@@ -288,7 +288,9 @@ Readme 작성중입니다....
       }
     }
     ```
-
+    
+    <br>
+    
     시술내용(대분류)는 기존값, 세부내용(소뷴류)는 직접입력일 때
     ```java
     else {
@@ -308,6 +310,8 @@ Readme 작성중입니다....
     }
     ```
 
+    <br>
+    
     시술내용(대분류), 세부내용(소뷴류) 둘 다 기존 값이 있을 때
     ```java
     if (postDTO.getParentTreatment() != null && postDTO.getChildTreatment() != null) {
@@ -317,10 +321,34 @@ Readme 작성중입니다....
     }
     ```
 
-   <h2>방문경로 입력 항목도 직접입력 필드 제공하여 로직 처리</h2>
-   
-    ```java
+    <br>
+    
+    <h2>방문경로 입력 항목도 직접입력 필드 제공하여 로직 처리</h2>
 
+    방문경로가 직접입력일 때
+    ```java
+    // Visit 정보 설정
+    Visit visitPath = null;
+      
+    if (postDTO.getVisitId() == null){
+      String directVisitPath = postDTO.getVisitPath();
+      visitPath = new Visit();
+      visitPath.setVisitPath(directVisitPath);
+      visitRepository.save(visitPath);
+    }
+    ```
+    
+    방문경로가 기존값일 때
+    ```java
+    if (postDTO.getVisitId() != null) {
+      if (postDTO.getVisitId() == 0){
+          post.setVisit(null);
+      }else {
+          Visit visit = visitRepository.findById(postDTO.getVisitId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 방문 경로입니다."));
+          visitPath = visit;
+      }
+    }
     ```
 
   </details>
@@ -365,10 +393,44 @@ Readme 작성중입니다....
         return postDTO;
     }
     ```
-          
-    ```java
+    
+    <h2>게시물을 바로 삭제하지 않고, 휴지통에 넣어서 복원/삭제 처리</h2>
 
+    휴지통으로 보내기
+    ```java
+    public String postDelete(Long postId){
+        Post post = postRepository.findById(postId).orElse(null);
+
+        if (post != null) {
+            // isDeleted 값을 "Y"로 변경
+            post.setIsDeleted("Y");
+            // 포스트 업데이트
+            postRepository.save(post);
+            return null;
+        }
+        return null;
+    }
     ```
+
+    <br>
+
+    휴지통에서 복원하기
+    ```java
+    public String postRestore(Long postId){
+        Post post = postRepository.findById(postId).orElse(null);
+
+        if (post != null) {
+            // isDeleted 값을 "N"로 변경
+            post.setIsDeleted("N");
+            // 포스트 업데이트
+            postRepository.save(post);
+            return null;
+        }
+        return null;
+    }
+    ```
+
+    <br>
 
   </details>
   
@@ -529,45 +591,203 @@ Readme 작성중입니다....
   <details>
     <summary> 예약상태 변경 기능 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(코드▼)</summary>
     <br>
+
+    <h2>예약상태를 누르면 모달 창을 띄우고, reservation_id, reservation_state 정보를 담아 컨트롤러로 전송</h2>
+  
+    <br>
+    
+    ![예약상태변경1](https://github.com/user-attachments/assets/3335c1e8-cad0-4917-950e-9381e9c79746)
+    
+    View
+    ```java
+    // Html
+    <div class="modal fade" id="reservationModal" tabindex="-1" aria-labelledby="reservationModalLabel" aria-hidden="true">
+        <form id="modalAction" method="post">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="reservationModalLabel">예약상태 변경</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="modalReservationId">
+                        <select class="form-select" name="modalReservationState" id="modalReservationState" aria-label="Default select example">
+                            <option value="예약대기">예약대기</option>
+                            <option value="예약확정">예약확정</option>
+                            <option value="시술완료">시술완료</option>
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                          <button type="submit" class="btn btn-primary">변경하기</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    // JavaScript
+    function showReservationModal(modal) {
+        const reservationId = modal.dataset.id;
+        const reservationState = modal.dataset.state;
+        const stateSelect = document.getElementById("modalReservationState");
+
+        document.getElementById("modalReservationId").value = reservationId;
+
+        if (reservationState === '예약대기') {
+            stateSelect.value = '예약대기';
+        } else if (reservationState === '예약확정') {
+            stateSelect.value = '예약확정';
+        } else if (reservationState === '시술완료') {
+            stateSelect.value = '시술완료';
+        }
+
+        const form = document.getElementById("modalAction");
+        form.action = '/reservation/'+reservationId+'/stateUpdate';
+
+        var reservationModal = new bootstrap.Modal(document.getElementById("reservationModal"));
+        reservationModal.show();
+    }
+    ```
     
     Controller
     ```java
-    
+    @PostMapping("/reservation/{reservationId}/stateUpdate")
+    public String reservationStateUpdate(@PathVariable Long reservationId, ReservationDTO reservationDTO){
+
+        reservationService.reservationStateUpdate(reservationId, reservationDTO);
+
+        return "redirect:/reservation/list";
+    }
     ```
     
     Service
     ```java
-    
-    ```
-    
-    ![예약상태변경1](https://github.com/user-attachments/assets/3335c1e8-cad0-4917-950e-9381e9c79746)
-    ![예약상태변경2](https://github.com/user-attachments/assets/328b3893-1b38-4c41-8c05-cbc011d4cb40)
+    public void reservationStateUpdate(Long reservationId, ReservationDTO reservationDTO) {
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new IllegalArgumentException("예약내역을 찾을 수 없습니다. :" + reservationId));
+        
+        reservation.setState(reservationDTO.getModalReservationState());
 
+        reservationRepository.save(reservation);
+    }
+    ```
   </details> 
 
+  <details>
+    <summary>원하는 예약 시간을 선택하여 예약을 요청하면 선택한 시술에따라 자동으로 예약 종료시간 설정</summary>
+    <br>
+    
+    <h2>각 시술마다 소요시간 필드를 추가하여 LocalTime 타입으로 변환 후 servation_startTime과 연산하여 endTime 설정</h2>
+
+    ![image](https://github.com/user-attachments/assets/e3df8a9e-01fa-47b7-886d-0a67910485bc)
+    ![image](https://github.com/user-attachments/assets/ebf3706b-eda3-47d9-92cc-9b2888476020)
+
+    <br>
+      
+    Service
+    ```java
+    LocalTime endTime = null;
+    if (childTreatment != null) {
+        reservation.setChild(childTreatment); // 소분류 설정
+        Long duration = childTreatment.getDuration();
+        endTime = startTime.plusMinutes(duration);
+    }
+    ```
+    
+    <br>
+    겹치는 시간에 대한 예외처리
+    
+    ```java
+    if (isReservationOverlapping(date, startTime, endTime)) {
+        throw new IllegalArgumentException("해당 시간에 이미 다른 예약이 있습니다.");
+    }
+    ```
+
+    ```java
+    // 예약 시간 겹침 확인 메서드
+    public boolean isReservationOverlapping(LocalDate date, LocalTime startTime, LocalTime endTime) {
+        return reservationRepository.existsOverlappingReservation(date, startTime, endTime);
+    }
+    ```
+    
+  </details>
+  
   <details>
     <summary> 날짜별 예약가능 시간 표시 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(코드▼)</summary>
     <br>
     
+    <h2>날짜를 선택하면 해달 날짜에 있는 모든 예약시간을 조회 후, 시작시간 / 종료시간 사이에 있는 시간들은 비활성화 처리 </h2>
+  
+    <br>
+    
+    ![날짜별 예약가능시간2](https://github.com/user-attachments/assets/97b5ea10-063b-4932-917c-880c1aba8766)
+
+    <br>
+
+    View
+    ```java
+    function reservationTime(inputElement) {
+        const selectedDate = inputElement.value;
+        console.log(selectedDate);
+
+        fetch('/reservation/timeCheck', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ reservationDate: selectedDate })
+        })
+            .then(response => response.json())
+            .then(existTime => {
+                console.log(existTime);
+    .
+    .
+    .
+    .
+    .
+    ```
+    
     Controller
     ```java
-    
+    @PostMapping("/reservation/timeCheck")
+    public ResponseEntity<List<String>> reservationTimeCheck(@RequestBody Map<String, String> request){
+
+        String selectedDate = request.get("reservationDate");
+
+        List<String> existTime = reservationService.reservationTimeCheck(LocalDate.parse(selectedDate));
+
+        return ResponseEntity.ok(existTime);
+    }
     ```
     
     Service
     ```java
-    
+    public List<String> reservationTimeCheck(LocalDate  selectedDate){
+
+        List<Reservation> reservations = reservationRepository.findByReservationDate(selectedDate);
+
+        List<String> existTime = new ArrayList<>();
+        for (Reservation reservation : reservations) {
+            existTime.add(String.valueOf(reservation.getReservationStartTime()));
+            existTime.add(String.valueOf(reservation.getReservationEndTime()));
+        }
+
+        return existTime;
+    }
     ```
-
-    ![날짜별 예약가능시간1](https://github.com/user-attachments/assets/6fc3ad3c-0fa5-4b59-946f-fe708700a808)
-    ![날짜별 예약가능시간2](https://github.com/user-attachments/assets/cd13b30f-6eff-4008-8fa8-38eacbd1b8af)
-
-
   </details> 
 
   
 - ### 리뷰기능 (추가 예정)
-
+  
+- ### 배포
+  <details>
+    <summary>Docker에 Tomcat을 설치하여 war 방식으로 배포</summary>
+  </details>
+  <details>
+    <summary>Synology에서 지원하는 기본 도메인 사용</summary>
+  </details>
 <br><br>
 
 # 🔥 문제점 및 해결방안
