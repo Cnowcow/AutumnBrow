@@ -49,7 +49,7 @@
                                         <div class="col-md-6">
                                             <label for="noticeImage" class="form-label">사진 변경</label>
                                             <div class="mb-3">
-                                                <img id="beforeImagePreview" th:src="@{|http://hhjnn92.synology.me/AutumnBrow/notice/*{noticeUrl}|}" style="max-width: 400px; max-height: 300px; cursor: pointer;" onclick="openImageInNewWindow(this.src)" />
+                                                <img id="beforeImagePreview" th:src="@{|http://hhjnn92.synology.me/Project/AutumnBrow/notice/*{noticeUrl}|}" style="max-width: 400px; max-height: 300px; cursor: pointer;" onclick="openImageInNewWindow(this.src)" />
                                             </div>
                                             <input class="form-control" id="noticeImage" name="noticeImage" type="file" accept="image/*" onchange="previewImage(event, 'beforeImagePreview')" />
                                         </div>

@@ -43,7 +43,7 @@ public class NoticeService {
         // 임시파일 업로드
         file.transferTo(localFile);
         // FTP에 파일 업로드
-        ftpUtil.uploadFile("/AutumnBrow/notice/" + uniqueFileName, localFile);
+        ftpUtil.uploadFile("/Project/AutumnBrow/notice/" + uniqueFileName, localFile);
         localFile.delete(); // 임시 파일 삭제
         ftpUtil.disconnect();
 

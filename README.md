@@ -111,7 +111,7 @@ Readme 작성중입니다....
               String uniqueFileName = UUID.randomUUID().toString() + fileExtension;
               File localFile = new File(System.getProperty("java.io.tmpdir") + "/" + uniqueFileName);
               file.transferTo(localFile);
-              ftpUtil.uploadFile("/AutumnBrow/BeforeAndAfter/" + uniqueFileName, localFile);
+              ftpUtil.uploadFile("/Project/AutumnBrow/BeforeAndAfter/" + uniqueFileName, localFile);
   
               if (isBefore) {
                   postDTO.setBeforeImageUrl(uniqueFileName);

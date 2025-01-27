@@ -1,6 +1,5 @@
 package autumn.browmanagement.config;
 
-import lombok.RequiredArgsConstructor;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.springframework.stereotype.Component;

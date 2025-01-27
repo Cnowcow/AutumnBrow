@@ -46,7 +46,7 @@
                             <div class="mb-4" id="beforeImagePreview">
                                 <div th:if="${events.imageUrls != null and !events.imageUrls.isEmpty()}">
                                     <div class="text-center" th:each="imageurl : ${events.imageUrls}">
-                                        <img th:id="${imageurl}" th:src="'http://hhjnn92.synology.me/AutumnBrow/event/'+${imageurl}" style="width: 60%;"/>
+                                        <img th:id="${imageurl}" th:src="'http://hhjnn92.synology.me/Project/AutumnBrow/event/'+${imageurl}" style="width: 60%;"/>
                                         <a class="btn btn-danger" th:data-name="${imageurl}" style="position: relative; top: 0;" onclick="deleteImage(this)">삭제</a>
                                     </div>
                                 </div>

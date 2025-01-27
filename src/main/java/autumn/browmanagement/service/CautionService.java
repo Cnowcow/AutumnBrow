@@ -43,7 +43,7 @@ public class CautionService {
             String uniqueFileName = UUID.randomUUID().toString() + fileExtension;
             File localFile = new File(System.getProperty("java.io.tmpdir") + "/" + uniqueFileName);
             file.transferTo(localFile);
-            ftpUtil.uploadFile("/AutumnBrow/caution/" + uniqueFileName, localFile);
+            ftpUtil.uploadFile("/Project/AutumnBrow/caution/" + uniqueFileName, localFile);
 
             if (isBefore) {
                 cautionDTO.setBeforeUrl(uniqueFileName); // 비포 URL 설정

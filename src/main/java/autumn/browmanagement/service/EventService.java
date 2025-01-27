@@ -43,7 +43,7 @@ public class EventService {
         // 임시파일 업로드
         file.transferTo(localFile);
         // FTP에 파일 업로드
-        ftpUtil.uploadFile("/AutumnBrow/event/" + uniqueFileName, localFile);
+        ftpUtil.uploadFile("/Project/AutumnBrow/event/" + uniqueFileName, localFile);
         localFile.delete(); // 임시 파일 삭제
         ftpUtil.disconnect();
 
