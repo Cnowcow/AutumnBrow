@@ -97,7 +97,7 @@
                                         <div class="col-md-6">
                                             <label for="beforeImageFile" class="form-label">시술 전 사진</label>
                                             <div class="mb-3" id="before">
-                                                <img id="beforeImagePreview" th:src="@{|http://hhjnn92.synology.me/AutumnBrow/BeforeAndAfter/${post.beforeImageUrl}|}" style="max-width: 200px; max-height: 200px; cursor: pointer;" onclick="openImageInNewWindow(this.src)" />
+                                                <img id="beforeImagePreview" th:src="@{|http://hhjnn92.synology.me/Project/AutumnBrow/BeforeAndAfter/${post.beforeImageUrl}|}" style="max-width: 200px; max-height: 200px; cursor: pointer;" onclick="openImageInNewWindow(this.src)" />
                                                 <a class="btn btn-danger" th:data-name="${post.beforeImageUrl}" style="position: relative; top: 0;" onclick="deleteImage(this)">삭제</a>
                                             </div>
                                             <input class="form-control" id="beforeImageFile" name="beforeImageFile" type="file" accept="image/*" onchange="previewImage(event, 'beforeImagePreview')" />
@@ -105,7 +105,7 @@
                                         <div class="col-md-6">
                                             <label for="afterImageFile" class="form-label">시술 후 사진</label>
                                             <div class="mb-3" id="after">
-                                                <img id="afterImagePreview" th:src="@{|http://hhjnn92.synology.me/AutumnBrow/BeforeAndAfter/${post.afterImageUrl}|}" style="max-width: 200px; max-height: 200px; cursor: pointer;" onclick="openImageInNewWindow(this.src)" />
+                                                <img id="afterImagePreview" th:src="@{|http://hhjnn92.synology.me/Project/AutumnBrow/BeforeAndAfter/${post.afterImageUrl}|}" style="max-width: 200px; max-height: 200px; cursor: pointer;" onclick="openImageInNewWindow(this.src)" />
                                                 <a class="btn btn-danger" th:data-name="${post.afterImageUrl}" style="position: relative; top: 0;" onclick="deleteImage(this)">삭제</a>
                                             </div>
                                             <input class="form-control" id="afterImageFile" name="afterImageFile" type="file" accept="image/*" onchange="previewImage(event, 'afterImagePreview')" />

@@ -34,7 +34,7 @@
                         <h2 class="p-3 fw-bold" th:text="${notices.title}"></h2>
                         <div class="bg-light p-3 d-flex flex-column flex-md-row justify-content-between">
                             <div class="d-flex align-items-center">
-                                <img src="http://hhjnn92.synology.me/AutumnBrow/autumn.png" style="width: 40px; height: 40px; border-radius: 50px;">
+                                <img src="http://hhjnn92.synology.me/Project/AutumnBrow/autumn.png" style="width: 40px; height: 40px; border-radius: 50px;">
                                 <span class="fs-5" th:text="${notices.userName == '박은혜'} ? 'Autumn Brow' : ''"></span>
                                 <!--<div class="text-secondary p-1 ms-3">
                                     <i class="fa fa-eye"></i> <span id="hits" th:text="${notices.noticeHits}"></span>
@@ -66,7 +66,7 @@
 
                         <div th:if="${notices.imageUrls != null and !notices.imageUrls.isEmpty()}">
                             <div id="noticeImage" class="text-center" th:each="imageurl : ${notices.imageUrls}">
-                                <img th:src="'http://hhjnn92.synology.me/AutumnBrow/notice/'+${imageurl}" style="width: 80%; cursor: pointer;" onclick="openImageInNewWindow(this.src)"/>
+                                <img th:src="'http://hhjnn92.synology.me/Project/AutumnBrow/notice/'+${imageurl}" style="width: 80%; cursor: pointer;" onclick="openImageInNewWindow(this.src)"/>
                             </div>
                         </div>
                         <div th:if="${notices.imageUrls == null or notices.imageUrls.isEmpty()}">

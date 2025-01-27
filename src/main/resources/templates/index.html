@@ -49,7 +49,7 @@
                     <div class="container mb-5">
 
                         <div class="text-center">
-                            <img src="http://hhjnn92.synology.me/image/AutumnBrow.png" style="width: 400px; height: 400px;">
+                            <img src="http://hhjnn92.synology.me/Project/AutumnBrow/AutumnBrow.png" style="width: 400px; height: 400px;">
                         </div>
 
                         <div class="row d-flex justify-content-between mb-5">
@@ -68,10 +68,10 @@
                                                     <div id="swiper-container1" class="swiper-slide" th:each="notice, iterStat : ${notices}" th:if="${iterStat.index < 5}">-->
                                                     <a th:href="@{/notice/{noticeId}/detail (noticeId=${notice.noticeId})}">
                                                         <div th:if="${notice.imageUrls != null and !notice.imageUrls.isEmpty()}">
-                                                            <img class="mt-3 mb-3" th:src="@{|http://hhjnn92.synology.me/AutumnBrow/notice/${notice.imageUrls[0]}|}" style="width: 100%; height: 120px;">
+                                                            <img class="mt-3 mb-3" th:src="@{|http://hhjnn92.synology.me/Project/AutumnBrow/notice/${notice.imageUrls[0]}|}" style="width: 100%; height: 120px;">
                                                         </div>
                                                         <div th:if="${notice.imageUrls == null or notice.imageUrls.isEmpty()}">
-                                                            <img class="mt-3 mb-3" src="http://hhjnn92.synology.me/AutumnBrow/autumn.png" style="width: 100%; height: 120px;">
+                                                            <img class="mt-3 mb-3" src="http://hhjnn92.synology.me/Project/AutumnBrow/autumn.png" style="width: 100%; height: 120px;">
                                                         </div>
                                                     </a>
                                                     <p class="text-center"><strong class="card-text mt-5" th:text="${notice.title}"></strong></p>
@@ -97,10 +97,10 @@
                                                     <div id="swiper-container1" class="swiper-slide" th:each="notice, iterStat : ${notices}" th:if="${iterStat.index < 5}">-->
                                                     <a th:href="@{/event/{eventId}/detail (eventId=${event.eventId})}">
                                                         <div th:if="${event.imageUrls != null and !event.imageUrls.isEmpty()}">
-                                                            <img class="mt-3 mb-3" th:src="@{|http://hhjnn92.synology.me/AutumnBrow/event/${event.imageUrls[0]}|}" style="width: 100%; height: 120px;">
+                                                            <img class="mt-3 mb-3" th:src="@{|http://hhjnn92.synology.me/Project/AutumnBrow/event/${event.imageUrls[0]}|}" style="width: 100%; height: 120px;">
                                                         </div>
                                                         <div th:if="${event.imageUrls == null or event.imageUrls.isEmpty()}">
-                                                            <img class="mt-3 mb-3" src="http://hhjnn92.synology.me/AutumnBrow/autumn.png" style="width: 100%; height: 120px;">
+                                                            <img class="mt-3 mb-3" src="http://hhjnn92.synology.me/Project/AutumnBrow/autumn.png" style="width: 100%; height: 120px;">
                                                         </div>
                                                     </a>
                                                     <p class="text-center"><strong class="card-text mt-5" th:text="${event.title}"></strong></p>
@@ -127,7 +127,7 @@
                                             <div class="swiper-wrapper" style="justify-content: space-around;">
                                                 <!-- 후기 이미지 및 제목 출력 -->
                                                 <div id="swiper-container3" class="swiper-slide" th:each="review : ${reviews}">
-                                                    <img class="mt-3 mb-3" th:src="@{|http://hhjnn92.synology.me/AutumnBrow/review/${review.reviewUrl}|}" style="width: 100%; height: 160px;">
+                                                    <img class="mt-3 mb-3" th:src="@{|http://hhjnn92.synology.me/Project/AutumnBrow/review/${review.reviewUrl}|}" style="width: 100%; height: 160px;">
                                                     <p class="text-center"><strong class="card-text mt-5" th:text="${review.title}"></strong></p>
                                                 </div>
                                             </div>
@@ -178,7 +178,7 @@
         var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
 
 
-        var iwContent = '<div style="padding:0px 50px"><a href="http://map.naver.com/p/directions/-/14118399.401865814,4518660.919161124,%EB%A7%88%EA%B3%A1%EB%82%98%EB%A3%A8%EC%97%AD%ED%94%84%EB%9D%BC%EC%9D%B4%EB%B9%97%ED%83%80%EC%9B%8C1%EC%B0%A8,61727348,PLACE_POI/-/car" target="_blank"><img src="http://hhjnn92.synology.me/image/AutumnBrow.png" style="width: 50px; height: 50px;"></a></div>',
+        var iwContent = '<div style="padding:0px 50px"><a href="http://map.naver.com/p/directions/-/14118399.401865814,4518660.919161124,%EB%A7%88%EA%B3%A1%EB%82%98%EB%A3%A8%EC%97%AD%ED%94%84%EB%9D%BC%EC%9D%B4%EB%B9%97%ED%83%80%EC%9B%8C1%EC%B0%A8,61727348,PLACE_POI/-/car" target="_blank"><img src="http://hhjnn92.synology.me/Project/AutumnBrow/AutumnBrow.png" style="width: 50px; height: 50px;"></a></div>',
             iwPosition = new kakao.maps.LatLng(37.5685606, 126.827738); //인포윈도우 표시 위치입니다
 
         // 인포윈도우를 생성합니다
