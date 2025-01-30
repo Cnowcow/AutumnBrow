@@ -15,7 +15,7 @@ Readme 작성중입니다....
 <br><br>
 
 # 📚 배포 페이지
-### 🤨 [AutumnBrow](http://autumnbrow.hhjnn92.synology.me:8080/)
+### 🤨 [AutumnBrow](http://autumnbrow.hhjnn92.synology.me/)
 <br><br>
 
 # 🛠️ 기술 스택
